@@ -159,7 +159,8 @@ public class RegionCommand implements CommandExecutor
                 File rf = FileUtil.getRegionToLoad(a[1]);
                 if (rf == null)
                 {
-                    p.sendMessage("Region could not be found! Try create a new one.");
+                    p.sendMessage("Region could not be found, searching for possible matches:");
+                    p.sendMessage(FileUtil.getMatches(a[1]));
                     return true;
                 }
                 Region r = JsonUtil.loadRegion(rf);

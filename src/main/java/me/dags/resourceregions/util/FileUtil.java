@@ -76,6 +76,37 @@ public class FileUtil
         return null;
     }
 
+    public static String getMatches(String fileName)
+    {
+        boolean found = false;
+        StringBuilder sb = new StringBuilder();
+        sb.append("No matches could be found!").trimToSize();
+        File[] contents = getRegionFolder().listFiles();
+        if (contents != null)
+        {
+            fileName = fileName.toLowerCase();
+            for (File f : contents)
+            {
+                if (f.getName().contains(fileName))
+                {
+                    if (!found)
+                    {
+                        sb.setLength(0);
+                        found = true;
+                    }
+                    sb.append(f.getName().replace(".json", ""));
+                    sb.append(", ");
+                }
+            }
+            if (found)
+            {
+                sb.deleteCharAt(sb.length() - 2);
+            }
+        }
+        return sb.toString();
+    }
+
+
     public static File getRegionFolder()
     {
         return new File(ResourceRegions.getPlugin().getDataFolder(), "regions");
