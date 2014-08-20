@@ -17,6 +17,7 @@ the user is between two or more overlapping regions.</i>
 
 #### Region Commands
 <b>/resourceregions</b> or <b>/rr</b> - prints available region commands<br>
+<b>resourceregions.region</b> - permission node for the /rr command
 
 - <b>/rr create <regionName></b> - create a new region with the given name
 - <b>/rr url \<http://url_to_pack.zip\></b> - set the selected region's pack url
