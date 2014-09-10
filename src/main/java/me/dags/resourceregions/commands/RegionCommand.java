@@ -142,7 +142,7 @@ public class RegionCommand implements CommandExecutor
                 p.sendMessage("You are not currently building a region!");
                 return true;
             }
-            if (!r.validate())
+            if (!r.isValid())
             {
                 p.sendMessage("You have not completed the region!");
                 return true;
@@ -164,7 +164,6 @@ public class RegionCommand implements CommandExecutor
                     return true;
                 }
                 Region r = JsonUtil.loadRegion(rf);
-                r.init();
                 RegionUtil.attachRegionBuilder(p, r);
                 p.sendMessage("Region " + r.getName() + " loaded successfully!");
                 return true;

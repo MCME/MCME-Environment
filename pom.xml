@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.dags</groupId>
     <artifactId>ResourceRegions</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>ResourceRegions</name>
     <url>https://github.com/dags-/ResourceRegions</url>

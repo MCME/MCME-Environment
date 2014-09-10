@@ -49,6 +49,7 @@ public class ResourceRegions extends JavaPlugin
         return instance;
     }
 
+    @Override
     public void onEnable()
     {
         RegionManager.loadRegions(this);
@@ -58,6 +59,7 @@ public class ResourceRegions extends JavaPlugin
         saveConfig();
     }
 
+    @Override
     public void onDisable()
     {
         RegionManager.stopChecks();
@@ -90,8 +92,8 @@ public class ResourceRegions extends JavaPlugin
             if (RegionManager.isReady())
             {
                 log("Starting region checks...");
-                RegionManager.runChecks();
                 runChecks.cancel();
+                RegionManager.runChecks();
             }
         }
     }

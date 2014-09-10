@@ -1,6 +1,9 @@
 name: ResourceRegions
 main: me.dags.resourceregions.ResourceRegions
-version: 1.0
+version: ${project.version}
+author: dags_
+softdepend: [WorldGuard]
+website: ${project.url}
 
 commands:
   resourceregion:

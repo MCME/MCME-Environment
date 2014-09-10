@@ -23,8 +23,6 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.awt.*;
-
 /**
  * @author dags_ <dags@dags.me>
  */
@@ -42,11 +40,11 @@ public class Region
     @JsonProperty
     private int weight;
     @JsonProperty
+    private int n;
+    @JsonProperty
     private int[] xpoints;
     @JsonProperty
     private int[] zpoints;
-
-    private Polygon bounds;
 
     public Region()
     {}
@@ -58,13 +56,6 @@ public class Region
             name = "";
             weight = -1;
         }
-    }
-
-    public void init()
-    {
-        bounds = new Polygon(xpoints, zpoints, xpoints.length);
-        xpoints = null;
-        zpoints = null;
     }
 
     public void setName(String s)
@@ -82,22 +73,28 @@ public class Region
         worldName = s;
     }
 
-    public void resetBounds()
-    {
-        if (bounds == null)
-        {
-            bounds = new Polygon();
-        }
-        bounds.reset();
-    }
-
     public void addPoint(int x, int z)
     {
-        if (bounds == null)
+        int length = n;
+        int[] xp = new int[length + 1];
+        int[] zp = new int[length + 1];
+        for (int i = 0; i < length; i++)
         {
-            bounds = new Polygon();
+            xp[i] = xpoints[i];
+            zp[i] = zpoints[i];
         }
-        bounds.addPoint(x, z);
+        xp[length] = x;
+        zp[length] = z;
+        xpoints = xp;
+        zpoints = zp;
+        n = xpoints.length;
+    }
+
+    public void resetBounds()
+    {
+        xpoints = new int[0];
+        zpoints = new int[0];
+        n = 0;
     }
 
     public void setWeight(int i)
@@ -122,7 +119,15 @@ public class Region
 
     public boolean contains(int x, int z)
     {
-        return bounds.contains(x, z);
+        boolean inside = false;
+        for (int i = 0, j = n - 1; i < n; j = i++)
+        {
+            if ((zpoints[i] > z) != (zpoints[j] > z) && (x < (xpoints[j] - xpoints[i]) * (z - zpoints[i]) / (zpoints[j] - zpoints[i]) + xpoints[i]))
+            {
+                inside = !inside;
+            }
+        }
+        return inside;
     }
 
     public int getWeight()
@@ -130,20 +135,13 @@ public class Region
         return weight;
     }
 
-    public boolean validate()
+    public boolean isValid()
     {
-        return name != null && packUrl != null && worldName != null && bounds != null && bounds.npoints > 1 && weight > -1;
+        return name != null && packUrl != null && worldName != null && n > 1 && weight > -1;
     }
 
     public boolean save()
     {
-        xpoints = new int[bounds.npoints];
-        zpoints = new int[bounds.npoints];
-        for (int i = 0; i < bounds.npoints; i++)
-        {
-            xpoints[i] = bounds.xpoints[i];
-            zpoints[i] = bounds.ypoints[i];
-        }
         return JsonUtil.saveRegion(this);
     }
 

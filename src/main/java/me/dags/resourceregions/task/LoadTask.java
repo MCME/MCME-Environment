@@ -58,8 +58,12 @@ public class LoadTask extends BukkitRunnable
                     Region r = JsonUtil.loadRegion(f);
                     if (r != null)
                     {
+                        if (!r.isValid())
+                        {
+                            ResourceRegions.log("Could not load invalid region: " + r.getName());
+                            return;
+                        }
                         ResourceRegions.log("Loaded region: " + r.getName() + " (" + r.getWorldName() + ")");
-                        r.init();
                         regions.add(r);
                     }
                 }
