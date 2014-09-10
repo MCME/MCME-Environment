@@ -8,6 +8,7 @@ Regional texture-switching
 - name: the name of the region
 - packUrl: the url to the region's resourcepack
 - weight: the 'weight' (see below) that the region holds
+- n: the number of (x, z) points to make up the region
 - xpoints: an array of x co-ordinates
 - zpoints: an array of z co-ordinates
  
