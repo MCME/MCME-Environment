@@ -18,6 +18,7 @@
 
 package me.dags.resourceregions.task;
 
+import com.mcmiddleearth.resourceregions.DynmapUtil;
 import me.dags.resourceregions.ResourceRegions;
 import me.dags.resourceregions.region.Region;
 import me.dags.resourceregions.region.RegionManager;
@@ -65,6 +66,7 @@ public class LoadTask extends BukkitRunnable
                         }
                         ResourceRegions.log("Loaded region: " + r.getName() + " (" + r.getWorldName() + ")");
                         regions.add(r);
+                        DynmapUtil.createMarker(r);
                     }
                 }
             }

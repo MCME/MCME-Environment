@@ -29,6 +29,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
+import com.mcmiddleearth.resourceregions.RRDevCommand;
+import me.dags.resourceregions.listener.PlayerListener;
 
 /**
  * @author dags_ <dags@dags.me>
@@ -38,6 +40,8 @@ public class ResourceRegions extends JavaPlugin
 
     private static ResourceRegions instance;
     private RunChecks runChecks;
+    
+    private boolean registeredStuff = false;
 
     public ResourceRegions()
     {
@@ -52,8 +56,12 @@ public class ResourceRegions extends JavaPlugin
     @Override
     public void onEnable()
     {
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         RegionManager.loadRegions(this);
-        registerStuff();
+        if(!registeredStuff) {
+            registerStuff();
+        }
         runChecks = new RunChecks();
         runChecks.runTaskTimer(this, 0L, 20L);
         saveConfig();
@@ -70,8 +78,11 @@ public class ResourceRegions extends JavaPlugin
     {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new RegionListener(), this);
+        pm.registerEvents(new PlayerListener(), this);
         getCommand("resourceregion").setExecutor(new RegionCommand());
+        getCommand("rrdev").setExecutor(new RRDevCommand());
         getCommand("rpurl").setExecutor(new RPUrlCommand());
+        registeredStuff=true;
     }
 
     public static void log(String msg)

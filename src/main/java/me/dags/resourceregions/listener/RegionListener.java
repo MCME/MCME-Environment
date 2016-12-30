@@ -18,9 +18,12 @@
 
 package me.dags.resourceregions.listener;
 
+import com.mcmiddleearth.resourceregions.DevUtil;
 import me.dags.resourceregions.ResourceRegions;
 import me.dags.resourceregions.event.RegionChangeEvent;
 import me.dags.resourceregions.region.Region;
+import me.dags.resourceregions.region.RegionManager;
+import me.dags.resourceregions.region.RegionPlayer;
 import me.dags.resourceregions.util.Constants;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,10 +41,17 @@ public class RegionListener implements Listener
     @EventHandler
     public void onRegionChange(RegionChangeEvent e)
     {
+DevUtil.log("REGION change event");
         if (e.getPlayer().isOnline())
         {
+DevUtil.log("is Online - "+e.getPlayer().getUniqueId());
             Player p = e.getPlayer().getPlayer();
-            p.setResourcePack(e.getRegion().getPackUrl());
+            Region currentRegion = RegionManager.getRegion(p.getLocation().getWorld().getName(),
+                                                           RegionPlayer.getCurrent(p));
+            if((currentRegion==null) || (!e.getRegion().getPackUrl().equals(currentRegion.getPackUrl()))) {
+DevUtil.log("switch pack - "+e.getPlayer().getUniqueId());
+                p.setResourcePack(e.getRegion().getPackUrl());
+            }
             setRegion(p, e.getRegion());
         }
     }

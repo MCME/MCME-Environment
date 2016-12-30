@@ -69,9 +69,9 @@ public class RegionPlayer
         return currentRegion;
     }
 
-    private String getCurrent(Player p)
+    public static String getCurrent(Player p)
     {
-        if (p.hasMetadata(Constants.RESOURCE_REGION))
+        if (p.hasMetadata(Constants.RESOURCE_REGION) && p.getMetadata(Constants.RESOURCE_REGION).size()>0)
         {
             return p.getMetadata(Constants.RESOURCE_REGION).get(0).asString();
         }

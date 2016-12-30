@@ -18,6 +18,7 @@
 
 package me.dags.resourceregions.region;
 
+import com.mcmiddleearth.resourceregions.DynmapUtil;
 import me.dags.resourceregions.ResourceRegions;
 import me.dags.resourceregions.task.CheckTask;
 import me.dags.resourceregions.task.LoadTask;
@@ -41,7 +42,7 @@ public class RegionManager
 
     private final Object lock = new Object();
     private volatile boolean ready = false;
-    private Set<Region> regions;
+    private static Set<Region> regions;
     private CheckLoop checkLoop;
     private CheckTask asyncChecks;
 
@@ -59,6 +60,10 @@ public class RegionManager
         return instance;
     }
 
+    public static Set<Region> getRegions() {
+        return regions;
+    }
+    
     public static void setRegions(Set<Region> set)
     {
         i().setRegionMap(set);
@@ -68,6 +73,15 @@ public class RegionManager
     {
         LoadTask lt = new LoadTask(plugin);
         lt.runTaskAsynchronously(ResourceRegions.getPlugin());
+    }
+    
+    public static Region getRegion(String worldName, String regionName) {
+        for(Region search:regions) {
+            if(search.getWorldName().equals(worldName) && search.getName().equals(regionName)) {
+                return search;
+            }
+        }
+        return null;
     }
 
     public static boolean isReady()
@@ -87,6 +101,7 @@ public class RegionManager
 
     public static void clear()
     {
+        DynmapUtil.clearMarkers();
         i().ready = false;
         i().regions.clear();
     }
@@ -99,7 +114,7 @@ public class RegionManager
             ready = true;
         }
     }
-
+    
     private void runCheckLoop()
     {
         stopCheckLoop();

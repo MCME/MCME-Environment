@@ -67,6 +67,10 @@ public class Region
     {
         packUrl = s;
     }
+    
+    public String getPackUrl() {
+        return packUrl;
+    }
 
     public void setWorldName(String s)
     {
@@ -107,14 +111,17 @@ public class Region
         return name;
     }
 
-    public String getPackUrl()
-    {
-        return packUrl;
-    }
-
     public String getWorldName()
     {
         return worldName;
+    }
+    
+    public int[] getXPoints() {
+        return xpoints;
+    }
+    
+    public int[] getZPoints() {
+        return zpoints;
     }
 
     public boolean contains(int x, int z)

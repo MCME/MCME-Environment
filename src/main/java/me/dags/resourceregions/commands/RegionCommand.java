@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import me.dags.resourceregions.region.RegionManager;
 
 /**
  * @author dags_ <dags@dags.me>
@@ -151,6 +152,28 @@ public class RegionCommand implements CommandExecutor
             p.sendMessage("Region saved!");
             RegionUtil.removeRegionBuilder(p);
             return true;
+        }
+        else if (a[0].equalsIgnoreCase("list"))
+        {
+            p.sendMessage("Resource regions: ");
+            for(Region region:RegionManager.getRegions()) {
+                p.sendMessage("    - "+region.getWorldName()+"-"+region.getName());
+            }
+            return true;
+        }
+        else if (a[0].equalsIgnoreCase("delete"))
+        {
+            File rf = FileUtil.getRegionToLoad(a[1]);
+            if(rf!=null) {
+                rf.delete();
+                p.sendMessage("Deleting region "+a[1]+" ...");
+                ResourceRegions.reload();
+                return true;
+            } else {
+                p.sendMessage("Region could not be found, searching for possible matches:");
+                p.sendMessage(FileUtil.getMatches(a[1]));
+                return true;
+            }
         }
         else if (a[0].equalsIgnoreCase("load"))
         {
