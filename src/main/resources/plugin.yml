@@ -2,7 +2,7 @@ name: ResourceRegions
 main: me.dags.resourceregions.ResourceRegions
 version: ${project.version}
 author: dags_
-softdepend: [WorldGuard]
+softdepend: [WorldGuard,dynmap]
 website: ${project.url}
 
 commands:
@@ -18,3 +18,7 @@ commands:
     useage: /rp <name> <url>
     permission-message: Ain't got perms fo' dat yo!
     permission: resourceregions.rpurl
+  rrdev:
+    descrption: Manage debug output
+    useage: /rrdev [r | true | false]
+    

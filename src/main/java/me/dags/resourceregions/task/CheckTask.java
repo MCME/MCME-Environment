@@ -18,6 +18,7 @@
 
 package me.dags.resourceregions.task;
 
+import com.mcmiddleearth.resourceregions.DevUtil;
 import me.dags.resourceregions.ResourceRegions;
 import me.dags.resourceregions.event.RegionChangeEvent;
 import me.dags.resourceregions.region.Region;
@@ -58,6 +59,7 @@ public class CheckTask extends BukkitRunnable
             running = true;
             for (RegionPlayer pw : players)
             {
+DevUtil.log("PLAYER - "+Bukkit.getPlayer(pw.getUuid()).getName()+"   "+pw.getCurrentRegion());
                 Region newRegion = new Region(true);
                 for (Region r : regions)
                 {
@@ -82,8 +84,10 @@ public class CheckTask extends BukkitRunnable
                     }
                 }
                 String rName = newRegion.getName();
+DevUtil.log("REGION - "+rName);
                 if (!rName.equals("") && !rName.equals(pw.getCurrentRegion()))
                 {
+DevUtil.log("NEW REGION - "+rName);
                     events.add(new RegionChangeEvent(pw, newRegion));
                 }
             }
@@ -119,6 +123,7 @@ public class CheckTask extends BukkitRunnable
             PluginManager pm = Bukkit.getPluginManager();
             for (Event e : events)
             {
+DevUtil.log("call Event - "+e.getEventName());
                 pm.callEvent(e);
             }
         }
