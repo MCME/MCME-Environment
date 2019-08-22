@@ -83,8 +83,6 @@ public class EnvRegion
                 && region.contains(new Vector(loc.getX(),loc.getY(),loc.getZ()));
     }
 
-    
-
     public Map<String, Object> saveToMap() {
         Map<String,Object> result = new HashMap<>();
         result.put("name", name);
