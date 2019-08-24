@@ -8,7 +8,7 @@
     <name>Environment</name>
     <url>http://www.mcmiddleearth.com/</url>
     <repositories> 
-<repository>
+        <repository>
     <id>fawe-repo</id>
     <url>https://ci.athion.net/job/FastAsyncWorldEdit-Breaking/ws/mvn</url>
 </repository>
@@ -26,24 +26,9 @@
             <type>pom</type>
         </dependency>
         <dependency>
-    <groupId>com.boydti</groupId>
-    <artifactId>fawe-api</artifactId>
-    <version>latest</version>
-</dependency>
-        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-lgpl</artifactId>
             <version>1.9.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>7.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-core</artifactId>
-            <version>6.1.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -56,7 +41,13 @@
             <artifactId>PluginUtils</artifactId>
             <version>1.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+    <groupId>com.boydti</groupId>
+    <artifactId>fawe-api</artifactId>
+    <version>latest</version>
+</dependency>
     </dependencies>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
