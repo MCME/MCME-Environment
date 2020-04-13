@@ -1,16 +1,6 @@
-dynmap:
-    enabled: true
-    hide: true
-    borderColor:
-        ==: Color
-        RED: 128
-        BLUE: 64
-        GREEN: 0
-    areaColor:
-        ==: Color
-        RED: 128
-        BLUE: 64
-        GREEN: 0
-    borderWidth: 2
-    borderOpacity: 0.2
-    areaOpacity: 0.1
+#***DATABASE CONNECTION***
+host: localhost
+port: 3306
+database: mcmeproject_data
+username: root
+password: default

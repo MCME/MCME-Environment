@@ -1,24 +1,15 @@
-name: ResourceRegions
-main: me.dags.resourceregions.ResourceRegions
+name: Environment
+main: com.mcme.me.fraspace5.environment.Environment
 version: ${project.version}
-author: dags_
-softdepend: [WorldGuard,dynmap]
+author: Fraspace5
+api-version: 1.15
+softdepend: [WorldEdit,PluginUtils,ProtocolLib]
 website: ${project.url}
 
 commands:
-  resourceregion:
-    aliases: [rr, rregion]
+  environment:
+    aliases: [env]
     description: Region command
-    usage: /resourceregion
-    permission-message: Ain't got perms fo' dat yo!
-    permission: resourceregions.region
-  rpurl:
-    aliases: [rp]
-    description: Set resourcepack url
-    useage: /rp <name> <url>
-    permission-message: Ain't got perms fo' dat yo!
-    permission: resourceregions.rpurl
-  rrdev:
-    descrption: Manage debug output
-    useage: /rrdev [r | true | false]
-    
+permissions:
+  environment.admin:
+            default: op
