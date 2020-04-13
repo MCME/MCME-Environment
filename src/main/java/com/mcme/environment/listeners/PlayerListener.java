@@ -15,6 +15,7 @@ import com.mcme.environment.event.EnterRegionEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.WeatherType;
@@ -145,17 +146,18 @@ public class PlayerListener implements Listener {
         } else {
             e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
         }
+        Random rnd = new Random();
+        int result = (rnd.nextInt(0xFF) + 1) << 8 * 3;
+        result += rnd.nextInt(0x1000000);
+
         if (re.thunder) {
             PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
             thunder.getIntegers().
-                    write(0, 1).
+                    write(0,result).
                     write(1, 1).
                     write(2, (int) e.getPlayer().getLocation().getX()).
                     write(3, (int) e.getPlayer().getLocation().getY()).
                     write(4, (int) e.getPlayer().getLocation().getZ());
-
-            thunder.getDataWatcherModifier().
-                    write(0, Environment.getPluginInstance().getThunderWatcher());
 
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(e.getPlayer(), thunder);
