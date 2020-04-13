@@ -8,6 +8,7 @@ package com.mcme.environment;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import static com.mcme.environment.Environment.manager;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.listeners.PlayerListener;
 import java.sql.Connection;
@@ -56,13 +57,17 @@ public class Environment extends JavaPlugin {
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
             Bukkit.getPluginManager().disablePlugin(this);
         }
-        getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
-        getCommand("environment").setTabCompleter(new EnvironmentCommandExecutor());
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        manager = ProtocolLibrary.getProtocolManager();
-        clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
-        clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
-        clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
+        if (this.isEnabled()) {
+
+            getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
+            getCommand("environment").setTabCompleter(new EnvironmentCommandExecutor());
+            Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+            manager = ProtocolLibrary.getProtocolManager();
+            clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
+            clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
+            clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
+        }
+
     }
 
     @Override
@@ -101,14 +106,14 @@ public class Environment extends JavaPlugin {
                             + "  `zlist` LONGTEXT NOT NULL,\n"
                             + "  `ymin` INT NOT NULL,\n"
                             + "  `ymax` INT NOT NULL,\n"
-                            + "  `weather` VARCHAR(5) NOT NULL),\n"
-                            + "  `thunders` BOOLEAN NOT NULL),\n"
-                            + "  `time` LONGTEXT NOT NULL),\n"
+                            + "  `weather` VARCHAR(5),\n"
+                            + "  `thunders` BOOLEAN,\n"
+                            + "  `time` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
                             + "  PRIMARY KEY (`idregion`));";
                     String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
                             + "  `uuid` VARCHAR(45) NOT NULL,\n"
-                            + "  `bool` BOOLEAN NOT NULL),\n"
+                            + "  `bool` BOOLEAN NOT NULL,\n"
                             + "  PRIMARY KEY (`uuid`));";
                     try {
                         con.createStatement().execute(stat);

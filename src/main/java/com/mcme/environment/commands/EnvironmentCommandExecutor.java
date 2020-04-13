@@ -44,7 +44,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
-        if (!string.equalsIgnoreCase("project")) {
+        if (!string.equalsIgnoreCase("environment")) {
             return false;
         }
         if (strings == null || strings.length == 0) {
