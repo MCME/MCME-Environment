@@ -7,8 +7,6 @@ package com.mcme.environment;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import static com.mcme.environment.Environment.manager;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.listeners.PlayerListener;
 import java.sql.Connection;
@@ -42,8 +40,7 @@ public class Environment extends JavaPlugin {
     public static String nameserver;
     @Getter
     public static ProtocolManager manager;
-    @Getter
-    private WrappedDataWatcher thunderWatcher;
+   
 
     @Override
     public void onEnable() {

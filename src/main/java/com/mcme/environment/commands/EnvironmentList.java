@@ -45,12 +45,13 @@ public class EnvironmentList extends EnvironmentCommand {
         FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
                 .addSimple(ChatColor.GREEN + "Project opens (click for details)" + "\n");
         List<FancyMessage> messages = new ArrayList<>();
-       
+
         for (String region : PluginData.AllRegions.keySet()) {
             FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
                     .addSimple(ChatColor.DARK_GREEN + region + "\n");
+            messages.add(r);
         }
-        
+
         PluginData.getMessageUtil().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
     }
 }
