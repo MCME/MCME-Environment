@@ -1,0 +1,6 @@
+#***DATABASE CONNECTION***
+host: localhost
+port: 3306
+database: mcmeproject_data
+username: root
+password: default
