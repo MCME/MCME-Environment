@@ -126,8 +126,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `zlist` LONGTEXT NOT NULL,\n"
                             + "  `ymin` INT NOT NULL,\n"
                             + "  `ymax` INT NOT NULL,\n"
-                            + "  `weather` VARCHAR(5),\n"
+                            + "  `weather` VARCHAR(45),\n"
                             + "  `thunders` BOOLEAN,\n"
+                            + "  `location` LONGTEXT NOT NULL,\n"
                             + "  `time` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
                             + "  PRIMARY KEY (`idregion`));";
