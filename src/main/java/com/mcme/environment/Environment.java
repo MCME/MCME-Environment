@@ -7,6 +7,9 @@ package com.mcme.environment;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.listeners.PlayerListener;
 import java.sql.Connection;
@@ -18,7 +21,9 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -26,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author Fraspace5
  *
  */
-public class Environment extends JavaPlugin {
+public class Environment extends JavaPlugin implements PluginMessageListener {
 
     static final Logger Logger = Bukkit.getLogger();
 
@@ -40,7 +45,6 @@ public class Environment extends JavaPlugin {
     public static String nameserver;
     @Getter
     public static ProtocolManager manager;
-   
 
     @Override
     public void onEnable() {
@@ -60,9 +64,13 @@ public class Environment extends JavaPlugin {
             getCommand("environment").setTabCompleter(new EnvironmentCommandExecutor());
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
             manager = ProtocolLibrary.getProtocolManager();
+            this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
+            ConnectionRunnable();
+            nameserver = "default";
         }
 
     }
@@ -72,6 +80,21 @@ public class Environment extends JavaPlugin {
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
         clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " disabled!");
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
+    }
+
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (!channel.equals("BungeeCord")) {
+            return;
+        }
+        ByteArrayDataInput in = ByteStreams.newDataInput(message);
+        String subchannel = in.readUTF();
+
+        if (subchannel.equals("GetServer")) {
+            String servern = in.readUTF();
+            nameserver = servern;
+
+        }
     }
 
     public void openConnection() throws SQLException {
@@ -136,5 +159,35 @@ public class Environment extends JavaPlugin {
     String username = this.getConfig().getString("username");
     @Getter
     String password = this.getConfig().getString("password");
+
+    public void ConnectionRunnable() {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                try {
+                    if (!con.isValid(2)) {
+
+                        openConnection();
+
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
+        }.runTaskTimer(Environment.getPluginInstance(), 60L, 100L);
+
+    }
+
+    public void sendNameServer(Player player) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+
+        out.writeUTF("GetServer");
+
+        player.sendPluginMessage(this, "BungeeCord", out.toByteArray());
+    }
 
 }
