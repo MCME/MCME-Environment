@@ -62,11 +62,11 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default' ) ;";
                             try {
-                                Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                                Environment.getPluginInstance().con.prepareStatement(stat).execute(stat);
+                                PluginData.loadRegions();
                             } catch (SQLException ex) {
                                 Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            PluginData.loadRegions();
 
                         }
 
@@ -86,11 +86,11 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time ) VALUES ('" + PluginData.createId().toString() + "','" + args[2] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default' ) ;";
                             try {
-                                Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                                Environment.getPluginInstance().con.prepareStatement(stat).execute(stat);
+                                PluginData.loadRegions();
                             } catch (SQLException ex) {
                                 Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            PluginData.loadRegions();
 
                         }
 
