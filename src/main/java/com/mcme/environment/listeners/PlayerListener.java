@@ -16,7 +16,6 @@
  */
 package com.mcme.environment.listeners;
 
-
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
@@ -26,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -144,6 +144,7 @@ public class PlayerListener implements Listener {
 
                         //trigger event 
                         EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), region);
+                        Bukkit.getPluginManager().callEvent(event);
                         for (String r : PluginData.AllRegions.keySet()) {
                             if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
                                 PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
@@ -175,11 +176,24 @@ public class PlayerListener implements Listener {
         }
 
         if (re.thunder) {
-            EnvChange.spawnThunderstorm(e.getPlayer());
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+
+                    if (!PluginData.EntityPlayer.contains(e.getPlayer().getUniqueId())) {
+                        EnvChange.spawnThunderstorm(e.getPlayer());
+                    } else {
+                        cancel();
+                        PluginData.EntityPlayer.remove(e.getPlayer().getUniqueId());
+                    }
+
+                }
+
+            }.runTaskTimerAsynchronously(Environment.getPluginInstance(), 20L, 30L);
 
         }
 
         EnvChange.changePlayerTime(e.getPlayer(), Integer.parseInt(re.time));
-
     }
 }
