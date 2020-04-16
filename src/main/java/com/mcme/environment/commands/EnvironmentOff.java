@@ -16,6 +16,7 @@
  */
 package com.mcme.environment.commands;
 
+import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +40,8 @@ public class EnvironmentOff extends EnvironmentCommand {
         if (PluginData.boolPlayers.get(pl.getUniqueId())) {
             PluginData.boolPlayers.remove(pl.getUniqueId());
             PluginData.boolPlayers.put(pl.getUniqueId(), Boolean.FALSE);
+            EnvChange.resetAll(pl);
+            
         } else {
             sendAlready(cs);
         }
@@ -54,4 +57,18 @@ public class EnvironmentOff extends EnvironmentCommand {
         PluginData.getMessageUtil().sendErrorMessage(cs, "It's already off");
 
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

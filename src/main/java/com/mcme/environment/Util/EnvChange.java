@@ -20,8 +20,11 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.mcme.environment.Environment;
+import com.mcme.environment.data.PluginData;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
+import org.bukkit.Bukkit;
+import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -63,8 +66,8 @@ public class EnvChange {
 
     /**
      * This method changes the player time with an animation
-     * 
-     * @param pl Player 
+     *
+     * @param pl Player
      * @param time Time in ticks
      */
     public static void changePlayerTime(Player pl, int time) {
@@ -107,6 +110,12 @@ public class EnvChange {
             }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
         }
 
+    }
+
+    public static void resetAll(Player pl) {
+        pl.setPlayerWeather(WeatherType.CLEAR);
+        pl.setPlayerTime(12000, false);
+        PluginData.EntityPlayer.add(pl.getUniqueId());
     }
 
 }
