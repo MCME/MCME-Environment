@@ -70,7 +70,7 @@ public class EnvChange {
                     pl.setPlayerTime(pl.getPlayerTime() + 50, false);
 
                 }
-            }.runTaskTimerAsynchronously(Environment.getPluginInstance(), 0L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
 
         } else {
             new BukkitRunnable() {
@@ -93,7 +93,7 @@ public class EnvChange {
                     pl.setPlayerTime(pl.getPlayerTime() + 50, false);
 
                 }
-            }.runTaskTimerAsynchronously(Environment.getPluginInstance(), 0L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
         }
 
     }
