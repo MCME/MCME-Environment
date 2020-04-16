@@ -11,6 +11,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
+import com.mcme.environment.data.PluginData;
 import com.mcme.environment.listeners.PlayerListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,18 +36,27 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Environment extends JavaPlugin implements PluginMessageListener {
 
     static final Logger Logger = Bukkit.getLogger();
-
     @Getter
     public ConsoleCommandSender clogger = this.getServer().getConsoleSender();
-
     @Getter
     private static Environment pluginInstance;
-
     @Getter
     @Setter
     public static String nameserver;
     @Getter
     public static ProtocolManager manager;
+    @Getter
+    public Connection con;
+    @Getter
+    String host = this.getConfig().getString("host");
+    @Getter
+    String port = this.getConfig().getString("port");
+    @Getter
+    public String database = this.getConfig().getString("database");
+    @Getter
+    String username = this.getConfig().getString("username");
+    @Getter
+    String password = this.getConfig().getString("password");
 
     @Override
     public void onEnable() {
@@ -73,6 +83,15 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             ConnectionRunnable();
             Environment.setNameserver("default");
+
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    PluginData.loadRegions();
+                }
+
+            }.runTaskLater(Environment.getPluginInstance(), 200L);
         }
 
     }
@@ -94,11 +113,16 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
         if (subchannel.equals("GetServer")) {
             String servern = in.readUTF();
-           Environment.setNameserver(servern);
+            Environment.setNameserver(servern);
 
         }
     }
 
+    /**
+     *
+     * @throws SQLException
+     *
+     */
     public void openConnection() throws SQLException {
         if (con != null && !con.isClosed()) {
             return;
@@ -150,19 +174,6 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
     }
 
-    @Getter
-    public Connection con;
-    @Getter
-    String host = this.getConfig().getString("host");
-    @Getter
-    String port = this.getConfig().getString("port");
-    @Getter
-    public String database = this.getConfig().getString("database");
-    @Getter
-    String username = this.getConfig().getString("username");
-    @Getter
-    String password = this.getConfig().getString("password");
-
     public void ConnectionRunnable() {
 
         new BukkitRunnable() {
@@ -185,6 +196,10 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
     }
 
+    /**
+     *
+     * @param player The player that sends this message
+     */
     public void sendNameServer(Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
