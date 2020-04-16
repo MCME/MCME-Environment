@@ -38,6 +38,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
         rain = false;
         sun = false;
         thunder = false;
+     
         if (PluginData.AllRegions.containsKey(args[0])) {
 
             if (args[1].equalsIgnoreCase("rain")) {

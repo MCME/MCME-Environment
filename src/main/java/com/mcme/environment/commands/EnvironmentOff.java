@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 public class EnvironmentOff extends EnvironmentCommand {
 
     public EnvironmentOff(String... permissionNodes) {
-        super(1, true, permissionNodes);
+        super(0, true, permissionNodes);
         setShortDescription(": Switch off");
         setUsageDescription(": Your time and weather won't change along the fellowship path");
     }

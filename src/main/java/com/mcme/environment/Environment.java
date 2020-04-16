@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -42,6 +43,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     private static Environment pluginInstance;
 
     @Getter
+    @Setter
     public static String nameserver;
     @Getter
     public static ProtocolManager manager;
@@ -70,7 +72,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             ConnectionRunnable();
-            nameserver = "default";
+            Environment.setNameserver("default");
         }
 
     }
@@ -92,7 +94,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
         if (subchannel.equals("GetServer")) {
             String servern = in.readUTF();
-            nameserver = servern;
+           Environment.setNameserver(servern);
 
         }
     }
@@ -126,8 +128,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `zlist` LONGTEXT NOT NULL,\n"
                             + "  `ymin` INT NOT NULL,\n"
                             + "  `ymax` INT NOT NULL,\n"
-                            + "  `weather` VARCHAR(5),\n"
+                            + "  `weather` VARCHAR(45),\n"
                             + "  `thunders` BOOLEAN,\n"
+                            + "  `location` LONGTEXT NOT NULL,\n"
                             + "  `time` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
                             + "  PRIMARY KEY (`idregion`));";

@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
         if (Environment.nameserver.equalsIgnoreCase("default")) {
             Environment.getPluginInstance().sendNameServer(e.getPlayer());
         }
-        
+        System.out.println("Env "+ Environment.getNameserver());
         new BukkitRunnable() {
             
             @Override

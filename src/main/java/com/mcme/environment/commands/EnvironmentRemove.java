@@ -36,16 +36,14 @@ public class EnvironmentRemove extends EnvironmentCommand {
                 @Override
                 public void run() {
 
-                    String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".mcmeproject_regions_data WHERE name = '" + args[0] + "' ;";
+                    String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".environment_regions_data WHERE idregion = '" + PluginData.AllRegions.get(args[0]).idr.toString() + "' ;";
                     try {
                         Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
+                        PluginData.loadRegions();
+                        sendDel(cs);
                     } catch (SQLException ex) {
                         Logger.getLogger(EnvironmentRemove.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-                    PluginData.loadRegions();
-
-                    sendDel(cs);
 
                 }
 

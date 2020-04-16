@@ -80,6 +80,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             areas.add(s);
 
         }
+//environment edit[0] test3[1] rain true 15:00
 
         if (args.length == 1) {
             for (String s : arguments) {
@@ -89,10 +90,10 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             }
             return Flist;
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("edit") || args[1].equalsIgnoreCase("remove")) {
+            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove")) {
 
                 for (String s : areas) {
-                    if (s.toLowerCase().startsWith(args[2].toLowerCase())) {
+                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                         fregion.add(s);
                     }
                 }

@@ -43,7 +43,7 @@ public class EnvironmentList extends EnvironmentCommand {
         }
 
         FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
-                .addSimple(ChatColor.GREEN + "Project opens (click for details)" + "\n");
+                .addSimple(ChatColor.GREEN + "Regions " + "\n");
         List<FancyMessage> messages = new ArrayList<>();
 
         for (String region : PluginData.AllRegions.keySet()) {
