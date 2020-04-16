@@ -11,5 +11,11 @@ commands:
     aliases: [env,en]
     description: Region command
 permissions:
-  environment.admin:
+    env.user:
+            description: Permission for users
+    env.staff:
             default: op
+            description: Allows to use all the commands of this plugin[Guide+]
+    env.reload:
+            description: Allows to reload
+ #Copyright (C) 2020 MCME (Fraspace5)
