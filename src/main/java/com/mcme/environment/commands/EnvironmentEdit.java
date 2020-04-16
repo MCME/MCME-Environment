@@ -58,7 +58,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + toTicks(args[3]) + "', WHERE uuid = '" + pl.getUniqueId().toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + toTicks(args[3]) + "', WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -76,7 +76,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + toTicks(args[3]) + "', WHERE uuid = '" + pl.getUniqueId().toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + toTicks(args[3]) + "', WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
