@@ -149,23 +149,28 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onEnterRegion(EnterRegionEvent e) {
+        new BukkitRunnable() {
 
-        RegionData re = PluginData.AllRegions.get(e.getNameRegion());
+            @Override
+            public void run() {
+                RegionData re = PluginData.AllRegions.get(e.getNameRegion());
 
-        if (re.weather.equalsIgnoreCase("rain")) {
-            e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
+                if (re.weather.equalsIgnoreCase("rain")) {
+                    e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
-        } else {
-            e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
-        }
+                } else {
+                    e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
+                }
 
-        if (re.thunder) {
-            EnvChange.spawnThunderstorm(e.getPlayer());
+                if (re.thunder) {
+                    EnvChange.spawnThunderstorm(e.getPlayer());
 
-        }
+                }
 
-        EnvChange.changePlayerTime(e.getPlayer(), Integer.parseInt(re.time));
+                EnvChange.changePlayerTime(e.getPlayer(), Integer.parseInt(re.time));
 
+            }
+
+        }.runTaskAsynchronously(Environment.getPluginInstance());
     }
-
 }
