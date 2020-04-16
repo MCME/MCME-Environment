@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 MCME (Fraspace5)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mcme.environment.data;
 
@@ -39,7 +50,7 @@ public class PluginData {
         messageUtil.setPluginName("Environment-MCME");
     }
     /**
-     *  String and regions data
+     * String and regions data
      */
     @Getter
     public static Map<String, RegionData> AllRegions = new HashMap<>();
@@ -47,6 +58,10 @@ public class PluginData {
     @Getter
     public static Map<UUID, Boolean> boolPlayers = new HashMap<>();
 
+    @Getter
+    public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
+
+    //IdRegion, Players
     /**
      * It reload all regions from database
      */
@@ -86,6 +101,11 @@ public class PluginData {
                                 CuboidRegion rr = new CuboidRegion(loc, minCorner, maxCorner);
 
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time")));
+                                if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
+                                    List<UUID> s = new ArrayList<>();
+
+                                    informedRegion.put(UUID.fromString(r.getString("idregion")), s);
+                                }
 
                             } else {
 
@@ -100,7 +120,11 @@ public class PluginData {
 
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time")));
+                                if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
+                                    List<UUID> s = new ArrayList<>();
 
+                                    informedRegion.put(UUID.fromString(r.getString("idregion")), s);
+                                }
                             }
 
                         } while (r.next());

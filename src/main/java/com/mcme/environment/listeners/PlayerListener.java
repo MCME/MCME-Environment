@@ -1,22 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 MCME (Fraspace5)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mcme.environment.listeners;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
+
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcme.environment.event.EnterRegionEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.WeatherType;
@@ -132,10 +139,18 @@ public class PlayerListener implements Listener {
 
                 for (String region : PluginData.AllRegions.keySet()) {
 
-                    if (PluginData.AllRegions.get(region).region.isInside(e.getPlayer().getLocation())) {
+                    if (PluginData.AllRegions.get(region).region.isInside(e.getPlayer().getLocation())
+                            && !PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).contains(e.getPlayer().getUniqueId())) {
 
                         //trigger event 
                         EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), region);
+                        for (String r : PluginData.AllRegions.keySet()) {
+                            if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
+                                PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                            }
+                        }
+
+                        PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).add(e.getPlayer().getUniqueId());
 
                     }
 
