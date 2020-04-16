@@ -38,12 +38,18 @@ public class PluginData {
     static {
         messageUtil.setPluginName("Environment-MCME");
     }
-
+    /**
+     *  String and regions data
+     */
     @Getter
     public static Map<String, RegionData> AllRegions = new HashMap<>();
+
     @Getter
     public static Map<UUID, Boolean> boolPlayers = new HashMap<>();
 
+    /**
+     * It reload all regions from database
+     */
     public static void loadRegions() {
         AllRegions.clear();
 

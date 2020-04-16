@@ -31,6 +31,19 @@ public class RegionData {
 
     public final String time;
 
+    /**
+     *
+     * Create a new region data 
+     * 
+     * @param namem Name of the region
+     * @param idregion Id of the region
+     * @param rn The PluginUtil region
+     * @param sr The name of the server as in BungeeCord file
+     * @param t Type of the region (Cuboid or Prismoid)
+     * @param we Weather type (rain|sun)
+     * @param th Thunder boolean
+     * @param tm Time in ticks
+     */
     public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm) {
 
         name = namem;

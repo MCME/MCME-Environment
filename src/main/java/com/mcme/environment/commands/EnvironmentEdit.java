@@ -38,7 +38,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
         rain = false;
         sun = false;
         thunder = false;
-     
+
         if (PluginData.AllRegions.containsKey(args[0])) {
 
             if (args[1].equalsIgnoreCase("rain")) {
@@ -118,17 +118,28 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     }
 
-    //14:50   time in 24hours
+    /**
+     *
+     * @param s The string of the 24h times to be converted to ticks
+     * @return
+     */
     private Integer toTicks(String s) {
 
         String[] l = unserialize(s);
         int minute = 1200;
         int hour = 72000;
+        if (l[1].substring(0, 0).equals("0")) {
+            int hours = Integer.parseInt(l[0].substring(1)) * hour;
+            int minutes = Integer.parseInt(l[1]) * minute;
+            System.out.println(minutes + hours);
+            return (minutes + hours);
+        } else {
+            int hours = Integer.parseInt(l[0]) * hour;
+            int minutes = Integer.parseInt(l[1]) * minute;
+            System.out.println(minutes + hours);
+            return (minutes + hours);
 
-        int minutes = Integer.getInteger(l[1]) * minute;
-        int hours = Integer.getInteger(l[0]) * hour;
-
-        return minutes + hours;
+        }
 
     }
 
