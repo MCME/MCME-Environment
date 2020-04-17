@@ -63,7 +63,7 @@ public class EnvChange {
 
             Boolean result = random.next();
             if (result) {
-                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0, 0);
+                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.5F, 1.0F);
             }
         }
 
