@@ -45,10 +45,11 @@ public class EnvChange {
         PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         thunder.getIntegers().
                 write(0, randomReturn()).
-                write(1, 1).
-                write(2, (int) pl.getLocation().getX()).
-                write(3, (int) pl.getLocation().getY()).
-                write(4, (int) pl.getLocation().getZ());
+                write(1, 1);
+        thunder.getDoubles().
+                write(2, pl.getLocation().getX()).
+                write(3, pl.getLocation().getY()).
+                write(4, pl.getLocation().getZ());
 
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
@@ -58,12 +59,12 @@ public class EnvChange {
 
         if (bol) {
             RandomCollection<Boolean> random = new RandomCollection<>();
-            random.add(0.05, true);
-            random.add(0.95, false);
+            random.add(0.2, true);
+            random.add(0.8, false);
 
             Boolean result = random.next();
             if (result) {
-                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.5F, 1.0F);
+                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
             }
         }
 
