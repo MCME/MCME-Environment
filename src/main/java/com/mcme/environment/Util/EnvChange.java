@@ -59,12 +59,12 @@ public class EnvChange {
 
         if (bol) {
             RandomCollection<Boolean> random = new RandomCollection<>();
-            random.add(0.05, true);
-            random.add(0.95, false);
+            random.add(0.2, true);
+            random.add(0.8, false);
 
             Boolean result = random.next();
             if (result) {
-                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.5F, 1.0F);
+                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
             }
         }
 
