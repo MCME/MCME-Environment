@@ -133,6 +133,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
 
+        String s = "";
+
         if (PluginData.boolPlayers.containsKey(e.getPlayer().getUniqueId())) {
 
             if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
@@ -142,16 +144,20 @@ public class PlayerListener implements Listener {
                     if (PluginData.AllRegions.get(region).region.isInside(e.getPlayer().getLocation())
                             && !PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).contains(e.getPlayer().getUniqueId())) {
 
-                        //trigger event 
-                        EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), region);
-                        Bukkit.getPluginManager().callEvent(event);
                         for (String r : PluginData.AllRegions.keySet()) {
                             if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
                                 PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                                s = r;
                             }
                         }
 
                         PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).add(e.getPlayer().getUniqueId());
+                        if (!PluginData.AllRegions.get(region).thunder && PluginData.AllRegions.get(s).thunder) {
+                            PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
+                        }
+                        //trigger event 
+                        EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), region);
+                        Bukkit.getPluginManager().callEvent(event);
 
                     }
 
@@ -182,7 +188,7 @@ public class PlayerListener implements Listener {
                 public void run() {
 
                     if (!PluginData.EntityPlayer.contains(e.getPlayer().getUniqueId())) {
-                        EnvChange.spawnThunderstorm(e.getPlayer());
+                        EnvChange.spawnThunderstorm(e.getPlayer(),true);
                     } else {
                         cancel();
                         PluginData.EntityPlayer.remove(e.getPlayer().getUniqueId());
@@ -190,10 +196,11 @@ public class PlayerListener implements Listener {
 
                 }
 
-            }.runTaskTimerAsynchronously(Environment.getPluginInstance(), 20L, 30L);
+            }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
         }
 
         EnvChange.changePlayerTime(e.getPlayer(), Integer.parseInt(re.time));
     }
+
 }

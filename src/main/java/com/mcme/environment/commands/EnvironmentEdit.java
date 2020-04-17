@@ -63,13 +63,13 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-
+            System.out.println(pl.getPlayerTime());
             if (rain) {
                 new BukkitRunnable() {
-
+                //removed toTicks()
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + toTicks(args[3]) + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -87,7 +87,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + toTicks(args[3]) + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -134,7 +134,8 @@ public class EnvironmentEdit extends EnvironmentCommand {
      * @param s The string of the 24h times to be converted to ticks
      * @return
      */
-    private Integer toTicks(String s) {
+    /*
+     private Integer toTicks(String s) {
 
         String[] l = unserialize(s);
         int minute = 1200;
@@ -160,4 +161,5 @@ public class EnvironmentEdit extends EnvironmentCommand {
         return dataArray;
 
     }
+     */
 }
