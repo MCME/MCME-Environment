@@ -24,6 +24,7 @@ import com.mcme.environment.data.PluginData;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,9 +39,9 @@ public class EnvChange {
      * It spawn a thunderstorm with the player in the center
      *
      * @param pl Player
-     *
+     * @param bol Sounds on
      */
-    public static void spawnThunderstorm(Player pl) {
+    public static void spawnThunderstorm(Player pl, boolean bol) {
         PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         thunder.getIntegers().
                 write(0, randomReturn()).
@@ -54,6 +55,18 @@ public class EnvChange {
         } catch (InvocationTargetException es) {
             es.printStackTrace();
         }
+
+        if (bol) {
+            RandomCollection<Boolean> random = new RandomCollection<>();
+            random.add(0.05, true);
+            random.add(0.95, false);
+
+            Boolean result = random.next();
+            if (result) {
+                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0, 0);
+            }
+        }
+
     }
 
     private static int randomReturn() {
@@ -71,7 +84,7 @@ public class EnvChange {
      * @param time Time in ticks
      */
     public static void changePlayerTime(Player pl, int time) {
-
+// 10 18
         if (pl.getPlayerTime() <= time) {
             new BukkitRunnable() {
 
@@ -80,8 +93,10 @@ public class EnvChange {
                     if (time <= pl.getPlayerTime()) {
 
                         cancel();
+
                     }
-                    pl.setPlayerTime(pl.getPlayerTime() + 50, false);
+                    System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+                    pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
             }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
@@ -96,15 +111,15 @@ public class EnvChange {
 
                         pl.setPlayerTime(0, false);
                     } else if (pl.getPlayerTime() > time && pl.getPlayerTime() < 23900) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 50, false);
+                        pl.setPlayerTime(pl.getPlayerTime() + 20, false);
                     } else if (pl.getPlayerTime() < i) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 50, false);
+                        pl.setPlayerTime(pl.getPlayerTime() + 20, false);
                     } else if (pl.getPlayerTime() >= i && pl.getPlayerTime() <= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
                     }
-
-                    pl.setPlayerTime(pl.getPlayerTime() + 50, false);
+                    System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+                    pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
             }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
