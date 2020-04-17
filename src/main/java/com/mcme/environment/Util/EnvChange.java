@@ -47,9 +47,9 @@ public class EnvChange {
                 write(0, randomReturn()).
                 write(1, 1);
         thunder.getDoubles().
-                write(2, pl.getLocation().getX()).
-                write(3, pl.getLocation().getY()).
-                write(4, pl.getLocation().getZ());
+                write(0, pl.getLocation().getX()).
+                write(1, pl.getLocation().getY()).
+                write(2, pl.getLocation().getZ());
 
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
