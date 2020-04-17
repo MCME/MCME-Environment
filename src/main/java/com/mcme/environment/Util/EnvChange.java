@@ -96,7 +96,7 @@ public class EnvChange {
                         cancel();
 
                     }
-                    System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+           //         System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
@@ -119,7 +119,7 @@ public class EnvChange {
                         pl.setPlayerTime(time, false);
                         cancel();
                     }
-                    System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+              //      System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
