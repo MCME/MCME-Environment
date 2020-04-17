@@ -45,10 +45,11 @@ public class EnvChange {
         PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
         thunder.getIntegers().
                 write(0, randomReturn()).
-                write(1, 1).
-                write(2, (int) pl.getLocation().getX()).
-                write(3, (int) pl.getLocation().getY()).
-                write(4, (int) pl.getLocation().getZ());
+                write(1, 1);
+        thunder.getDoubles().
+                write(2, pl.getLocation().getX()).
+                write(3, pl.getLocation().getY()).
+                write(4, pl.getLocation().getZ());
 
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
