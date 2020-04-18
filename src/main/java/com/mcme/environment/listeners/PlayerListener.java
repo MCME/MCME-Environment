@@ -188,7 +188,7 @@ public class PlayerListener implements Listener {
                 public void run() {
 
                     if (!PluginData.EntityPlayer.contains(e.getPlayer().getUniqueId())) {
-                        EnvChange.spawnThunderstorm(e.getPlayer(),true);
+                        EnvChange.spawnThunderstorm(e.getPlayer(),true,re.region);
                     } else {
                         cancel();
                         PluginData.EntityPlayer.remove(e.getPlayer().getUniqueId());

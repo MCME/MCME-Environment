@@ -66,7 +66,7 @@ public class PluginData {
 
     //IdRegion, Players
     /**
-     * It reload all regions from database
+     * It reloads all regions from database
      */
     public static void loadRegions() {
         AllRegions.clear();
