@@ -15,6 +15,7 @@ import com.mcmiddleearth.pluginutil.region.Region;
 import static java.lang.Long.parseLong;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 /**
@@ -41,7 +42,7 @@ public class EnvironmentDetails extends EnvironmentCommand {
     protected void execute(final CommandSender cs, final String... args) {
 
         if (PluginData.AllRegions.containsKey(args[0])) {
-
+            Player pl = (Player) cs;
             RegionData redata = PluginData.AllRegions.get(args[0]);
 
             weight = redata.weight;
@@ -54,12 +55,18 @@ public class EnvironmentDetails extends EnvironmentCommand {
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtil());
 
             message.addSimple(ChatColor.GREEN + "Name of the region :" + ChatColor.BLUE + args[0] + "\n");
-            message.addSimple(ChatColor.AQUA + "Weather type: " + ChatColor.BLUE + weather.toUpperCase() + "\n");
+
+            if (weather != "default") {
+                message.addSimple(ChatColor.AQUA + "Weather type: " + ChatColor.BLUE + weather.toUpperCase() + "\n");
+            }
+
             if (thunder) {
                 message.addTooltipped(ChatColor.BLUE.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 40% of thunderbolt ");
 
             }
-            message.addSimple(ChatColor.AQUA + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
+            if (time != "default") {
+                message.addSimple(ChatColor.AQUA + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
+            }
             message.addSimple(ChatColor.AQUA + "Region data: \n");
             message.addSimple(ChatColor.AQUA + "Type: " + ChatColor.BLUE + type + "\n");
             message.addSimple(ChatColor.AQUA + "Weight: " + ChatColor.BLUE + weight + "\n");
@@ -69,6 +76,7 @@ public class EnvironmentDetails extends EnvironmentCommand {
                 message.addSimple(ChatColor.AQUA + "Min " + ChatColor.BLUE + min.getBlockX() + "," + min.getBlockY() + "," + min.getBlockZ() + "\n");
                 message.addSimple(ChatColor.AQUA + "Max " + ChatColor.BLUE + max.getBlockX() + "," + max.getBlockY() + "," + max.getBlockZ() + "\n");
             }
+            message.send(pl);
 
         } else {
             sendNo(cs);
