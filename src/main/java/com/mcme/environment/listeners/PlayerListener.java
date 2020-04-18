@@ -23,6 +23,9 @@ import com.mcme.environment.data.RegionData;
 import com.mcme.environment.event.EnterRegionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -134,6 +137,7 @@ public class PlayerListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
 
         String s = "";
+        List<String> regions = new ArrayList<>();
 
         if (PluginData.boolPlayers.containsKey(e.getPlayer().getUniqueId())) {
 
@@ -143,27 +147,36 @@ public class PlayerListener implements Listener {
 
                     if (PluginData.AllRegions.get(region).region.isInside(e.getPlayer().getLocation())
                             && !PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).contains(e.getPlayer().getUniqueId())) {
-
-                        for (String r : PluginData.AllRegions.keySet()) {
-                            if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
-                                PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
-                                s = r;
-                            }
-                        }
-
-                        PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).add(e.getPlayer().getUniqueId());
-                        if (!PluginData.AllRegions.get(region).thunder && PluginData.AllRegions.get(s).thunder) {
-                            PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
-                        }
-                        //trigger event 
-                        EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), region);
-                        Bukkit.getPluginManager().callEvent(event);
+                        regions.add(region);
 
                     }
 
                 }
 
             }
+
+        }
+
+        if (!regions.isEmpty()) {
+            String weightMax = regions.get(0);
+
+            for (String re : regions) {
+                if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
+                    weightMax = re;
+                }
+            }
+
+            for (String r : PluginData.AllRegions.keySet()) {
+                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
+                    PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                }
+            }
+            PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
+            if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(weightMax).thunder) {
+                PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
+            }
+            EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
+            Bukkit.getPluginManager().callEvent(event);
 
         }
 
@@ -188,7 +201,7 @@ public class PlayerListener implements Listener {
                 public void run() {
 
                     if (!PluginData.EntityPlayer.contains(e.getPlayer().getUniqueId())) {
-                        EnvChange.spawnThunderstorm(e.getPlayer(),true);
+                        EnvChange.spawnThunderstorm(e.getPlayer(), true, re.region);
                     } else {
                         cancel();
                         PluginData.EntityPlayer.remove(e.getPlayer().getUniqueId());

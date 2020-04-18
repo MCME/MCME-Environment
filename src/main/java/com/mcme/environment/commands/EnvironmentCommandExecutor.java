@@ -51,6 +51,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("on", new EnvironmentOn(permissionStaff, permission));
         addCommandHandler("off", new EnvironmentOff(permissionStaff, permission));
         addCommandHandler("edit", new EnvironmentEdit(permissionStaff));
+        addCommandHandler("details", new EnvironmentDetails(permissionStaff));
     }
 
     @Override

@@ -21,13 +21,21 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
+import com.mcmiddleearth.pluginutil.region.CuboidRegion;
+import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
+import com.mcmiddleearth.pluginutil.region.Region;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -36,25 +44,41 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnvChange {
 
     /**
-     * It spawn a thunderstorm with the player in the center
+     * It spawn a thunderstorm 40% thunder 20% sound
      *
      * @param pl Player
      * @param bol Sounds on
+     * @param reg
+     * @param world
      */
-    public static void spawnThunderstorm(Player pl, boolean bol) {
-        PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
-        thunder.getIntegers().
-                write(0, randomReturn()).
-                write(1, 1);
-        thunder.getDoubles().
-                write(0, pl.getLocation().getX()).
-                write(1, pl.getLocation().getY()).
-                write(2, pl.getLocation().getZ());
+    public static void spawnThunderstorm(Player pl, boolean bol, Region reg) {
+        RandomCollection<Boolean> r = new RandomCollection<>();
+        r.add(0.4, true);
+        r.add(0.6, false);
+        Boolean result1 = r.next();
 
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
-        } catch (InvocationTargetException es) {
-            es.printStackTrace();
+        if (result1) {
+            Location l = pl.getLocation();
+            String w = reg.getWorld().getName();
+            if (reg instanceof CuboidRegion) {
+                l = randomLocCuboid(reg, w);
+            } else if (reg instanceof PrismoidRegion) {
+                l = randomLocPrismoid(reg, w);
+            }
+            PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
+            thunder.getIntegers().
+                    write(0, randomReturn()).
+                    write(1, 1);
+            thunder.getDoubles().
+                    write(0, pl.getLocation().getX()).
+                    write(1, pl.getLocation().getY()).
+                    write(2, pl.getLocation().getZ());
+
+            try {
+                ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
+            } catch (InvocationTargetException es) {
+                es.printStackTrace();
+            }
         }
 
         if (bol) {
@@ -86,7 +110,13 @@ public class EnvChange {
      */
     public static void changePlayerTime(Player pl, int time) {
 // 10 18
-        if (pl.getPlayerTime() <= time) {
+        Long playertime = pl.getPlayerTime();
+
+        Double ptime = playertime.doubleValue() / 24000.0;
+        int ptime1 = (int) Math.round(ptime);
+        ptime = pl.getPlayerTime() - (ptime1 * 24000.0);
+        pl.setPlayerTime(ptime.longValue(), false);
+        if (ptime.longValue() <= time) {
             new BukkitRunnable() {
 
                 @Override
@@ -96,11 +126,11 @@ public class EnvChange {
                         cancel();
 
                     }
-           //         System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+                    //         System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 5L, 5L);
 
         } else {
             new BukkitRunnable() {
@@ -119,11 +149,11 @@ public class EnvChange {
                         pl.setPlayerTime(time, false);
                         cancel();
                     }
-              //      System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
+                    //      System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 5L, 5L);
         }
 
     }
@@ -132,6 +162,73 @@ public class EnvChange {
         pl.setPlayerWeather(WeatherType.CLEAR);
         pl.setPlayerTime(12000, false);
         PluginData.EntityPlayer.add(pl.getUniqueId());
+    }
+
+    private static Location randomLocCuboid(Region r, String world) {
+        if (r instanceof CuboidRegion) {
+            Vector min = ((CuboidRegion) r).getMinCorner();
+            Vector max = ((CuboidRegion) r).getMaxCorner();
+
+            Location range = new Location(Bukkit.getWorld(world), Math.abs(max.getX() - min.getX()), min.getY(), Math.abs(max.getZ() - min.getZ()));
+            return new Location(Bukkit.getWorld(world), (Math.random() * range.getX()) + (min.getX() <= max.getX() ? min.getX() : max.getX()), range.getY(), (Math.random() * range.getZ()) + (min.getZ() <= max.getZ() ? min.getZ() : max.getZ()));
+
+        } else {
+            return null;
+        }
+
+    }
+
+    private static Location randomLocPrismoid(Region r, String world) {
+        if (r instanceof PrismoidRegion) {
+            List<Integer> X = Arrays.asList(((PrismoidRegion) r).getXPoints());
+            List<Integer> Z = Arrays.asList(((PrismoidRegion) r).getZPoints());
+
+            Integer minX = getMin(X);
+            Integer minZ = getMin(Z);
+            Integer maxZ = getMax(Z);
+            Integer maxX = getMax(X);
+            Location range = new Location(Bukkit.getWorld(world), Math.abs(maxX - minX), ((PrismoidRegion) r).getMinY(), Math.abs(maxZ - minZ));
+            Location l = new Location(Bukkit.getWorld(world), (Math.random() * range.getX()) + (minX <= maxX ? minX : maxX), range.getY(), (Math.random() * range.getZ()) + (minZ <= maxZ ? minZ : maxZ));
+            do {
+
+                l = new Location(Bukkit.getWorld(world), (Math.random() * range.getX()) + (minX <= maxX ? minX : maxX), range.getY(), (Math.random() * range.getZ()) + (minZ <= maxZ ? minZ : maxZ));
+
+            } while (r.isInside(l));
+
+            return l;
+
+        } else {
+            return null;
+        }
+
+    }
+
+    public static Integer getMin(List<Integer> list) {
+
+        Integer min = Integer.MAX_VALUE;
+
+        for (Integer i : list) {
+
+            if (min > i) {
+                min = i;
+            }
+        }
+
+        return min;
+    }
+
+    public static Integer getMax(List<Integer> list) {
+
+        Integer max = Integer.MIN_VALUE;
+
+        for (Integer i : list) {
+
+            if (max < i) {
+                max = i;
+            }
+        }
+
+        return max;
     }
 
 }
