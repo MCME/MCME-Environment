@@ -42,10 +42,12 @@ public class RegionData {
 
     public final String time;
 
+    public final Integer weight;
+
     /**
      *
-     * Create a new region data 
-     * 
+     * Create a new region data
+     *
      * @param namem Name of the region
      * @param idregion Id of the region
      * @param rn The PluginUtil region
@@ -54,8 +56,9 @@ public class RegionData {
      * @param we Weather type (rain|sun)
      * @param th Thunder boolean
      * @param tm Time in ticks
+     * @param weg Weight of the region
      */
-    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm) {
+    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg) {
 
         name = namem;
 
@@ -72,6 +75,8 @@ public class RegionData {
         thunder = th;
 
         time = tm;
+
+        weight = weg;
 
     }
 

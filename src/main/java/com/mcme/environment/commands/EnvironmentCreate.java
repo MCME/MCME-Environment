@@ -33,6 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import static java.lang.Integer.parseInt;
 
 /**
  *
@@ -41,9 +42,9 @@ import org.bukkit.util.Vector;
 public class EnvironmentCreate extends EnvironmentCommand {
 
     public EnvironmentCreate(String... permissionNodes) {
-        super(1, true, permissionNodes);
+        super(2, true, permissionNodes);
         setShortDescription(": Create a new region");
-        setUsageDescription(" <areaName>: Create a new region");
+        setUsageDescription(" <areaName> <weight>: Create a new region");
     }
 //environment create nameRegion 
 
@@ -55,6 +56,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
         Player pl = (Player) cs;
         final Location loc = pl.getLocation();
         if (!PluginData.AllRegions.containsKey(args[0])) {
+
             try {
                 WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 
@@ -69,17 +71,20 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                         @Override
                         public void run() {
-
-                            PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
-
-                            String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default' ) ;";
                             try {
+                                PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
+
+                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','none','" + (parseInt(args[1])) + "' ) ;";
+
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
                                 sendDone(cs);
-                            } catch (SQLException ex) {
-                                Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException | NumberFormatException ex) {
+                                if (ex instanceof NumberFormatException) {
+                                    PluginData.getMessageUtil().sendErrorMessage(cs, "It should be an integer number");
+                                }
+
                             }
 
                         }
@@ -92,20 +97,22 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                         @Override
                         public void run() {
-
-                            CuboidRegion r = new CuboidRegion(loc, (com.sk89q.worldedit.regions.CuboidRegion) weRegion);
-                            Vector minCorner = r.getMinCorner();
-                            Vector maxCorner = r.getMaxCorner();
-
-                            String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default' ) ;";
-
                             try {
+                                CuboidRegion r = new CuboidRegion(loc, (com.sk89q.worldedit.regions.CuboidRegion) weRegion);
+                                Vector minCorner = r.getMinCorner();
+                                Vector maxCorner = r.getMaxCorner();
+
+                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','none','" + (parseInt(args[1])) + "' ) ;";
+
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
                                 sendDone(cs);
-                            } catch (SQLException ex) {
-                                Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException | NumberFormatException ex) {
+                                if (ex instanceof NumberFormatException) {
+                                    PluginData.getMessageUtil().sendErrorMessage(cs, "It should be an integer number");
+                                }
+
                             }
 
                         }

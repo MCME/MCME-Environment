@@ -164,8 +164,10 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `ymin` INT NOT NULL,\n"
                             + "  `ymax` INT NOT NULL,\n"
                             + "  `weather` VARCHAR(45),\n"
+                            + "  `sound` VARCHAR(45),\n"
                             + "  `thunders` BOOLEAN,\n"
                             + "  `location` LONGTEXT NOT NULL,\n"
+                            + "  `weight` INT,\n"
                             + "  `time` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
                             + "  PRIMARY KEY (`idregion`));";
