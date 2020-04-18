@@ -167,12 +167,16 @@ public class PlayerListener implements Listener {
             }
 
             for (String r : PluginData.AllRegions.keySet()) {
-                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
+                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equalsIgnoreCase(weightMax)) {
                     PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                    s = r;
                 }
             }
-            PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
-            if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(weightMax).thunder) {
+            if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
+                PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
+            }
+
+            if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
                 PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
             }
             EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);

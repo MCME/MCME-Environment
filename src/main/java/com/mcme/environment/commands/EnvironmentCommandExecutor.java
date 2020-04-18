@@ -83,6 +83,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("list");
             arguments.add("remove");
             arguments.add("create");
+            arguments.add("details");
         }
         List<String> Flist = new ArrayList<String>();
         List<String> areas = new ArrayList<String>();
@@ -102,7 +103,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             }
             return Flist;
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove")) {
+            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details")) {
 
                 for (String s : areas) {
                     if (s.toLowerCase().startsWith(args[1].toLowerCase())) {

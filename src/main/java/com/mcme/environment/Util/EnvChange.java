@@ -44,7 +44,7 @@ import org.bukkit.util.Vector;
 public class EnvChange {
 
     /**
-     * It spawn a thunderstorm 40% thunder 20% sound
+     * It spawn a thunderstorm 20% thunder 15% sound
      *
      * @param pl Player
      * @param bol Sounds on
@@ -70,9 +70,9 @@ public class EnvChange {
                     write(0, randomReturn()).
                     write(1, 1);
             thunder.getDoubles().
-                    write(0, pl.getLocation().getX()).
-                    write(1, pl.getLocation().getY()).
-                    write(2, pl.getLocation().getZ());
+                    write(0, l.getX()).
+                    write(1, l.getY()).
+                    write(2, l.getZ());
 
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
@@ -113,10 +113,13 @@ public class EnvChange {
         Long playertime = pl.getPlayerTime();
 
         Double ptime = playertime.doubleValue() / 24000.0;
-        int ptime1 = (int) Math.round(ptime);
-        ptime = pl.getPlayerTime() - (ptime1 * 24000.0);
+        long ptime1 =  Math.round(ptime);
+        double pp = ptime1 * 24000.0;
+        ptime = pl.getPlayerTime() - pp;
         pl.setPlayerTime(ptime.longValue(), false);
-        if (ptime.longValue() <= time) {
+        
+        System.out.println("ptime "+ ptime +" ptime long value "+ ptime.longValue()+ " pp "+ pp);
+        if (pl.getPlayerTime() <= time) {
             new BukkitRunnable() {
 
                 @Override
@@ -130,7 +133,7 @@ public class EnvChange {
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 5L, 5L);
+            }.runTaskTimer(Environment.getPluginInstance(), 1L, 1L);
 
         } else {
             new BukkitRunnable() {
@@ -153,7 +156,7 @@ public class EnvChange {
                     pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 5L, 5L);
+            }.runTaskTimer(Environment.getPluginInstance(), 1L, 1L);
         }
 
     }
