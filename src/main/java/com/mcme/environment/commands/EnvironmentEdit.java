@@ -32,9 +32,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnvironmentEdit extends EnvironmentCommand {
 
     public EnvironmentEdit(String... permissionNodes) {
-        super(4, true, permissionNodes);
+        super(5, true, permissionNodes);
         setShortDescription(": Edit a region ");
-        setUsageDescription(": With this command you can edit a region, then set his weather and time");
+        setUsageDescription("<nameRegion> rain|sun true|false time sound: With this command you can edit a region, then set his weather and time, and sound");
     }
 //environment edit nameRegion rain|sun true|false time
     //               0
@@ -42,6 +42,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
     private boolean rain;
     private boolean sun;
     private boolean thunder;
+    private String sound;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -63,13 +64,20 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
+            if (args[4].equalsIgnoreCase("bird")) {
+                sound = "bird";
+
+            } else {
+                sound = "none";
+            }
+
             System.out.println(pl.getPlayerTime());
             if (rain) {
                 new BukkitRunnable() {
-                //removed toTicks()
+                    //removed toTicks()
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "', sound = '" + sound + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -87,7 +95,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "', sound = '" + sound + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -114,7 +122,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
     }
 
     private void sendNo(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This region doesn't exists.Type before /environment create areaName");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "This region doesn't exist.Type before /environment create areaName");
 
     }
 

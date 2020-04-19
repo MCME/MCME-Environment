@@ -117,50 +117,59 @@ public class EnvChange {
         double pp = ptime1 * 24000.0;
         ptime = pl.getPlayerTime() - pp;
         pl.setPlayerTime(ptime.longValue(), false);
-
+        Long startTime = ptime.longValue();
         System.out.println("ptime " + ptime + " ptime long value " + ptime.longValue() + " pp " + pp + " time " + time);
-        if (pl.getPlayerTime() <= time) {
+
+        if (startTime <= time) {
             System.out.println("1 scelto ");
+
             new BukkitRunnable() {
+                long effectiveTime = startTime;
 
                 @Override
                 public void run() {
-                    if (pl.getPlayerTime() >= time) {
+
+                    if (effectiveTime >= time) {
                         cancel();
                         System.out.println("trigger0 " + (pl.getPlayerTime()) + " " + time);
                     }
-                    //         System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
 
-                    pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
-                    System.out.println("vediamo il playertime " + (pl.getPlayerTime() + 20));
+                    effectiveTime += 20;
+                    pl.setPlayerTime(effectiveTime, false);
+                    System.out.println("vediamo il playertime " + effectiveTime);
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 20L, 20L);
+            }.runTaskTimer(Environment.getPluginInstance(), 20L, 10L);
 
         } else {
             System.out.println("2 scelto ");
             new BukkitRunnable() {
+                long effectiveTime = startTime;
 
                 @Override
                 public void run() {
                     Long i = time - 60;
-                    if (pl.getPlayerTime() >= 23900 && pl.getPlayerTime() <= 24000) {
+                    if (effectiveTime >= 23900 && effectiveTime <= 24000) {
 
                         pl.setPlayerTime(0L, false);
-                        System.out.println("trigger1 " + (pl.getPlayerTime()));
-                    } else if (pl.getPlayerTime() > time && pl.getPlayerTime() < 23900) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
-                        System.out.println("trigger2 " + (pl.getPlayerTime()));
-                    } else if (pl.getPlayerTime() < i) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
-                        System.out.println("trigger3 " + (pl.getPlayerTime()));
-                    } else if (pl.getPlayerTime() >= i && pl.getPlayerTime() <= time) {
+                        effectiveTime = 0L;
+                        System.out.println("trigger1 " + (effectiveTime));
+                    } else if (effectiveTime > time && effectiveTime < 23900) {
+                        effectiveTime += 20;
+                        pl.setPlayerTime(effectiveTime, false);
+                        System.out.println("trigger2 " + (effectiveTime));
+                    } else if (effectiveTime < i) {
+                        effectiveTime += 20;
+                        pl.setPlayerTime(effectiveTime, false);
+                        System.out.println("trigger3 " + (effectiveTime));
+                    } else if (effectiveTime >= i && effectiveTime <= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
-                        System.out.println("trigger4(cancel) " + (pl.getPlayerTime()));
+                        System.out.println("trigger4(cancel) " + (effectiveTime));
+                    } else {
+                        effectiveTime += 20;
+                        pl.setPlayerTime(effectiveTime, false);
                     }
-                    //      System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
-                    pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
-                    System.out.println("vediamo il playertime " + (pl.getPlayerTime() + 20));
+
                 }
             }.runTaskTimer(Environment.getPluginInstance(), 20L, 20L);
         }

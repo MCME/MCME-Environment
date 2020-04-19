@@ -43,6 +43,8 @@ public class RegionData {
     public final String time;
 
     public final Integer weight;
+    
+    public final String sound;
 
     /**
      *
@@ -57,8 +59,9 @@ public class RegionData {
      * @param th Thunder boolean
      * @param tm Time in ticks
      * @param weg Weight of the region
+     * @param snd Sound type
      */
-    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg) {
+    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg,String snd) {
 
         name = namem;
 
@@ -77,6 +80,8 @@ public class RegionData {
         time = tm;
 
         weight = weg;
+        
+        sound = snd;
 
     }
 

@@ -103,7 +103,7 @@ public class PluginData {
                                 
                                 CuboidRegion rr = new CuboidRegion(loc, minCorner, maxCorner);
                                 
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight")));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"),r.getString("sound")));
                                 if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
                                     List<UUID> s = new ArrayList<>();
                                     
@@ -122,7 +122,7 @@ public class PluginData {
                                 Location loc = new Location(Bukkit.getWorld(UUID.fromString(location[0])), parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
                                 
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight")));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"),r.getString("sound")));
                                 if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
                                     List<UUID> s = new ArrayList<>();
                                     

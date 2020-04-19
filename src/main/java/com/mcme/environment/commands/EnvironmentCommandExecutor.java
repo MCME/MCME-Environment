@@ -135,6 +135,16 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
 
                 return null;
             }
+        } else if (args.length == 5) {
+            if (args[0].equalsIgnoreCase("edit")) {
+
+                List<String> l = Arrays.asList("bird", "none");
+                return l;
+
+            } else {
+
+                return null;
+            }
         } else {
             return null;
         }

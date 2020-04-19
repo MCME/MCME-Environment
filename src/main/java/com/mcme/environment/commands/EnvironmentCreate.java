@@ -143,7 +143,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
     }
 
     private void sendAlready(CommandSender cs, String name) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "The region " + name + " !");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "The region " + name + " already exists!");
 
     }
 
