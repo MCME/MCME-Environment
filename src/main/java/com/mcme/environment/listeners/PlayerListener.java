@@ -205,10 +205,11 @@ public class PlayerListener implements Listener {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
         System.out.println("evento triggered");
+        
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
-        } else {
+        } else if (re.weather.equalsIgnoreCase("sun")) {
             e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
         }
 
@@ -230,9 +231,11 @@ public class PlayerListener implements Listener {
             }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
         }
-
-        EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
-
+        
+        if (!re.time.equalsIgnoreCase("default")) {
+            EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
+        }
+        
         if (!re.sound.equalsIgnoreCase("none")) {
             new BukkitRunnable() {
 

@@ -22,7 +22,7 @@ public class Sound {
         Boolean result = random.next();
         if (result) {
 
-            pl.playSound(pl.getLocation(), "minecraft:generic.tree.day", 0.7F, 1.0F);
+            pl.playSound(pl.getLocation(), "generic.tree.day", 0.7F, 1.0F);
 
         }
     }
