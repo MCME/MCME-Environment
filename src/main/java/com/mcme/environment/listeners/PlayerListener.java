@@ -156,6 +156,9 @@ public class PlayerListener implements Listener {
             }
 
         }
+        if (regions.isEmpty()) {
+
+        }
 
         if (!regions.isEmpty()) {
             String weightMax = regions.get(0);
@@ -184,10 +187,10 @@ public class PlayerListener implements Listener {
 
             if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
                 PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
-                EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
-                Bukkit.getPluginManager().callEvent(event);
-
             }
+
+            EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
+            Bukkit.getPluginManager().callEvent(event);
 
         }
 
