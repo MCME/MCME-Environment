@@ -33,7 +33,7 @@ public class EnvironmentOff extends EnvironmentCommand {
         setUsageDescription(": Your time and weather won't change along the fellowship path");
     }
 
-     @Override
+    @Override
     protected void execute(final CommandSender cs, final String... args) {
         Player pl = (Player) cs;
 
@@ -41,7 +41,7 @@ public class EnvironmentOff extends EnvironmentCommand {
             PluginData.boolPlayers.remove(pl.getUniqueId());
             PluginData.boolPlayers.put(pl.getUniqueId(), Boolean.FALSE);
             EnvChange.resetAll(pl);
-            
+            sendDone(cs);
         } else {
             sendAlready(cs);
         }
@@ -57,18 +57,5 @@ public class EnvironmentOff extends EnvironmentCommand {
         PluginData.getMessageUtil().sendErrorMessage(cs, "It's already off");
 
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }

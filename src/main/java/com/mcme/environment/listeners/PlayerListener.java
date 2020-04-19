@@ -36,6 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import com.mcme.environment.SoundPacket.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -141,49 +142,52 @@ public class PlayerListener implements Listener {
         String s = "";
         List<String> regions = new ArrayList<>();
 
-        if (PluginData.boolPlayers.containsKey(e.getPlayer().getUniqueId())) {
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
 
-            if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+            for (String region : PluginData.AllRegions.keySet()) {
 
-                for (String region : PluginData.AllRegions.keySet()) {
+                RegionData re = PluginData.AllRegions.get(region);
 
-                    if (PluginData.AllRegions.get(region).region.isInside(e.getPlayer().getLocation())
-                            && !PluginData.informedRegion.get(PluginData.AllRegions.get(region).idr).contains(e.getPlayer().getUniqueId())) {
-                        regions.add(region);
-
-                    }
-
+                if (re.region.isInside(e.getPlayer().getLocation())
+                        && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
+                    regions.add(region);
                 }
 
             }
 
         }
+        String weightMax = regions.get(0);
+
+        for (String re : regions) {
+            if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
+                weightMax = re;
+            }
+        }
+
+        for (String r : PluginData.AllRegions.keySet()) {
+            if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equals(weightMax)) {
+                PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                s = r;
+            }
+        }
 
         if (!regions.isEmpty()) {
-            String weightMax = regions.get(0);
-
-            for (String re : regions) {
-                if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
-                    weightMax = re;
-                }
-            }
-
-            for (String r : PluginData.AllRegions.keySet()) {
-                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
-                    PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
-                    s = r;
-                }
-            }
-            if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
-                PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
-            }
 
             if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
                 PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
+                
+            }
+            if (!PluginData.AllRegions.get(weightMax).sound.equalsIgnoreCase("none") && !PluginData.AllRegions.get(s).sound.equalsIgnoreCase(PluginData.AllRegions.get(weightMax).sound)) {
+                PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
+                
             }
 
-            EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
-            Bukkit.getPluginManager().callEvent(event);
+            if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
+                PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
+                EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
+                Bukkit.getPluginManager().callEvent(event);
+
+            }
 
         }
 
@@ -193,7 +197,7 @@ public class PlayerListener implements Listener {
     public void onEnterRegion(EnterRegionEvent e) {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
-
+        System.out.println("evento triggered");
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
@@ -221,6 +225,25 @@ public class PlayerListener implements Listener {
         }
 
         EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
+
+        if (!re.sound.equalsIgnoreCase("none")) {
+          new BukkitRunnable() {
+
+                @Override
+                public void run() {
+
+                    if (!PluginData.SoundPlayer.contains(e.getPlayer().getUniqueId())) {
+                        Sound.BirdSound(e.getPlayer());
+                    } else {
+                        cancel();
+                        PluginData.SoundPlayer.remove(e.getPlayer().getUniqueId());
+                    }
+
+                }
+
+            }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+        }
+
     }
 
 }
