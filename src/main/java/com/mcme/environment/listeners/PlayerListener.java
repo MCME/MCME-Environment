@@ -175,11 +175,14 @@ public class PlayerListener implements Listener {
                     s = r;
                 }
             }
+            
+            if (PluginData.AllRegions.containsKey(s)) {
+                if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
+                    PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
 
-            if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
-                PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
-
+                }
             }
+            
             if (!PluginData.AllRegions.get(weightMax).sound.equalsIgnoreCase("none") && !PluginData.AllRegions.get(s).sound.equalsIgnoreCase(PluginData.AllRegions.get(weightMax).sound)) {
                 PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
 
