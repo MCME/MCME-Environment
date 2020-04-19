@@ -21,6 +21,7 @@ import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcme.environment.event.EnterRegionEvent;
+import static java.lang.Long.parseLong;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class PlayerListener implements Listener {
         }.runTaskLater(Environment.getPluginInstance(), 150L);
 
         System.out.println("Env " + Environment.getNameserver());
+
         new BukkitRunnable() {
 
             @Override
@@ -167,7 +169,7 @@ public class PlayerListener implements Listener {
             }
 
             for (String r : PluginData.AllRegions.keySet()) {
-                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equalsIgnoreCase(weightMax)) {
+                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId())) {
                     PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
                     s = r;
                 }
@@ -179,6 +181,7 @@ public class PlayerListener implements Listener {
             if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
                 PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
             }
+
             EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
             Bukkit.getPluginManager().callEvent(event);
 
@@ -217,7 +220,7 @@ public class PlayerListener implements Listener {
 
         }
 
-        EnvChange.changePlayerTime(e.getPlayer(), Integer.parseInt(re.time));
+        EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
     }
 
 }
