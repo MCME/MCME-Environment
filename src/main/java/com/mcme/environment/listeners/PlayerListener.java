@@ -36,6 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import com.mcme.environment.SoundPacket.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -174,6 +175,11 @@ public class PlayerListener implements Listener {
 
             if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
                 PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
+                
+            }
+            if (!PluginData.AllRegions.get(weightMax).sound.equalsIgnoreCase("none") && !PluginData.AllRegions.get(s).sound.equalsIgnoreCase(PluginData.AllRegions.get(weightMax).sound)) {
+                PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
+                
             }
 
             if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
@@ -221,7 +227,21 @@ public class PlayerListener implements Listener {
         EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
 
         if (!re.sound.equalsIgnoreCase("none")) {
-           //trigger sound
+          new BukkitRunnable() {
+
+                @Override
+                public void run() {
+
+                    if (!PluginData.SoundPlayer.contains(e.getPlayer().getUniqueId())) {
+                        Sound.BirdSound(e.getPlayer());
+                    } else {
+                        cancel();
+                        PluginData.SoundPlayer.remove(e.getPlayer().getUniqueId());
+                    }
+
+                }
+
+            }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
         }
 
     }

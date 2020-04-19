@@ -180,6 +180,7 @@ public class EnvChange {
         pl.setPlayerWeather(WeatherType.CLEAR);
         pl.setPlayerTime(12000, false);
         PluginData.EntityPlayer.add(pl.getUniqueId());
+        PluginData.SoundPlayer.add(pl.getUniqueId());
     }
 
     private static Location randomLocCuboid(Region r, String world) {

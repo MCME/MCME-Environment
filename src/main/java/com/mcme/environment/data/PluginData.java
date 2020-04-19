@@ -63,6 +63,8 @@ public class PluginData {
     
     @Getter
     public static List<UUID> EntityPlayer = new ArrayList<>();
+     @Getter
+    public static List<UUID> SoundPlayer = new ArrayList<>();
 
     //IdRegion, Players
     /**
