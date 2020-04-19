@@ -56,9 +56,9 @@ public class EnvChange {
         r.add(0.4, true);
         r.add(0.6, false);
         Boolean result1 = r.next();
-
+        Location l = pl.getLocation();
         if (result1) {
-            Location l = pl.getLocation();
+
             String w = reg.getWorld().getName();
             if (reg instanceof CuboidRegion) {
                 l = randomLocCuboid(reg, w);
@@ -88,7 +88,7 @@ public class EnvChange {
 
             Boolean result = random.next();
             if (result) {
-                pl.playSound(pl.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
+                pl.playSound(l, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
             }
         }
 
@@ -108,55 +108,61 @@ public class EnvChange {
      * @param pl Player
      * @param time Time in ticks
      */
-    public static void changePlayerTime(Player pl, int time) {
+    public static void changePlayerTime(Player pl, Long time) {
 // 10 18
         Long playertime = pl.getPlayerTime();
 
         Double ptime = playertime.doubleValue() / 24000.0;
-        long ptime1 =  Math.round(ptime);
+        long ptime1 = Math.round(ptime);
         double pp = ptime1 * 24000.0;
         ptime = pl.getPlayerTime() - pp;
         pl.setPlayerTime(ptime.longValue(), false);
-        
-        System.out.println("ptime "+ ptime +" ptime long value "+ ptime.longValue()+ " pp "+ pp);
+
+        System.out.println("ptime " + ptime + " ptime long value " + ptime.longValue() + " pp " + pp + " time " + time);
         if (pl.getPlayerTime() <= time) {
+            System.out.println("1 scelto ");
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-                    if (time <= pl.getPlayerTime()) {
-
+                    if (pl.getPlayerTime() >= time) {
                         cancel();
-
+                        System.out.println("trigger0 " + (pl.getPlayerTime()) + " " + time);
                     }
                     //         System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
-                    pl.setPlayerTime(pl.getPlayerTime() + 20, false);
 
+                    pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
+                    System.out.println("vediamo il playertime " + (pl.getPlayerTime() + 20));
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 1L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 20L, 20L);
 
         } else {
+            System.out.println("2 scelto ");
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-                    int i = time - 60;
+                    Long i = time - 60;
                     if (pl.getPlayerTime() >= 23900 && pl.getPlayerTime() <= 24000) {
 
-                        pl.setPlayerTime(0, false);
+                        pl.setPlayerTime(0L, false);
+                        System.out.println("trigger1 " + (pl.getPlayerTime()));
                     } else if (pl.getPlayerTime() > time && pl.getPlayerTime() < 23900) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 20, false);
+                        pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
+                        System.out.println("trigger2 " + (pl.getPlayerTime()));
                     } else if (pl.getPlayerTime() < i) {
-                        pl.setPlayerTime(pl.getPlayerTime() + 20, false);
+                        pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
+                        System.out.println("trigger3 " + (pl.getPlayerTime()));
                     } else if (pl.getPlayerTime() >= i && pl.getPlayerTime() <= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
+                        System.out.println("trigger4(cancel) " + (pl.getPlayerTime()));
                     }
                     //      System.out.println("time" + time + " playertime " + pl.getPlayerTime() + " playertime offset" + pl.getPlayerTimeOffset());
-                    pl.setPlayerTime(pl.getPlayerTime() + 20, false);
-
+                    pl.setPlayerTime(pl.getPlayerTime() + 20L, false);
+                    System.out.println("vediamo il playertime " + (pl.getPlayerTime() + 20));
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 1L, 1L);
+            }.runTaskTimer(Environment.getPluginInstance(), 20L, 20L);
         }
 
     }
