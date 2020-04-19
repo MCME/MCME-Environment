@@ -156,30 +156,30 @@ public class PlayerListener implements Listener {
             }
 
         }
-        String weightMax = regions.get(0);
-
-        for (String re : regions) {
-            if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
-                weightMax = re;
-            }
-        }
-
-        for (String r : PluginData.AllRegions.keySet()) {
-            if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equals(weightMax)) {
-                PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
-                s = r;
-            }
-        }
 
         if (!regions.isEmpty()) {
+            String weightMax = regions.get(0);
+
+            for (String re : regions) {
+                if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
+                    weightMax = re;
+                }
+            }
+
+            for (String r : PluginData.AllRegions.keySet()) {
+                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equals(weightMax)) {
+                    PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
+                    s = r;
+                }
+            }
 
             if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
                 PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
-                
+
             }
             if (!PluginData.AllRegions.get(weightMax).sound.equalsIgnoreCase("none") && !PluginData.AllRegions.get(s).sound.equalsIgnoreCase(PluginData.AllRegions.get(weightMax).sound)) {
                 PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
-                
+
             }
 
             if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
@@ -227,7 +227,7 @@ public class PlayerListener implements Listener {
         EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
 
         if (!re.sound.equalsIgnoreCase("none")) {
-          new BukkitRunnable() {
+            new BukkitRunnable() {
 
                 @Override
                 public void run() {
