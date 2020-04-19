@@ -126,10 +126,14 @@ public class EnvironmentCreate extends EnvironmentCommand {
                 }
             } catch (IncompleteRegionException | NullPointerException ex) {
 
-                Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                 if (ex instanceof NullPointerException) {
                     sendInvalidSelection(pl);
+                } else if (ex instanceof IncompleteRegionException) {
+                    sendInvalidSelection(pl);
+
                 }
+
             }
         } else {
             sendAlready(cs, args[0]);

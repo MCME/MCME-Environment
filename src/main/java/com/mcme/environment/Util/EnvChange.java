@@ -134,11 +134,11 @@ public class EnvChange {
                         System.out.println("trigger0 " + (pl.getPlayerTime()) + " " + time);
                     }
 
-                    effectiveTime += 20;
+                    effectiveTime += 50;
                     pl.setPlayerTime(effectiveTime, false);
                     System.out.println("vediamo il playertime " + effectiveTime);
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 20L, 10L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
 
         } else {
             System.out.println("2 scelto ");
@@ -154,11 +154,11 @@ public class EnvChange {
                         effectiveTime = 0L;
                         System.out.println("trigger1 " + (effectiveTime));
                     } else if (effectiveTime > time && effectiveTime < 23900) {
-                        effectiveTime += 20;
+                        effectiveTime += 50;
                         pl.setPlayerTime(effectiveTime, false);
                         System.out.println("trigger2 " + (effectiveTime));
                     } else if (effectiveTime < i) {
-                        effectiveTime += 20;
+                        effectiveTime += 50;
                         pl.setPlayerTime(effectiveTime, false);
                         System.out.println("trigger3 " + (effectiveTime));
                     } else if (effectiveTime >= i && effectiveTime <= time) {
@@ -166,12 +166,12 @@ public class EnvChange {
                         cancel();
                         System.out.println("trigger4(cancel) " + (effectiveTime));
                     } else {
-                        effectiveTime += 20;
+                        effectiveTime += 50;
                         pl.setPlayerTime(effectiveTime, false);
                     }
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 20L, 20L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
         }
 
     }
