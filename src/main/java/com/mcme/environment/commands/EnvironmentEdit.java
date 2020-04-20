@@ -17,10 +17,12 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -42,7 +44,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
     private boolean rain;
     private boolean sun;
     private boolean thunder;
-    private String sound;
+    private SoundType sound;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -64,11 +66,26 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-            if (args[4].equalsIgnoreCase("bird")) {
-                sound = "bird";
+            if (args[4].equalsIgnoreCase("plains")) {
+                sound = SoundType.PLAINS;
+
+            } else if (args[4].equalsIgnoreCase("caves")) {
+                sound = SoundType.CAVES;
+
+            } else if (args[4].equalsIgnoreCase("forest")) {
+                sound = SoundType.FOREST;
+
+            } else if (args[4].equalsIgnoreCase("ocean")) {
+                sound = SoundType.OCEAN;
+
+            } else if (args[4].equalsIgnoreCase("wind")) {
+                sound = SoundType.WIND;
+
+            } else if (args[4].equalsIgnoreCase("swampland")) {
+                sound = SoundType.SWAMPLAND;
 
             } else {
-                sound = "none";
+                sound = SoundType.BELL;
             }
 
             System.out.println(pl.getPlayerTime());
@@ -77,7 +94,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
                     //removed toTicks()
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "', sound = '" + sound + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "', sound = '" + sound.name() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -95,7 +112,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "', sound = '" + sound + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "', sound = '" + sound.name() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);

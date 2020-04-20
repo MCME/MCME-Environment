@@ -52,11 +52,12 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("off", new EnvironmentOff(permissionStaff, permission));
         addCommandHandler("edit", new EnvironmentEdit(permissionStaff));
         addCommandHandler("details", new EnvironmentDetails(permissionStaff));
+        addCommandHandler("help", new EnvironmentDetails(permissionStaff, permission));
     }
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
-        if (!string.equalsIgnoreCase("environment")) {
+        if (!string.equalsIgnoreCase("environment") && !string.equalsIgnoreCase("env") && !string.equalsIgnoreCase("en")) {
             return false;
         }
         if (strings == null || strings.length == 0) {
