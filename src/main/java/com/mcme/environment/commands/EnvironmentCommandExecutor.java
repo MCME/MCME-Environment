@@ -139,7 +139,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         } else if (args.length == 6) {
             if (args[0].equalsIgnoreCase("edit")) {
 
-                List<String> l = Arrays.asList("bird", "none");
+                List<String> l = Arrays.asList("bell", "none", "plain", "cave", "forest", "ocean", "wind", "swampland");
                 return l;
 
             } else {
