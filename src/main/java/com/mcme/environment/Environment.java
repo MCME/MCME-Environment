@@ -165,6 +165,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `ymax` INT NOT NULL,\n"
                             + "  `weather` VARCHAR(45),\n"
                             + "  `sound` VARCHAR(45),\n"
+                            + "  `info_sound` LONGTEXT,\n"
                             + "  `thunders` BOOLEAN,\n"
                             + "  `location` LONGTEXT NOT NULL,\n"
                             + "  `weight` INT,\n"

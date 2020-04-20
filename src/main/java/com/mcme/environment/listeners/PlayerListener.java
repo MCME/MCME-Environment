@@ -37,6 +37,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.Sound;
+import com.mcme.environment.SoundPacket.SoundType;
+import static java.lang.Integer.parseInt;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -183,7 +185,7 @@ public class PlayerListener implements Listener {
                 }
             }
             if (PluginData.AllRegions.containsKey(s)) {
-                if (!PluginData.AllRegions.get(weightMax).sound.equalsIgnoreCase("none") && !PluginData.AllRegions.get(s).sound.equalsIgnoreCase(PluginData.AllRegions.get(weightMax).sound)) {
+                if (!PluginData.AllRegions.get(weightMax).sound.equals(SoundType.NONE) && !PluginData.AllRegions.get(s).sound.equals(PluginData.AllRegions.get(weightMax).sound)) {
                     PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
 
                 }
@@ -205,7 +207,12 @@ public class PlayerListener implements Listener {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
         System.out.println("evento triggered");
-        
+        int i = 0;
+
+        if (parseInt(re.time) >= 1000) {
+            i = parseInt(re.time) / 1000;
+
+        }
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
@@ -231,19 +238,27 @@ public class PlayerListener implements Listener {
             }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
         }
-        
+
         if (!re.time.equalsIgnoreCase("default")) {
             EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
         }
-        
-        if (!re.sound.equalsIgnoreCase("none")) {
-            new BukkitRunnable() {
+
+        if (!re.sound.equals(SoundType.NONE)) {
+
+            Sound.playSound(re.sound, e.getPlayer(), parseLong(re.time), re.loc, i);
+
+        }
+
+    }
+
+    /*
+     new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
                     if (!PluginData.SoundPlayer.contains(e.getPlayer().getUniqueId())) {
-                        Sound.BirdSound(e.getPlayer());
+                       Sound.playSound(re.sound, e.getPlayer(), parseLong(re.time));
                     } else {
                         cancel();
                         PluginData.SoundPlayer.remove(e.getPlayer().getUniqueId());
@@ -252,8 +267,6 @@ public class PlayerListener implements Listener {
                 }
 
             }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-        }
-
-    }
-
+    
+     */
 }
