@@ -101,7 +101,7 @@ public class Sound {
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
                 break;
-            case CAVES:
+            case CAVE:
                 new BukkitRunnable() {
 
                     @Override
@@ -156,7 +156,7 @@ public class Sound {
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
                 break;
-            case PLAINS:
+            case PLAIN:
 
                 new BukkitRunnable() {
 

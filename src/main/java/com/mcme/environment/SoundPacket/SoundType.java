@@ -11,10 +11,10 @@ package com.mcme.environment.SoundPacket;
  */
 public enum SoundType {
 
-    PLAINS,
+    PLAIN,
     OCEAN,
     WIND,
-    CAVES,
+    CAVE,
     SWAMPLAND,
     NONE,
     FOREST,

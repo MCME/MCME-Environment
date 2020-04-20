@@ -22,7 +22,6 @@ import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -66,11 +65,11 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-            if (args[4].equalsIgnoreCase("plains")) {
-                sound = SoundType.PLAINS;
+            if (args[4].equalsIgnoreCase("plain")) {
+                sound = SoundType.PLAIN;
 
-            } else if (args[4].equalsIgnoreCase("caves")) {
-                sound = SoundType.CAVES;
+            } else if (args[4].equalsIgnoreCase("cave")) {
+                sound = SoundType.CAVE;
 
             } else if (args[4].equalsIgnoreCase("forest")) {
                 sound = SoundType.FOREST;
