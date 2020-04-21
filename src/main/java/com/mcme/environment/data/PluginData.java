@@ -61,7 +61,7 @@ public class PluginData {
 
     @Getter
     public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
-
+    //id region, uuid
     @Getter
     public static List<UUID> EntityPlayer = new ArrayList<>();
     @Getter
