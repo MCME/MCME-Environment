@@ -36,7 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.mcme.environment.SoundPacket.Sound;
+import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import static java.lang.Integer.parseInt;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -245,7 +245,7 @@ public class PlayerListener implements Listener {
 
         if (!re.sound.equals(SoundType.NONE)) {
 
-            Sound.playSound(re.sound, e.getPlayer(), parseLong(re.time), re.loc, i);
+            SoundUtil.playSound(re.sound, e.getPlayer(), parseLong(re.time), re.loc, i);
 
         }
 

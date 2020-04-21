@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  *
  * @author Fraspace5
  */
-public class Sound {
+public class SoundUtil {
 
 // NW no water 
     public static Location getRandomLocationNW(int minX, int maxX, int minZ, int maxZ, World world, int y) {
@@ -69,6 +69,18 @@ public class Sound {
         } else {
             return "day";
         }
+    }
+
+    public static Boolean isOutdoor(Location l) {
+        int y = l.getBlockY();
+        int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
+        
+        if (y < worldMaximumY) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**

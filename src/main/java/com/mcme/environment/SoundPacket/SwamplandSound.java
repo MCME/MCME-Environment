@@ -5,7 +5,7 @@
  */
 package com.mcme.environment.SoundPacket;
 
-import static com.mcme.environment.SoundPacket.Sound.getRandomLocationNW;
+import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class SwamplandSound {
         Boolean result2 = random2.next();
         Boolean result3 = random3.next();
 
-        if (Sound.getTimeString(time).equalsIgnoreCase("day") || Sound.getTimeString(time).equalsIgnoreCase("morning")) {
+        if (SoundUtil.getTimeString(time).equalsIgnoreCase("day") || SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
 
             if (result) {
 

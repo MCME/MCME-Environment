@@ -5,7 +5,7 @@
  */
 package com.mcme.environment.SoundPacket;
 
-import static com.mcme.environment.SoundPacket.Sound.getRandomLocationNW;
+import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class PlainSound {
         Boolean result = random.next();
         Boolean result2 = random2.next();
 
-        if (Sound.getTimeString(time).equalsIgnoreCase("day")) {
+        if (SoundUtil.getTimeString(time).equalsIgnoreCase("day")) {
 
             if (result) {
 
@@ -42,7 +42,7 @@ public class PlainSound {
 
             }
 
-        } else if (Sound.getTimeString(time).equalsIgnoreCase("morning")) {
+        } else if (SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
             if (result) {
 
                 pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), 0.7F, 1.0F);

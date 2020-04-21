@@ -5,7 +5,7 @@
  */
 package com.mcme.environment.SoundPacket;
 
-import static com.mcme.environment.SoundPacket.Sound.getRandomLocationNW;
+import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class OceanSound {
         random2.add(0.4, true);
         random2.add(0.6, false);
 
-        Location l = Sound.getRandomLocationYW(pl.getLocation().getBlockX() - 50, pl.getLocation().getBlockX() + 50, pl.getLocation().getBlockZ() - 50, pl.getLocation().getBlockZ() + 50, pl.getWorld(), pl.getLocation().getBlockY());
+        Location l = SoundUtil.getRandomLocationYW(pl.getLocation().getBlockX() - 50, pl.getLocation().getBlockX() + 50, pl.getLocation().getBlockZ() - 50, pl.getLocation().getBlockZ() + 50, pl.getWorld(), pl.getLocation().getBlockY());
 
         Boolean result = random.next();
         Boolean result2 = random2.next();
