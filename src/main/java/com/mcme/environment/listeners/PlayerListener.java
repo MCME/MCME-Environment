@@ -39,6 +39,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import static java.lang.Integer.parseInt;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -143,6 +148,7 @@ public class PlayerListener implements Listener {
 
         List<String> regions = new ArrayList<>();
         List<String> informed = new ArrayList<>();
+        System.out.println("parte");
 
         if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
 
@@ -154,11 +160,11 @@ public class PlayerListener implements Listener {
                         && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
                     regions.add(region);
 
-                    Environment.getPluginInstance().getLogger().log(Level.INFO, "primo {0}", region);
+                    System.out.println("primo" + region);
                 } else if (re.region.isInside(e.getPlayer().getLocation())
                         && PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
                     informed.add(region);
-                    Environment.getPluginInstance().getLogger().log(Level.INFO, "second {0}", region);
+                    System.out.println("secondo" + region);
                 }
 
             }
@@ -171,7 +177,8 @@ public class PlayerListener implements Listener {
                         weightMax = re;
                     }
                 }
-                Environment.getPluginInstance().getLogger().log(Level.INFO, "weightmax {0}", weightMax);
+                System.out.println("weight" + weightMax);
+
                 if (!informed.contains(weightMax)) {
                     String ll = "";
                     if (!informed.isEmpty()) {
@@ -253,8 +260,9 @@ public class PlayerListener implements Listener {
         }
 
     }
+}
 
-    /*
+/*
      new BukkitRunnable() {
 
                 @Override
@@ -271,5 +279,4 @@ public class PlayerListener implements Listener {
 
             }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
     
-     */
-}
+ */
