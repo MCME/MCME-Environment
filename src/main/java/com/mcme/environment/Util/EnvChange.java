@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -181,6 +182,13 @@ public class EnvChange {
         pl.setPlayerTime(12000, false);
         PluginData.EntityPlayer.add(pl.getUniqueId());
         PluginData.SoundPlayer.add(pl.getUniqueId());
+        for (UUID region : PluginData.informedRegion.keySet()) {
+            if (PluginData.informedRegion.get(region).contains(pl.getUniqueId())) {
+                PluginData.informedRegion.get(region).remove(pl.getUniqueId());
+            }
+
+        }
+
     }
 
     private static Location randomLocCuboid(Region r, String world) {

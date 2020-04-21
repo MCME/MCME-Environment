@@ -29,40 +29,47 @@ public class ForestSound {
         Boolean result = random.next();
         Boolean result2 = random2.next();
 
+        Float volume = 1F;
+
+        if (SoundUtil.isOutdoor(pl.getLocation())) {
+            volume = 0.4F;
+
+        }
+
         if (SoundUtil.getTimeString(time).equalsIgnoreCase("day")) {
 
             if (result) {
 
-                pl.playSound(l, SoundsString.FOREST_BIRD_DAY.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_BIRD_DAY.getPath(),volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.FOREST_INSECT_DAY.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_INSECT_DAY.getPath(), volume, 1.0F);
 
             }
 
         } else if (SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
             if (result) {
 
-                pl.playSound(l, SoundsString.FOREST_BIRD_MORNING.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_BIRD_MORNING.getPath(), volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.FOREST_INSECT_MORNING.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_INSECT_MORNING.getPath(), volume, 1.0F);
 
             }
 
         } else {
             if (result) {
 
-                pl.playSound(l, SoundsString.FOREST_BIRD_NIGHT.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_BIRD_NIGHT.getPath(), volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.FOREST_INSECT_NIGHT.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.FOREST_INSECT_NIGHT.getPath(), volume, 1.0F);
 
             }
 

@@ -18,8 +18,8 @@ public class CaveSound {
 
     public static void CaveSound(Player pl) {
         RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.2, true);
-        random.add(0.8, false);
+        random.add(0.05, true);
+        random.add(0.95, false);
 
         RandomCollection<Boolean> random2 = new RandomCollection<>();
         random2.add(0.3, true);

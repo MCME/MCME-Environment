@@ -33,36 +33,36 @@ public class PlainSound {
 
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_DAY.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_DAY.getPath(), 0.9F, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_DAY.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_DAY.getPath(), 0.9F, 1.0F);
 
             }
 
         } else if (SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), 0.9F, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_MORNING.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_MORNING.getPath(), 0.9F, 1.0F);
 
             }
 
         } else {
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), 0.9F, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), 0.7F, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), 0.9F, 1.0F);
 
             }
 

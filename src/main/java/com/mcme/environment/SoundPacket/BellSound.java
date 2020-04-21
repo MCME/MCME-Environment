@@ -6,8 +6,6 @@
 package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
-import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
-import com.mcme.environment.data.PluginData;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.Sound;
@@ -30,7 +28,7 @@ public class BellSound {
                 if (times <= time) {
                     times += 1;
 
-                    pl.playSound(l, Sound.BLOCK_BELL_USE, 1.0F, 1.0F);
+                    pl.playSound(l, Sound.BLOCK_BELL_USE, 0.8F, 0.7F);
 
                 } else {
                     cancel();
@@ -39,7 +37,7 @@ public class BellSound {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 300L, 40L);
+        }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
 
     }
 

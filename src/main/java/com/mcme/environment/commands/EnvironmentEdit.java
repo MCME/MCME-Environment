@@ -83,8 +83,10 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else if (args[4].equalsIgnoreCase("swampland")) {
                 sound = SoundType.SWAMPLAND;
 
-            } else {
+            } else if (args[4].equalsIgnoreCase("bell")) {
                 sound = SoundType.BELL;
+            } else {
+                sound = SoundType.NONE;
             }
 
             System.out.println(pl.getPlayerTime());
