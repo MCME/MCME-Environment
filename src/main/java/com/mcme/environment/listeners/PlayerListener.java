@@ -141,8 +141,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
 
-        String s = "";
         List<String> regions = new ArrayList<>();
+        List<String> informed = new ArrayList<>();
 
         if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
 
@@ -153,51 +153,54 @@ public class PlayerListener implements Listener {
                 if (re.region.isInside(e.getPlayer().getLocation())
                         && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
                     regions.add(region);
+
+                    Environment.getPluginInstance().getLogger().log(Level.INFO, "primo {0}", region);
+                } else if (re.region.isInside(e.getPlayer().getLocation())
+                        && PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
+                    informed.add(region);
+                    Environment.getPluginInstance().getLogger().log(Level.INFO, "second {0}", region);
                 }
 
             }
 
-        }
-        if (regions.isEmpty()) {
+            if (!regions.isEmpty()) {
+                String weightMax = regions.get(0);
 
-        }
+                for (String re : regions) {
+                    if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
+                        weightMax = re;
+                    }
+                }
+                Environment.getPluginInstance().getLogger().log(Level.INFO, "weightmax {0}", weightMax);
+                if (!informed.contains(weightMax)) {
+                    String ll = "";
+                    if (!informed.isEmpty()) {
+                        ll = informed.get(0);
+                        PluginData.informedRegion.get(PluginData.AllRegions.get(ll).idr).remove(e.getPlayer().getUniqueId());
+                    }
 
-        if (!regions.isEmpty()) {
-            String weightMax = regions.get(0);
+                    if (PluginData.AllRegions.containsKey(ll)) {
+                        if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(ll).thunder) {
+                            PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
 
-            for (String re : regions) {
-                if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
-                    weightMax = re;
+                        }
+                    }
+
+                    if (PluginData.AllRegions.containsKey(ll)) {
+                        if (!PluginData.AllRegions.get(weightMax).sound.equals(SoundType.NONE) && !PluginData.AllRegions.get(ll).sound.equals(PluginData.AllRegions.get(weightMax).sound)) {
+                            PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
+
+                        }
+                    }
+
+                    if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
+                        PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
+                    }
+
+                    EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
+                    Bukkit.getPluginManager().callEvent(event);
                 }
             }
-
-            for (String r : PluginData.AllRegions.keySet()) {
-                if (PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).contains(e.getPlayer().getUniqueId()) && !r.equals(weightMax)) {
-                    PluginData.informedRegion.get(PluginData.AllRegions.get(r).idr).remove(e.getPlayer().getUniqueId());
-                    s = r;
-                }
-            }
-
-            if (PluginData.AllRegions.containsKey(s)) {
-                if (!PluginData.AllRegions.get(weightMax).thunder && PluginData.AllRegions.get(s).thunder) {
-                    PluginData.EntityPlayer.add(e.getPlayer().getUniqueId());
-
-                }
-            }
-            if (PluginData.AllRegions.containsKey(s)) {
-                if (!PluginData.AllRegions.get(weightMax).sound.equals(SoundType.NONE) && !PluginData.AllRegions.get(s).sound.equals(PluginData.AllRegions.get(weightMax).sound)) {
-                    PluginData.SoundPlayer.add(e.getPlayer().getUniqueId());
-
-                }
-            }
-
-            if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
-                PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
-            }
-
-            EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
-            Bukkit.getPluginManager().callEvent(event);
-
         }
 
     }

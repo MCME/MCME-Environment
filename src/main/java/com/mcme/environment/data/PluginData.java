@@ -73,6 +73,7 @@ public class PluginData {
      */
     public static void loadRegions() {
         AllRegions.clear();
+        informedRegion.clear();
 
         new BukkitRunnable() {
 
@@ -107,11 +108,10 @@ public class PluginData {
                                 CuboidRegion rr = new CuboidRegion(loc, minCorner, maxCorner);
 
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
-                                if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
-                                    List<UUID> s = new ArrayList<>();
 
-                                    informedRegion.put(UUID.fromString(r.getString("idregion")), s);
-                                }
+                                List<UUID> s = new ArrayList<>();
+
+                                informedRegion.put(UUID.fromString(r.getString("idregion")), s);
 
                             } else {
 
@@ -125,13 +125,14 @@ public class PluginData {
                                 List<Integer> zlist = StringtoListInt(unserialize(r.getString("zlist")));
                                 Location loc = new Location(Bukkit.getWorld(location[0]), parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
                                 Location loc2 = new Location(Bukkit.getWorld(location2[0]), parseDouble(location2[1]), parseDouble(location2[2]), parseDouble(location2[3]));
+
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
-                                if (!informedRegion.containsKey(UUID.fromString(r.getString("idregion")))) {
-                                    List<UUID> s = new ArrayList<>();
 
-                                    informedRegion.put(UUID.fromString(r.getString("idregion")), s);
-                                }
+                                List<UUID> s = new ArrayList<>();
+
+                                informedRegion.put(UUID.fromString(r.getString("idregion")), s);
+
                             }
 
                         } while (r.next());
