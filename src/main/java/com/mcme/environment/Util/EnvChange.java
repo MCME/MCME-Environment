@@ -53,8 +53,8 @@ public class EnvChange {
      */
     public static void spawnThunderstorm(Player pl, boolean bol, Region reg) {
         RandomCollection<Boolean> r = new RandomCollection<>();
-        r.add(0.4, true);
-        r.add(0.6, false);
+        r.add(0.2, true);
+        r.add(0.8, false);
         Boolean result1 = r.next();
         Location l = pl.getLocation();
         if (result1) {
@@ -83,8 +83,8 @@ public class EnvChange {
 
         if (bol) {
             RandomCollection<Boolean> random = new RandomCollection<>();
-            random.add(0.2, true);
-            random.add(0.8, false);
+            random.add(0.15, true);
+            random.add(0.85, false);
 
             Boolean result = random.next();
             if (result) {

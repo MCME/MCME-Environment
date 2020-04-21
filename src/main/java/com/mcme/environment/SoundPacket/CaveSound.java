@@ -5,7 +5,7 @@
  */
 package com.mcme.environment.SoundPacket;
 
-import static com.mcme.environment.SoundPacket.Sound.getRandomLocationNW;
+import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

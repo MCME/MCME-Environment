@@ -17,6 +17,7 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
@@ -74,7 +75,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','none','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
@@ -104,7 +105,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','none','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getUID().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
