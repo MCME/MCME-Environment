@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -36,6 +37,7 @@ import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -50,7 +52,7 @@ public class EnvChange {
      * @param pl Player
      * @param bol Sounds on
      * @param reg
-     * @param world
+     *
      */
     public static void spawnThunderstorm(Player pl, boolean bol, Region reg) {
         RandomCollection<Boolean> r = new RandomCollection<>();
@@ -180,8 +182,11 @@ public class EnvChange {
     public static void resetAll(Player pl) {
         pl.setPlayerWeather(WeatherType.CLEAR);
         pl.setPlayerTime(12000, false);
-        PluginData.EntityPlayer.add(pl.getUniqueId());
-        PluginData.SoundPlayer.add(pl.getUniqueId());
+       
+        for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
+            b.cancel();
+        }
+
         for (UUID region : PluginData.informedRegion.keySet()) {
             if (PluginData.informedRegion.get(region).contains(pl.getUniqueId())) {
                 PluginData.informedRegion.get(region).remove(pl.getUniqueId());

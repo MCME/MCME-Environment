@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -74,7 +75,7 @@ public class SoundUtil {
     public static Boolean isOutdoor(Location l) {
         int y = l.getBlockY();
         int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
-        
+
         if (y < worldMaximumY) {
             return false;
         } else {
@@ -96,150 +97,114 @@ public class SoundUtil {
         switch (s) {
             case WIND:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            WindSound.WindSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        WindSound.WindSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable);
                 break;
             case CAVE:
-                new BukkitRunnable() {
+                BukkitTask bRunnable1 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            CaveSound.CaveSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        CaveSound.CaveSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable1);
                 break;
             case FOREST:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable2 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            ForestSound.ForestSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        ForestSound.ForestSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable2);
                 break;
             case OCEAN:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable3 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            OceanSound.OceanSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        OceanSound.OceanSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable3);
                 break;
             case PLAIN:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable4 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            PlainSound.PlainSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        PlainSound.PlainSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable4);
                 break;
             case SWAMPLAND:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable5 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            SwamplandSound.SwampLandSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        SwamplandSound.SwampLandSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable5);
                 break;
             case BELL:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable6 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            BellSound.BellSound(pl, i, loc);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        BellSound.BellSound(pl, i, loc);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
-
+                PluginData.addBukkitTask(pl, bRunnable6);
                 break;
             default:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable7 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            PlainSound.PlainSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        PlainSound.PlainSound(pl, time);
 
                     }
 
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable7);
                 break;
         }
 

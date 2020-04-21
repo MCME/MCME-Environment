@@ -27,6 +27,7 @@ import com.mcme.environment.listeners.PlayerListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -38,6 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -112,6 +114,11 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
         clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " disabled!");
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
+        for (UUID uuid : PluginData.PlayersRunnable.keySet()) {
+            for (BukkitTask s : PluginData.PlayersRunnable.get(uuid)) {
+                s.cancel();
+            }
+        }
     }
 
     @Override

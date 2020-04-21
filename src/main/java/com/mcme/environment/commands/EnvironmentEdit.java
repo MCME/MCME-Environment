@@ -65,29 +65,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-            if (args[4].equalsIgnoreCase("plain")) {
-                sound = SoundType.PLAIN;
-
-            } else if (args[4].equalsIgnoreCase("cave")) {
-                sound = SoundType.CAVE;
-
-            } else if (args[4].equalsIgnoreCase("forest")) {
-                sound = SoundType.FOREST;
-
-            } else if (args[4].equalsIgnoreCase("ocean")) {
-                sound = SoundType.OCEAN;
-
-            } else if (args[4].equalsIgnoreCase("wind")) {
-                sound = SoundType.WIND;
-
-            } else if (args[4].equalsIgnoreCase("swampland")) {
-                sound = SoundType.SWAMPLAND;
-
-            } else if (args[4].equalsIgnoreCase("bell")) {
-                sound = SoundType.BELL;
-            } else {
-                sound = SoundType.NONE;
-            }
+            sound = getSound(args[4]);
 
             System.out.println(pl.getPlayerTime());
             if (rain) {
@@ -153,6 +131,35 @@ public class EnvironmentEdit extends EnvironmentCommand {
             return "0";
         }
 
+    }
+
+    private SoundType getSound(String arg) {
+        SoundType sound = SoundType.NONE;
+
+        if (arg.equalsIgnoreCase("plain")) {
+            sound = SoundType.PLAIN;
+
+        } else if (arg.equalsIgnoreCase("cave")) {
+            sound = SoundType.CAVE;
+
+        } else if (arg.equalsIgnoreCase("forest")) {
+            sound = SoundType.FOREST;
+
+        } else if (arg.equalsIgnoreCase("ocean")) {
+            sound = SoundType.OCEAN;
+
+        } else if (arg.equalsIgnoreCase("wind")) {
+            sound = SoundType.WIND;
+
+        } else if (arg.equalsIgnoreCase("swampland")) {
+            sound = SoundType.SWAMPLAND;
+
+        } else if (arg.equalsIgnoreCase("bell")) {
+            sound = SoundType.BELL;
+        } else {
+            sound = SoundType.NONE;
+        }
+        return sound;
     }
 
     /**

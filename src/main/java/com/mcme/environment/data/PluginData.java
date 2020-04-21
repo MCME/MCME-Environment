@@ -35,7 +35,9 @@ import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -63,9 +65,7 @@ public class PluginData {
     public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
     //id region, uuid
     @Getter
-    public static List<UUID> EntityPlayer = new ArrayList<>();
-    @Getter
-    public static List<UUID> SoundPlayer = new ArrayList<>();
+    public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
 
     //IdRegion, Players
     /**
@@ -175,5 +175,16 @@ public class PluginData {
             list.add(Integer.parseInt(s[i]));
         }
         return list;
+    }
+
+    public static void addBukkitTask(Player pl, BukkitTask b) {
+        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
+            PluginData.PlayersRunnable.get(pl.getUniqueId()).add(b);
+        } else {
+            List<BukkitTask> listB = new ArrayList<>();
+            listB.add(b);
+            PluginData.PlayersRunnable.put(pl.getUniqueId(), listB);
+        }
+
     }
 }
