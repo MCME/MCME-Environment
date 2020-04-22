@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 MCME (Fraspace5)
  *
@@ -17,8 +18,8 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
+import static java.lang.Long.parseLong;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,31 +34,29 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnvironmentEdit extends EnvironmentCommand {
 
     public EnvironmentEdit(String... permissionNodes) {
-        super(5, true, permissionNodes);
+        super(4, true, permissionNodes);
         setShortDescription(": Edit a region ");
-        setUsageDescription("<nameRegion> rain|sun true|false time sound: With this command you can edit a region, then set his weather and time, and sound");
+        setUsageDescription("<nameRegion> rain|sun true|false time: With this command you can edit a region, then set his weather and time");
     }
 //environment edit nameRegion rain|sun true|false time
     //               0
 
-    private boolean rain;
-    private boolean sun;
+    private String weather;
     private boolean thunder;
-    private SoundType sound;
+    private Long time;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
         Player pl = (Player) cs;
-        rain = false;
-        sun = false;
+
         thunder = false;
 
         if (PluginData.AllRegions.containsKey(args[0])) {
 
             if (args[1].equalsIgnoreCase("rain")) {
-                rain = true;
+                weather = "rain";
             } else {
-                sun = true;
+                weather = "sun";
             }
 
             if (args[2].equalsIgnoreCase("true")) {
@@ -65,35 +64,14 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-            if (args[4].equalsIgnoreCase("plain")) {
-                sound = SoundType.PLAIN;
+            try {
+                
+                time = parseLong(args[3]);
 
-            } else if (args[4].equalsIgnoreCase("cave")) {
-                sound = SoundType.CAVE;
-
-            } else if (args[4].equalsIgnoreCase("forest")) {
-                sound = SoundType.FOREST;
-
-            } else if (args[4].equalsIgnoreCase("ocean")) {
-                sound = SoundType.OCEAN;
-
-            } else if (args[4].equalsIgnoreCase("wind")) {
-                sound = SoundType.WIND;
-
-            } else if (args[4].equalsIgnoreCase("swampland")) {
-                sound = SoundType.SWAMPLAND;
-
-            } else {
-                sound = SoundType.BELL;
-            }
-
-            System.out.println(pl.getPlayerTime());
-            if (rain) {
                 new BukkitRunnable() {
-                    //removed toTicks()
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "', sound = '" + sound.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -106,26 +84,9 @@ public class EnvironmentEdit extends EnvironmentCommand {
                     }
 
                 }.runTaskAsynchronously(Environment.getPluginInstance());
-            } else {
-                new BukkitRunnable() {
+            } catch (NumberFormatException e) {
 
-                    @Override
-                    public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "', sound = '" + sound.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
-
-                        try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                            sendDone(cs);
-                            PluginData.loadRegions();
-                        } catch (SQLException ex) {
-                            Logger.getLogger(EnvironmentEdit.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    }
-
-                }.runTaskAsynchronously(Environment.getPluginInstance());
             }
-
         } else {
             sendNo(cs);
         }
@@ -185,5 +146,33 @@ public class EnvironmentEdit extends EnvironmentCommand {
         return dataArray;
 
     }
+    
+    
+    
+    MCME-Environment Plugin v2.5
+--------------
+Weather and Daytime control
+
+A plugin to control weather,  time and sounds of player's client in a defined region
+
+USAGE and PERMISSIONS
+
+
+Colours indicate the ranks which have permission for a command :
+Adventurer (+ all ranks except OB)
+Guide +
+List of all commands: [/environment, /env]
+To create a new region: 
+/environment create <nameRegion> <weight> (Eg. /environment create Bree 0)
+Weight define the priority of the region, important when two or more regions are overlapping.
+To remove a region:
+/environment remove <nameRegion> (Eg. /environment remove Bree)
+To edit weather and time of a region:
+/environment edit <nameRegion> rain|sun true|false <time>
+rain: when a player is inside this region it will start raining or snowing. This depends on biome type.
+sun: wean a player is inside this region the player's weather will be set as clear.
+true|false, this is for thunders, you can set thunders on with true or off with false 
+time: time in Ticks
+
      */
 }

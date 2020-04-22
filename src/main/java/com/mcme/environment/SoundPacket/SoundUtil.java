@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 MCME (Fraspace5)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mcme.environment.SoundPacket;
 
@@ -14,6 +25,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -74,7 +86,7 @@ public class SoundUtil {
     public static Boolean isOutdoor(Location l) {
         int y = l.getBlockY();
         int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
-        
+
         if (y < worldMaximumY) {
             return false;
         } else {
@@ -89,158 +101,129 @@ public class SoundUtil {
      * @param s SoundType
      * @param pl Player
      * @param time The time of the region
-     * @param loc Location
-     * @param i For bell, it is the number of tocks
+     *
      */
-    public static void playSound(SoundType s, Player pl, Long time, Location loc, int i) {
+    public static void playSoundAmbient(SoundType s, Player pl, Long time) {
         switch (s) {
             case WIND:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            WindSound.WindSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        WindSound.WindSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable);
                 break;
             case CAVE:
-                new BukkitRunnable() {
+                BukkitTask bRunnable1 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            CaveSound.CaveSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        CaveSound.CaveSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable1);
                 break;
             case FOREST:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable2 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            ForestSound.ForestSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        ForestSound.ForestSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable2);
                 break;
             case OCEAN:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable3 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            OceanSound.OceanSound(pl);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        OceanSound.OceanSound(pl);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-
+                PluginData.addBukkitTask(pl, bRunnable3);
                 break;
             case PLAIN:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable4 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            PlainSound.PlainSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        PlainSound.PlainSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable4);
                 break;
             case SWAMPLAND:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable5 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            SwamplandSound.SwampLandSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        SwamplandSound.SwampLandSound(pl, time);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                break;
-            case BELL:
-
-                new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            BellSound.BellSound(pl, i, loc);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
-
-                    }
-
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
-
+                PluginData.addBukkitTask(pl, bRunnable5);
                 break;
             default:
 
-                new BukkitRunnable() {
+                BukkitTask bRunnable7 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        if (!PluginData.SoundPlayer.contains(pl.getUniqueId())) {
-                            PlainSound.PlainSound(pl, time);
-                        } else {
-                            cancel();
-                            PluginData.SoundPlayer.remove(pl.getUniqueId());
-                        }
+                        PlainSound.PlainSound(pl, time);
+
+                    }
+
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable7);
+                break;
+        }
+
+    }
+
+    public static void playSoundLocated(SoundType s, Player pl, Long time, Location loc, int i) {
+        switch (s) {
+
+            case BELL:
+
+                BukkitTask bRunnable6 = new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+
+                        BellSound.BellSound(pl, i, loc);
 
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
+                PluginData.addBukkitTask(pl, bRunnable6);
                 break;
+
         }
 
     }

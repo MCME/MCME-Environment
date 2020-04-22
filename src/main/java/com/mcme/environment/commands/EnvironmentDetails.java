@@ -5,12 +5,12 @@
  */
 package com.mcme.environment.commands;
 
+import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
-import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.Region;
 import static java.lang.Long.parseLong;
 import net.md_5.bungee.api.ChatColor;
@@ -37,6 +37,8 @@ public class EnvironmentDetails extends EnvironmentCommand {
     private boolean thunder;
     private String time;
     private String type;
+    private SoundType soundAmb;
+    private SoundType soundLoc;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -51,30 +53,39 @@ public class EnvironmentDetails extends EnvironmentCommand {
             time = redata.time;
             type = redata.type;
             weather = redata.weather;
+            soundAmb = redata.soundAmbient;
+            soundLoc = redata.soundLocated;
 
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtil());
 
-            message.addSimple(ChatColor.GREEN + "Name of the region :" + ChatColor.BLUE + args[0] + "\n");
+            message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Name of the region :" + ChatColor.BLUE + args[0] + "\n");
 
             if (weather != "default") {
-                message.addSimple(ChatColor.AQUA + "Weather type: " + ChatColor.BLUE + weather.toUpperCase() + "\n");
+                message.addSimple(ChatColor.GREEN + "Weather type: " + ChatColor.BLUE + weather.toUpperCase() + "\n");
             }
 
             if (thunder) {
-                message.addTooltipped(ChatColor.BLUE.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 40% of thunderbolt ");
+                message.addTooltipped(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 20% of thunderbolt ");
 
             }
             if (time != "default") {
-                message.addSimple(ChatColor.AQUA + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
+                message.addSimple(ChatColor.GREEN + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
             }
-            message.addSimple(ChatColor.AQUA + "Region data: \n");
-            message.addSimple(ChatColor.AQUA + "Type: " + ChatColor.BLUE + type + "\n");
-            message.addSimple(ChatColor.AQUA + "Weight: " + ChatColor.BLUE + weight + "\n");
+            if (soundAmb != SoundType.NONE) {
+                message.addSimple(ChatColor.GREEN + "Sound heard: " + ChatColor.BLUE + soundAmb.name() + "\n");
+            }
+            if (soundLoc != SoundType.NONE) {
+                message.addSimple(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + soundLoc.name().toUpperCase() + "\n");
+
+            }
+            message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Region data: \n");
+            message.addSimple(ChatColor.GREEN + "Type: " + ChatColor.BLUE + type + "\n");
+            message.addSimple(ChatColor.GREEN + "Weight: " + ChatColor.BLUE + weight + "\n");
             if (r instanceof CuboidRegion) {
                 Vector min = ((CuboidRegion) r).getMinCorner();
                 Vector max = ((CuboidRegion) r).getMaxCorner();
-                message.addSimple(ChatColor.AQUA + "Min " + ChatColor.BLUE + min.getBlockX() + "," + min.getBlockY() + "," + min.getBlockZ() + "\n");
-                message.addSimple(ChatColor.AQUA + "Max " + ChatColor.BLUE + max.getBlockX() + "," + max.getBlockY() + "," + max.getBlockZ() + "\n");
+                message.addSimple(ChatColor.GREEN + "Min " + ChatColor.BLUE + min.getBlockX() + "," + min.getBlockY() + "," + min.getBlockZ() + "\n");
+                message.addSimple(ChatColor.GREEN + "Max " + ChatColor.BLUE + max.getBlockX() + "," + max.getBlockY() + "," + max.getBlockZ() + "\n");
             }
             message.send(pl);
 

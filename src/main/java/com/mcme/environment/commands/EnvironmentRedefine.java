@@ -17,7 +17,6 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
@@ -34,18 +33,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import static java.lang.Integer.parseInt;
 
 /**
  *
  * @author Fraspace5
  */
-public class EnvironmentCreate extends EnvironmentCommand {
+public class EnvironmentRedefine extends EnvironmentCommand {
 
-    public EnvironmentCreate(String... permissionNodes) {
+    public EnvironmentRedefine(String... permissionNodes) {
         super(2, true, permissionNodes);
-        setShortDescription(": Create a new region");
-        setUsageDescription(" <areaName> <weight>: Create a new region");
+        setShortDescription(": Redefine the area of one region");
+        setUsageDescription(" <areaName> <weight>: Change region size");
     }
 //environment create nameRegion 
 
@@ -56,7 +54,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
         Player pl = (Player) cs;
         final Location loc = pl.getLocation();
-        if (!PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.AllRegions.containsKey(args[0])) {
 
             try {
                 WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -75,7 +73,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + ";" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'prismoid', xlist = " + serialize(r.getXPoints()) + "', zlist = '" + serialize(r.getZPoints()) + "', ymin = '" + r.getMinY() + "', ymax = '" + r.getMaxY() + "', location = '" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.AllRegions.get(args[0]).idr + "';";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
@@ -105,7 +103,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + ";" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'cuboid', xlist = '" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "', zlist = '" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "', ymin = '" + minCorner.getBlockY() + "', ymax = '" + maxCorner.getBlockY() + "', location = '" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.AllRegions.get(args[0]).idr + "';";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
@@ -137,18 +135,18 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
             }
         } else {
-            sendAlready(cs, args[0]);
+            sendNo(cs, args[0]);
         }
 
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Region created!");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Region updated!");
 
     }
 
-    private void sendAlready(CommandSender cs, String name) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "The region " + name + " already exists!");
+    private void sendNo(CommandSender cs, String name) {
+        PluginData.getMessageUtil().sendErrorMessage(cs, "The region " + name + " doesn't exists!");
 
     }
 

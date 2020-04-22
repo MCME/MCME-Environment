@@ -17,8 +17,6 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.data.PluginData;
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

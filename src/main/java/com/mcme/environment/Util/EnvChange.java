@@ -25,16 +25,17 @@ import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -49,7 +50,7 @@ public class EnvChange {
      * @param pl Player
      * @param bol Sounds on
      * @param reg
-     * @param world
+     *
      */
     public static void spawnThunderstorm(Player pl, boolean bol, Region reg) {
         RandomCollection<Boolean> r = new RandomCollection<>();
@@ -109,7 +110,6 @@ public class EnvChange {
      * @param time Time in ticks
      */
     public static void changePlayerTime(Player pl, Long time) {
-// 10 18
         Long playertime = pl.getPlayerTime();
 
         Double ptime = playertime.doubleValue() / 24000.0;
@@ -118,60 +118,53 @@ public class EnvChange {
         ptime = pl.getPlayerTime() - pp;
         pl.setPlayerTime(ptime.longValue(), false);
         Long startTime = ptime.longValue();
-        System.out.println("ptime " + ptime + " ptime long value " + ptime.longValue() + " pp " + pp + " time " + time);
 
         if (startTime <= time) {
-            System.out.println("1 scelto ");
 
-            new BukkitRunnable() {
+            BukkitTask s = new BukkitRunnable() {
                 long effectiveTime = startTime;
 
                 @Override
                 public void run() {
 
                     if (effectiveTime >= time) {
+                        pl.setPlayerTime(time, false);
                         cancel();
-                        System.out.println("trigger0 " + (pl.getPlayerTime()) + " " + time);
                     }
 
                     effectiveTime += 50;
                     pl.setPlayerTime(effectiveTime, false);
-                    System.out.println("vediamo il playertime " + effectiveTime);
+
                 }
             }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
-
+            PluginData.addBukkitTask(pl, s);
         } else {
-            System.out.println("2 scelto ");
-            new BukkitRunnable() {
+            BukkitTask s = new BukkitRunnable() {
                 long effectiveTime = startTime;
 
                 @Override
                 public void run() {
                     Long i = time - 60;
                     if (effectiveTime >= 23900 && effectiveTime <= 24000) {
-
                         pl.setPlayerTime(0L, false);
                         effectiveTime = 0L;
-                        System.out.println("trigger1 " + (effectiveTime));
                     } else if (effectiveTime > time && effectiveTime < 23900) {
                         effectiveTime += 50;
                         pl.setPlayerTime(effectiveTime, false);
-                        System.out.println("trigger2 " + (effectiveTime));
                     } else if (effectiveTime < i) {
                         effectiveTime += 50;
                         pl.setPlayerTime(effectiveTime, false);
-                        System.out.println("trigger3 " + (effectiveTime));
                     } else if (effectiveTime >= i && effectiveTime <= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
-                        System.out.println("trigger4(cancel) " + (effectiveTime));
                     } else {
                         effectiveTime += 50;
-                        pl.setPlayerTime(effectiveTime, false);
                     }
 
                 }
             }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
+            PluginData.addBukkitTask(pl, s);
+
         }
 
     }
@@ -179,8 +172,18 @@ public class EnvChange {
     public static void resetAll(Player pl) {
         pl.setPlayerWeather(WeatherType.CLEAR);
         pl.setPlayerTime(12000, false);
-        PluginData.EntityPlayer.add(pl.getUniqueId());
-        PluginData.SoundPlayer.add(pl.getUniqueId());
+
+        for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
+            b.cancel();
+        }
+
+        for (UUID region : PluginData.informedRegion.keySet()) {
+            if (PluginData.informedRegion.get(region).contains(pl.getUniqueId())) {
+                PluginData.informedRegion.get(region).remove(pl.getUniqueId());
+            }
+
+        }
+
     }
 
     private static Location randomLocCuboid(Region r, String world) {

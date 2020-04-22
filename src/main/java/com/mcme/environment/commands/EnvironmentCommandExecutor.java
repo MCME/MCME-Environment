@@ -52,7 +52,8 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("off", new EnvironmentOff(permissionStaff, permission));
         addCommandHandler("edit", new EnvironmentEdit(permissionStaff));
         addCommandHandler("details", new EnvironmentDetails(permissionStaff));
-        addCommandHandler("help", new EnvironmentDetails(permissionStaff, permission));
+        addCommandHandler("redefine", new EnvironmentRedefine(permissionStaff));
+        addCommandHandler("help", new EnvironmentHelp(permissionStaff, permission));
     }
 
     @Override
@@ -85,6 +86,8 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("remove");
             arguments.add("create");
             arguments.add("details");
+            arguments.add("sound");
+            arguments.add("redefine");
         }
         List<String> Flist = new ArrayList<String>();
         List<String> areas = new ArrayList<String>();
@@ -104,7 +107,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             }
             return Flist;
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details")) {
+            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound") || args[0].equalsIgnoreCase("redefine")) {
 
                 for (String s : areas) {
                     if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
@@ -122,6 +125,11 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 List<String> l = Arrays.asList("rain", "sun");
                 return l;
 
+            } else if (args[0].equalsIgnoreCase("sound")) {
+
+                List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
+                return l;
+
             } else {
 
                 return null;
@@ -132,14 +140,9 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 List<String> l = Arrays.asList("true", "false");
                 return l;
 
-            } else {
+            } else if (args[0].equalsIgnoreCase("sound")) {
 
-                return null;
-            }
-        } else if (args.length == 6) {
-            if (args[0].equalsIgnoreCase("edit")) {
-
-                List<String> l = Arrays.asList("bell", "none", "plain", "cave", "forest", "ocean", "wind", "swampland");
+                List<String> l = Arrays.asList("bell", "none");
                 return l;
 
             } else {

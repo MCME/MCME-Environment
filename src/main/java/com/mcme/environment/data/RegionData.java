@@ -45,7 +45,9 @@ public class RegionData {
 
     public final Integer weight;
 
-    public final SoundType sound;
+    public final SoundType soundAmbient;
+    
+    public final SoundType soundLocated;
 
     public final Location loc;
 
@@ -62,9 +64,11 @@ public class RegionData {
      * @param th Thunder boolean
      * @param tm Time in ticks
      * @param weg Weight of the region
-     * @param snd Sound type
+     * @param sndAmb Sound type of Ambient
+     * @param lc Location for soundlocated
+     * @param sndLoc Sound Located type
      */
-    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType snd, Location lc) {
+    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc, SoundType sndLoc) {
 
         name = namem;
 
@@ -84,7 +88,9 @@ public class RegionData {
 
         weight = weg;
 
-        sound = snd;
+        soundAmbient = sndAmb;
+        
+        soundLocated = sndLoc;
 
         loc = lc;
 

@@ -35,7 +35,9 @@ import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -63,9 +65,7 @@ public class PluginData {
     public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
     //id region, uuid
     @Getter
-    public static List<UUID> EntityPlayer = new ArrayList<>();
-    @Getter
-    public static List<UUID> SoundPlayer = new ArrayList<>();
+    public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
 
     //IdRegion, Players
     /**
@@ -94,6 +94,8 @@ public class PluginData {
                                 String[] zlist = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
+                                String[] sound = unserialize(r.getString("sound"));
+
                                 Integer ymin = r.getInt("ymin");
                                 Integer ymax = r.getInt("ymax");
                                 Vector minCorner = new Vector(parseInt(xlist[0]),
@@ -107,7 +109,7 @@ public class PluginData {
                                 Location loc2 = new Location(Bukkit.getWorld(location2[0]), parseDouble(location2[1]), parseDouble(location2[2]), parseDouble(location2[3]));
                                 CuboidRegion rr = new CuboidRegion(loc, minCorner, maxCorner);
 
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(sound[0]), loc2, SoundType.valueOf(sound[1])));
 
                                 List<UUID> s = new ArrayList<>();
 
@@ -119,6 +121,8 @@ public class PluginData {
                                 String[] zl = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
+                                String[] sound = unserialize(r.getString("sound"));
+
                                 Integer ymin = r.getInt("ymin");
                                 Integer ymax = r.getInt("ymax");
                                 List<Integer> xlist = StringtoListInt(unserialize(r.getString("xlist")));
@@ -127,7 +131,7 @@ public class PluginData {
                                 Location loc2 = new Location(Bukkit.getWorld(location2[0]), parseDouble(location2[1]), parseDouble(location2[2]), parseDouble(location2[3]));
 
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(sound[0]), loc2, SoundType.valueOf(sound[1])));
 
                                 List<UUID> s = new ArrayList<>();
 
@@ -175,5 +179,16 @@ public class PluginData {
             list.add(Integer.parseInt(s[i]));
         }
         return list;
+    }
+
+    public static void addBukkitTask(Player pl, BukkitTask b) {
+        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
+            PluginData.PlayersRunnable.get(pl.getUniqueId()).add(b);
+        } else {
+            List<BukkitTask> listB = new ArrayList<>();
+            listB.add(b);
+            PluginData.PlayersRunnable.put(pl.getUniqueId(), listB);
+        }
+
     }
 }
