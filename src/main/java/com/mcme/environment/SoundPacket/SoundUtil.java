@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 MCME (Fraspace5)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mcme.environment.SoundPacket;
 
@@ -90,10 +101,9 @@ public class SoundUtil {
      * @param s SoundType
      * @param pl Player
      * @param time The time of the region
-     * @param loc Location
-     * @param i For bell, it is the number of tocks
+     *
      */
-    public static void playSound(SoundType s, Player pl, Long time, Location loc, int i) {
+    public static void playSoundAmbient(SoundType s, Player pl, Long time) {
         switch (s) {
             case WIND:
 
@@ -178,20 +188,6 @@ public class SoundUtil {
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
                 PluginData.addBukkitTask(pl, bRunnable5);
                 break;
-            case BELL:
-
-                BukkitTask bRunnable6 = new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-
-                        BellSound.BellSound(pl, i, loc);
-
-                    }
-
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
-                PluginData.addBukkitTask(pl, bRunnable6);
-                break;
             default:
 
                 BukkitTask bRunnable7 = new BukkitRunnable() {
@@ -206,6 +202,28 @@ public class SoundUtil {
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
                 PluginData.addBukkitTask(pl, bRunnable7);
                 break;
+        }
+
+    }
+
+    public static void playSoundLocated(SoundType s, Player pl, Long time, Location loc, int i) {
+        switch (s) {
+
+            case BELL:
+
+                BukkitTask bRunnable6 = new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+
+                        BellSound.BellSound(pl, i, loc);
+
+                    }
+
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
+                PluginData.addBukkitTask(pl, bRunnable6);
+                break;
+
         }
 
     }

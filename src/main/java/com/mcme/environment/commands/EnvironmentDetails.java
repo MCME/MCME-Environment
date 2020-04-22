@@ -11,7 +11,6 @@ import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
-import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.Region;
 import static java.lang.Long.parseLong;
 import net.md_5.bungee.api.ChatColor;
@@ -38,7 +37,8 @@ public class EnvironmentDetails extends EnvironmentCommand {
     private boolean thunder;
     private String time;
     private String type;
-    private SoundType sound;
+    private SoundType soundAmb;
+    private SoundType soundLoc;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -53,7 +53,8 @@ public class EnvironmentDetails extends EnvironmentCommand {
             time = redata.time;
             type = redata.type;
             weather = redata.weather;
-            sound = redata.sound;
+            soundAmb = redata.soundAmbient;
+            soundLoc = redata.soundLocated;
 
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtil());
 
@@ -64,14 +65,18 @@ public class EnvironmentDetails extends EnvironmentCommand {
             }
 
             if (thunder) {
-                message.addTooltipped(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 40% of thunderbolt ");
+                message.addTooltipped(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 20% of thunderbolt ");
 
             }
             if (time != "default") {
                 message.addSimple(ChatColor.GREEN + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
             }
-            if (sound != SoundType.NONE) {
-                message.addSimple(ChatColor.GREEN + "Sound heard: " + ChatColor.BLUE + sound.name() + "\n");
+            if (soundAmb != SoundType.NONE) {
+                message.addSimple(ChatColor.GREEN + "Sound heard: " + ChatColor.BLUE + soundAmb.name() + "\n");
+            }
+            if (soundLoc != SoundType.NONE) {
+                message.addSimple(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + soundLoc.name().toUpperCase() + "\n");
+
             }
             message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Region data: \n");
             message.addSimple(ChatColor.GREEN + "Type: " + ChatColor.BLUE + type + "\n");

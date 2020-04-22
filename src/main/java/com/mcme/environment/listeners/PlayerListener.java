@@ -26,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -39,11 +38,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import static java.lang.Integer.parseInt;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -148,6 +142,7 @@ public class PlayerListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
 
         List<String> regions = new ArrayList<>();
+        List<String> totalRegions = new ArrayList<>();
         List<String> informed = new ArrayList<>();
         System.out.println("parte");
 
@@ -156,6 +151,10 @@ public class PlayerListener implements Listener {
             for (String region : PluginData.AllRegions.keySet()) {
 
                 RegionData re = PluginData.AllRegions.get(region);
+
+                if (re.region.isInside(e.getPlayer().getLocation())) {
+                    totalRegions.add(region);
+                }
 
                 if (re.region.isInside(e.getPlayer().getLocation())
                         && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
@@ -168,6 +167,13 @@ public class PlayerListener implements Listener {
                     System.out.println("secondo" + region);
                 }
 
+            }
+
+            if (totalRegions.isEmpty()) {
+
+                EnvChange.resetAll(e.getPlayer());
+                
+                
             }
 
             if (!regions.isEmpty()) {
@@ -242,9 +248,15 @@ public class PlayerListener implements Listener {
             EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
         }
 
-        if (!re.sound.equals(SoundType.NONE)) {
+        if (!re.soundAmbient.equals(SoundType.NONE)) {
 
-            SoundUtil.playSound(re.sound, e.getPlayer(), parseLong(re.time), re.loc, i);
+            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time));
+
+        }
+
+        if (!re.soundLocated.equals(SoundType.NONE)) {
+
+            SoundUtil.playSoundLocated(re.soundLocated, e.getPlayer(), parseLong(re.time), re.loc, i);
 
         }
 

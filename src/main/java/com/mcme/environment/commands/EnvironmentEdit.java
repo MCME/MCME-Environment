@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 MCME (Fraspace5)
  *
@@ -17,8 +18,8 @@
 package com.mcme.environment.commands;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
+import static java.lang.Long.parseLong;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,31 +34,29 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnvironmentEdit extends EnvironmentCommand {
 
     public EnvironmentEdit(String... permissionNodes) {
-        super(5, true, permissionNodes);
+        super(4, true, permissionNodes);
         setShortDescription(": Edit a region ");
-        setUsageDescription("<nameRegion> rain|sun true|false time sound: With this command you can edit a region, then set his weather and time, and sound");
+        setUsageDescription("<nameRegion> rain|sun true|false time: With this command you can edit a region, then set his weather and time");
     }
 //environment edit nameRegion rain|sun true|false time
     //               0
 
-    private boolean rain;
-    private boolean sun;
+    private String weather;
     private boolean thunder;
-    private SoundType sound;
+    private Long time;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
         Player pl = (Player) cs;
-        rain = false;
-        sun = false;
+
         thunder = false;
 
         if (PluginData.AllRegions.containsKey(args[0])) {
 
             if (args[1].equalsIgnoreCase("rain")) {
-                rain = true;
+                weather = "rain";
             } else {
-                sun = true;
+                weather = "sun";
             }
 
             if (args[2].equalsIgnoreCase("true")) {
@@ -65,15 +64,14 @@ public class EnvironmentEdit extends EnvironmentCommand {
             } else {
                 thunder = false;
             }
-            sound = getSound(args[4]);
+            try {
+                
+                time = parseLong(args[3]);
 
-            System.out.println(pl.getPlayerTime());
-            if (rain) {
                 new BukkitRunnable() {
-                    //removed toTicks()
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'rain', time = '" + args[3] + "', sound = '" + sound.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -86,26 +84,9 @@ public class EnvironmentEdit extends EnvironmentCommand {
                     }
 
                 }.runTaskAsynchronously(Environment.getPluginInstance());
-            } else {
-                new BukkitRunnable() {
+            } catch (NumberFormatException e) {
 
-                    @Override
-                    public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = 'sun', time = '" + args[3] + "', sound = '" + sound.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
-
-                        try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                            sendDone(cs);
-                            PluginData.loadRegions();
-                        } catch (SQLException ex) {
-                            Logger.getLogger(EnvironmentEdit.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    }
-
-                }.runTaskAsynchronously(Environment.getPluginInstance());
             }
-
         } else {
             sendNo(cs);
         }
@@ -131,35 +112,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
             return "0";
         }
 
-    }
-
-    private SoundType getSound(String arg) {
-        SoundType sound = SoundType.NONE;
-
-        if (arg.equalsIgnoreCase("plain")) {
-            sound = SoundType.PLAIN;
-
-        } else if (arg.equalsIgnoreCase("cave")) {
-            sound = SoundType.CAVE;
-
-        } else if (arg.equalsIgnoreCase("forest")) {
-            sound = SoundType.FOREST;
-
-        } else if (arg.equalsIgnoreCase("ocean")) {
-            sound = SoundType.OCEAN;
-
-        } else if (arg.equalsIgnoreCase("wind")) {
-            sound = SoundType.WIND;
-
-        } else if (arg.equalsIgnoreCase("swampland")) {
-            sound = SoundType.SWAMPLAND;
-
-        } else if (arg.equalsIgnoreCase("bell")) {
-            sound = SoundType.BELL;
-        } else {
-            sound = SoundType.NONE;
-        }
-        return sound;
     }
 
     /**

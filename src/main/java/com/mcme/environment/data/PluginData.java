@@ -94,6 +94,8 @@ public class PluginData {
                                 String[] zlist = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
+                                String[] sound = unserialize(r.getString("sound"));
+
                                 Integer ymin = r.getInt("ymin");
                                 Integer ymax = r.getInt("ymax");
                                 Vector minCorner = new Vector(parseInt(xlist[0]),
@@ -107,7 +109,7 @@ public class PluginData {
                                 Location loc2 = new Location(Bukkit.getWorld(location2[0]), parseDouble(location2[1]), parseDouble(location2[2]), parseDouble(location2[3]));
                                 CuboidRegion rr = new CuboidRegion(loc, minCorner, maxCorner);
 
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(sound[0]), loc2, SoundType.valueOf(sound[1])));
 
                                 List<UUID> s = new ArrayList<>();
 
@@ -119,6 +121,8 @@ public class PluginData {
                                 String[] zl = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
+                                String[] sound = unserialize(r.getString("sound"));
+
                                 Integer ymin = r.getInt("ymin");
                                 Integer ymax = r.getInt("ymax");
                                 List<Integer> xlist = StringtoListInt(unserialize(r.getString("xlist")));
@@ -127,7 +131,7 @@ public class PluginData {
                                 Location loc2 = new Location(Bukkit.getWorld(location2[0]), parseDouble(location2[1]), parseDouble(location2[2]), parseDouble(location2[3]));
 
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
-                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
+                                AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(sound[0]), loc2, SoundType.valueOf(sound[1])));
 
                                 List<UUID> s = new ArrayList<>();
 
