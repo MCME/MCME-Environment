@@ -170,11 +170,20 @@ public class EnvChange {
     }
 
     public static void resetAll(Player pl) {
-        pl.setPlayerWeather(WeatherType.CLEAR);
-        pl.setPlayerTime(12000, false);
+        
+        if (pl.getPlayerWeather() != WeatherType.CLEAR) {
+            pl.setPlayerWeather(WeatherType.CLEAR);
+        }
+        
+        if (pl.getPlayerTime() != 12000) {
+            pl.setPlayerTime(12000, false);
+        }
 
-        for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
-            b.cancel();
+        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
+
+            for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
+                b.cancel();
+            }
         }
 
         for (UUID region : PluginData.informedRegion.keySet()) {
