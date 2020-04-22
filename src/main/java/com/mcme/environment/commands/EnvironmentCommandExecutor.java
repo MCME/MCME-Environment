@@ -52,7 +52,8 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("off", new EnvironmentOff(permissionStaff, permission));
         addCommandHandler("edit", new EnvironmentEdit(permissionStaff));
         addCommandHandler("details", new EnvironmentDetails(permissionStaff));
-        addCommandHandler("help", new EnvironmentDetails(permissionStaff, permission));
+        addCommandHandler("redefine", new EnvironmentRedefine(permissionStaff));
+        addCommandHandler("help", new EnvironmentHelp(permissionStaff, permission));
     }
 
     @Override
@@ -86,6 +87,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("create");
             arguments.add("details");
             arguments.add("sound");
+            arguments.add("redefine");
         }
         List<String> Flist = new ArrayList<String>();
         List<String> areas = new ArrayList<String>();
@@ -105,7 +107,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             }
             return Flist;
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound")) {
+            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound") || args[0].equalsIgnoreCase("redefine")) {
 
                 for (String s : areas) {
                     if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
