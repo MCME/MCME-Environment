@@ -202,11 +202,11 @@ public class PlayerListener implements Listener {
                         ll = informed.get(0);
                         PluginData.informedRegion.get(PluginData.AllRegions.get(ll).idr).remove(e.getPlayer().getUniqueId());
                     }
-
-                    for (BukkitTask b : PluginData.PlayersRunnable.get(e.getPlayer().getUniqueId())) {
-                        b.cancel();
+                    if (PluginData.PlayersRunnable.containsKey(e.getPlayer().getUniqueId())) {
+                        for (BukkitTask b : PluginData.PlayersRunnable.get(e.getPlayer().getUniqueId())) {
+                            b.cancel();
+                        }
                     }
-
                     if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
                         PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
                     }
