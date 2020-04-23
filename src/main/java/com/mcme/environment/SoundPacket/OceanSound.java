@@ -18,6 +18,7 @@ package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 /**
@@ -47,12 +48,12 @@ public class OceanSound {
         }
         if (result) {
 
-            pl.playSound(l, SoundsString.WALES.getPath(), volume, 1.0F);
+            pl.playSound(l, SoundsString.WALES.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
         }
         if (result2) {
 
-            pl.playSound(l, SoundsString.OCEAN.getPath(), volume, 1.0F);
+            pl.playSound(l, SoundsString.OCEAN.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
         }
 

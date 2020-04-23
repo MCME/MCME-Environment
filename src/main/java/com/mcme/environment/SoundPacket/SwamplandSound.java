@@ -19,6 +19,7 @@ package com.mcme.environment.SoundPacket;
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 /**
@@ -54,29 +55,29 @@ public class SwamplandSound {
 
             if (result) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_DAY.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_DAY.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_DAY.getPath(),volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_DAY.getPath(),SoundCategory.AMBIENT,volume, 1.0F);
 
             }
 
         } else {
             if (result) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_FROGS_NIGHT.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_FROGS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_NIGHT.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result3) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_NIGHT.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
 
             }
 

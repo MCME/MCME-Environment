@@ -19,6 +19,7 @@ package com.mcme.environment.SoundPacket;
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 /**
@@ -49,36 +50,36 @@ public class PlainSound {
 
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_DAY.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_DAY.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
 
         } else if (SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_MORNING.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_MORNING.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
 
         } else {
             if (result) {
 
-                pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (result2) {
 
-                pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), volume, 1.0F);
+                pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
 

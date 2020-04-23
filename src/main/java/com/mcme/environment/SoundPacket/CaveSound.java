@@ -19,6 +19,7 @@ package com.mcme.environment.SoundPacket;
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 /**
@@ -46,17 +47,17 @@ public class CaveSound {
         Boolean result3 = random3.next();
         if (result) {
 
-            pl.playSound(l, SoundsString.CAVES_CRUMBLE.getPath(), 0.7F, 1.0F);
+            pl.playSound(l, SoundsString.CAVES_CRUMBLE.getPath(), SoundCategory.AMBIENT, 0.7F, 1.0F);
 
         }
         if (result2) {
 
-            pl.playSound(l, SoundsString.CAVES_DROPLETS.getPath(), 0.7F, 1.0F);
+            pl.playSound(l, SoundsString.CAVES_DROPLETS.getPath(), SoundCategory.AMBIENT, 0.7F, 1.0F);
 
         }
         if (result3) {
 
-            pl.playSound(l, SoundsString.CAVE_CRICKETS.getPath(), 0.6F, 1.0F);
+            pl.playSound(l, SoundsString.CAVE_CRICKETS.getPath(), SoundCategory.AMBIENT, 0.6F, 1.0F);
 
         }
 
