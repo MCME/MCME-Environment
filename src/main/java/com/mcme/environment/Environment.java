@@ -213,7 +213,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 60L, 100L);
+        }.runTaskTimer(Environment.getPluginInstance(), 60L, 600L);
 
     }
 

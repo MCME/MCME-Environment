@@ -37,7 +37,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
+import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
+import java.util.Map.Entry;
+import java.util.UUID;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -144,7 +147,6 @@ public class PlayerListener implements Listener {
         List<String> regions = new ArrayList<>();
         List<String> totalRegions = new ArrayList<>();
         List<String> informed = new ArrayList<>();
-        System.out.println("parte");
 
         if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
 
@@ -170,10 +172,18 @@ public class PlayerListener implements Listener {
             }
 
             if (totalRegions.isEmpty()) {
+                for (Entry<UUID, List<UUID>> r : PluginData.informedRegion.entrySet()) {
 
-                EnvChange.resetAll(e.getPlayer());
-                
-                
+                    if (r.getValue().contains(e.getPlayer().getUniqueId())) {
+
+                        LeaveRegionEvent event = new LeaveRegionEvent(e.getPlayer(), PluginData.getNameFromUUID(r.getKey()));
+                        Bukkit.getPluginManager().callEvent(event);
+                        r.getValue().remove(e.getPlayer().getUniqueId());
+
+                    }
+
+                }
+
             }
 
             if (!regions.isEmpty()) {
@@ -259,6 +269,13 @@ public class PlayerListener implements Listener {
             SoundUtil.playSoundLocated(re.soundLocated, e.getPlayer(), parseLong(re.time), re.loc, i);
 
         }
+
+    }
+
+    @EventHandler
+    public void onLeaveRegion(LeaveRegionEvent e) {
+
+        EnvChange.resetAll(e.getPlayer());
 
     }
 

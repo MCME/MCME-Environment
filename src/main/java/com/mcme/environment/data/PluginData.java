@@ -191,4 +191,17 @@ public class PluginData {
         }
 
     }
+
+    public static String getNameFromUUID(UUID uuid) {
+        String name = "";
+
+        for (String s : PluginData.AllRegions.keySet()) {
+            if (PluginData.AllRegions.get(s).idr.equals(uuid)) {
+                name = s;
+            }
+        }
+
+        return name;
+    }
+
 }
