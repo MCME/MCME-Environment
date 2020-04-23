@@ -20,6 +20,7 @@ import com.mcme.environment.Environment;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -44,7 +45,7 @@ public class BellSound {
                 if (times <= time) {
                     times += 1;
 
-                    pl.playSound(l, Sound.BLOCK_BELL_USE, volume, 0.7F);
+                    pl.playSound(l, Sound.BLOCK_BELL_USE, SoundCategory.AMBIENT, volume, 0.7F);
 
                 } else {
                     cancel();

@@ -116,7 +116,7 @@ public class SoundUtil {
 
                     }
 
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 100L);
                 PluginData.addBukkitTask(pl, bRunnable);
                 break;
             case CAVE:
@@ -129,7 +129,7 @@ public class SoundUtil {
 
                     }
 
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 40L);
                 PluginData.addBukkitTask(pl, bRunnable1);
                 break;
             case FOREST:
@@ -157,7 +157,7 @@ public class SoundUtil {
 
                     }
 
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 40L);
                 PluginData.addBukkitTask(pl, bRunnable3);
                 break;
             case PLAIN:

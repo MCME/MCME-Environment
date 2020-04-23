@@ -19,6 +19,7 @@ package com.mcme.environment.SoundPacket;
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 /**
@@ -42,7 +43,7 @@ public class WindSound {
         }
         if (result) {
 
-            pl.playSound(l, SoundsString.WIND.getPath(), volume, 1.0F);
+            pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
         }
 
