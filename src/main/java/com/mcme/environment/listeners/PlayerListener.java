@@ -162,11 +162,10 @@ public class PlayerListener implements Listener {
                         && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
                     regions.add(region);
 
-                    System.out.println("primo" + region);
                 } else if (re.region.isInside(e.getPlayer().getLocation())
                         && PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
                     informed.add(region);
-                    System.out.println("secondo" + region);
+
                 }
 
             }
@@ -194,7 +193,6 @@ public class PlayerListener implements Listener {
                         weightMax = re;
                     }
                 }
-                System.out.println("weight" + weightMax);
 
                 if (!informed.contains(weightMax)) {
                     String ll = "";
@@ -223,7 +221,6 @@ public class PlayerListener implements Listener {
     public void onEnterRegion(EnterRegionEvent e) {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
-        System.out.println("evento triggered");
         int i = 0;
 
         if (parseInt(re.time) >= 1000) {

@@ -51,7 +51,7 @@ public class EnvironmentSound extends EnvironmentCommand {
 
             soundAmbient = getSoundAmbient(args[1]);
 
-            soundAmbient = getSoundLocated(args[1]);
+            soundLocated = getSoundLocated(args[2]);
 
             new BukkitRunnable() {
 

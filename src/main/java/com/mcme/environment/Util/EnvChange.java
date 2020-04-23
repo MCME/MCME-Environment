@@ -114,29 +114,32 @@ public class EnvChange {
 
         Double ptime = playertime.doubleValue() / 24000.0;
         long ptime1 = Math.round(ptime);
+       
         double pp = ptime1 * 24000.0;
         ptime = pl.getPlayerTime() - pp;
+
         pl.setPlayerTime(ptime.longValue(), false);
+
         Long startTime = ptime.longValue();
 
-        if (startTime <= time) {
+        if (startTime < time) {
 
             BukkitTask s = new BukkitRunnable() {
                 long effectiveTime = startTime;
 
                 @Override
                 public void run() {
-
+                    Long i = time - 60;
                     if (effectiveTime >= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
                     }
 
-                    effectiveTime += 50;
+                    effectiveTime += 50L;
                     pl.setPlayerTime(effectiveTime, false);
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
             PluginData.addBukkitTask(pl, s);
         } else {
             BukkitTask s = new BukkitRunnable() {
@@ -144,25 +147,25 @@ public class EnvChange {
 
                 @Override
                 public void run() {
-                    Long i = time - 60;
+                    Long i = time - 70;
                     if (effectiveTime >= 23900 && effectiveTime <= 24000) {
                         pl.setPlayerTime(0L, false);
                         effectiveTime = 0L;
                     } else if (effectiveTime > time && effectiveTime < 23900) {
-                        effectiveTime += 50;
+                        effectiveTime += 50L;
                         pl.setPlayerTime(effectiveTime, false);
                     } else if (effectiveTime < i) {
-                        effectiveTime += 50;
+                        effectiveTime += 50L;
                         pl.setPlayerTime(effectiveTime, false);
                     } else if (effectiveTime >= i && effectiveTime <= time) {
                         pl.setPlayerTime(time, false);
                         cancel();
                     } else {
-                        effectiveTime += 50;
+                        effectiveTime += 50L;
                     }
 
                 }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 2L);
+            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
             PluginData.addBukkitTask(pl, s);
 
         }
@@ -170,11 +173,11 @@ public class EnvChange {
     }
 
     public static void resetAll(Player pl) {
-        
+
         if (pl.getPlayerWeather() != WeatherType.CLEAR) {
             pl.setPlayerWeather(WeatherType.CLEAR);
         }
-        
+
         if (pl.getPlayerTime() != 12000) {
             pl.setPlayerTime(12000, false);
         }
