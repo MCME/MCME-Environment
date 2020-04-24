@@ -212,7 +212,7 @@ public class EnvChange {
 
     }
 
-    private static Location randomLocPrismoid(Region r, String world) {
+    public static Location randomLocPrismoid(Region r, String world) {
         if (r instanceof PrismoidRegion) {
             List<Integer> X = Arrays.asList(((PrismoidRegion) r).getXPoints());
             List<Integer> Z = Arrays.asList(((PrismoidRegion) r).getZPoints());

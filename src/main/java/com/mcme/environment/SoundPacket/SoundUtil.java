@@ -18,6 +18,7 @@ package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
+import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -53,7 +54,7 @@ public class SoundUtil {
     }
 // only water 
 
-    public static Location getRandomLocationYW(int minX, int maxX, int minZ, int maxZ, World world, int maxY, int minY) {
+    public static Location getRandomLocationYW(int minX, int maxX, int minZ, int maxZ, World world, int minY, int maxY) {
         Random rand = new Random();
         Random r = new Random();
         int x = r.nextInt(maxX - minX + 1) + minX;
@@ -104,7 +105,7 @@ public class SoundUtil {
      * @param time The time of the region
      *
      */
-    public static void playSoundAmbient(SoundType s, Player pl, Long time) {
+    public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re) {
         switch (s) {
             case WIND:
 
@@ -154,7 +155,7 @@ public class SoundUtil {
                     @Override
                     public void run() {
 
-                        OceanSound.OceanSound(pl);
+                        OceanSound.OceanSound(pl, re);
 
                     }
 
