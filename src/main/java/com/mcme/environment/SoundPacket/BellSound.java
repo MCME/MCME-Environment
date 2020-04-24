@@ -17,11 +17,13 @@
 package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.data.PluginData;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -31,21 +33,21 @@ public class BellSound {
 
     public static void BellSound(Player pl, int time, Location l) {
 
-        new BukkitRunnable() {
+        BukkitTask runnable = new BukkitRunnable() {
             int times = 0;
 
             @Override
             public void run() {
-                Float volume = 1F;
+                Float volume = 2F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
-                    volume = 0.4F;
+                    volume = 0.5F;
 
                 }
 
                 if (times <= time) {
                     times += 1;
 
-                    pl.playSound(l, Sound.BLOCK_BELL_USE, SoundCategory.AMBIENT, volume, 0.7F);
+                    pl.playSound(l, SoundsString.BELL.getPath(), SoundCategory.AMBIENT, volume, 0.8F);
 
                 } else {
                     cancel();
@@ -54,8 +56,23 @@ public class BellSound {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
+        }.runTaskTimer(Environment.getPluginInstance(), 300L, 70L);
+        PluginData.addBukkitTask(pl, runnable);
+    }
 
+    public static int bellTimes(int time) {
+        int gameTime = time;
+        int hours = gameTime / 1000 + 6;
+        int i = 0;
+        if (hours >= 13) {
+            i = hours - 12;
+        }
+
+        if (hours <= 12) {
+            i = hours;
+        }
+
+        return hours;
     }
 
 }
