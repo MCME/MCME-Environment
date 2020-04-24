@@ -16,9 +16,15 @@
  */
 package com.mcme.environment.SoundPacket;
 
+import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.Util.RandomCollection;
+import com.mcmiddleearth.pluginutil.region.CuboidRegion;
+import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
+import com.mcmiddleearth.pluginutil.region.Region;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.SoundCategory;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -27,7 +33,7 @@ import org.bukkit.entity.Player;
  */
 public class OceanSound {
 
-    public static void OceanSound(Player pl) {
+    public static void OceanSound(Player pl, Region re) {
         RandomCollection<Boolean> random = new RandomCollection<>();
         random.add(0.1, true);
         random.add(0.9, false);
@@ -35,27 +41,37 @@ public class OceanSound {
         RandomCollection<Boolean> random2 = new RandomCollection<>();
         random2.add(0.4, true);
         random2.add(0.6, false);
+        Location l = null;
 
-        Location l = SoundUtil.getRandomLocationYW(pl.getLocation().getBlockX() - 50, pl.getLocation().getBlockX() + 50, pl.getLocation().getBlockZ() - 50, pl.getLocation().getBlockZ() + 50, pl.getWorld(), pl.getLocation().getBlockY());
+        if (re instanceof CuboidRegion) {
+            l = SoundUtil.getRandomLocationYW(((CuboidRegion) re).getMinCorner().getBlockX(), ((CuboidRegion) re).getMaxCorner().getBlockX(), ((CuboidRegion) re).getMinCorner().getBlockZ(), ((CuboidRegion) re).getMaxCorner().getBlockZ(), pl.getWorld(), ((CuboidRegion) re).getMinCorner().getBlockY(), ((CuboidRegion) re).getMaxCorner().getBlockY());
+        } else if (re instanceof PrismoidRegion) {
+            l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
+            Block bl = pl.getWorld().getBlockAt(l);
+            while (bl.getType() != Material.WATER) {
+
+                l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
+            }
+        }
 
         Boolean result = random.next();
         Boolean result2 = random2.next();
         Float volume = 1F;
+        if (l != null) {
+            if (SoundUtil.isOutdoor(pl.getLocation())) {
+                volume = 0.4F;
 
-        if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 0.4F;
+            }
+            if (result) {
 
+                pl.playSound(l, SoundsString.WALES.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
+            if (result2) {
+
+                pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
         }
-        if (result) {
-
-            pl.playSound(l, SoundsString.WALES.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
-
-        }
-        if (result2) {
-
-            pl.playSound(l, SoundsString.OCEAN.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
-
-        }
-
     }
 }

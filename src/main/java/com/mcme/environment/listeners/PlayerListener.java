@@ -222,7 +222,7 @@ public class PlayerListener implements Listener {
     public void onEnterRegion(EnterRegionEvent e) {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
-        
+
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
@@ -253,7 +253,7 @@ public class PlayerListener implements Listener {
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {
 
-            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time));
+            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region);
 
         }
 
