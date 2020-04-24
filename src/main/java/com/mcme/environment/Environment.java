@@ -151,7 +151,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         } else {
 
             con = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
-                    + Environment.getPluginInstance().port + "/"
+                    + Environment.pluginInstance.port + "/"
                     + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
                     Environment.getPluginInstance().username,
                     Environment.getPluginInstance().password);

@@ -17,6 +17,7 @@
 package com.mcme.environment.listeners;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.SoundPacket.BellSound;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
@@ -221,12 +222,7 @@ public class PlayerListener implements Listener {
     public void onEnterRegion(EnterRegionEvent e) {
 
         RegionData re = PluginData.AllRegions.get(e.getNameRegion());
-        int i = 0;
-
-        if (parseInt(re.time) >= 1000) {
-            i = parseInt(re.time) / 1000;
-
-        }
+        
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
@@ -263,7 +259,7 @@ public class PlayerListener implements Listener {
 
         if (!re.soundLocated.equals(SoundType.NONE)) {
 
-            SoundUtil.playSoundLocated(re.soundLocated, e.getPlayer(), parseLong(re.time), re.loc, i);
+            SoundUtil.playSoundLocated(re.soundLocated, e.getPlayer(), parseLong(re.time), re.loc, BellSound.bellTimes(parseInt(re.time)));
 
         }
 
