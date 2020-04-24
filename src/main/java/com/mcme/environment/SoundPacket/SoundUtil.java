@@ -53,11 +53,12 @@ public class SoundUtil {
     }
 // only water 
 
-    public static Location getRandomLocationYW(int minX, int maxX, int minZ, int maxZ, World world, int y) {
+    public static Location getRandomLocationYW(int minX, int maxX, int minZ, int maxZ, World world, int maxY, int minY) {
         Random rand = new Random();
         Random r = new Random();
         int x = r.nextInt(maxX - minX + 1) + minX;
         int z = r.nextInt(maxZ - minZ + 1) + minZ;
+        int y = r.nextInt(maxY - minY + 1) + minY;
         Location rLoc = new Location(world, x, y, z);
         Block bl = world.getBlockAt(rLoc);
 

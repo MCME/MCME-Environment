@@ -36,7 +36,7 @@ public class OceanSound {
         random2.add(0.4, true);
         random2.add(0.6, false);
 
-        Location l = SoundUtil.getRandomLocationYW(pl.getLocation().getBlockX() - 50, pl.getLocation().getBlockX() + 50, pl.getLocation().getBlockZ() - 50, pl.getLocation().getBlockZ() + 50, pl.getWorld(), pl.getLocation().getBlockY());
+        Location l = SoundUtil.getRandomLocationNW(pl.getLocation().getBlockX() - 50, pl.getLocation().getBlockX() + 50, pl.getLocation().getBlockZ() - 50, pl.getLocation().getBlockZ() + 50, pl.getWorld(), pl.getLocation().getBlockY());
 
         Boolean result = random.next();
         Boolean result2 = random2.next();
@@ -48,12 +48,12 @@ public class OceanSound {
         }
         if (result) {
 
-            pl.playSound(l, SoundsString.WALES.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
+            pl.playSound(l, SoundsString.WALES.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
         }
         if (result2) {
 
-            pl.playSound(l, SoundsString.OCEAN.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
+            pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
         }
 
