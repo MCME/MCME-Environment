@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 public class PlainSound {
 
     public static void PlainSound(Player pl, Long time) {
-        Float volume = 1F;
+        Float volume = 0.3F;
         RandomCollection<Boolean> random = new RandomCollection<>();
         random.add(0.4, true);
         random.add(0.6, false);
@@ -43,7 +43,7 @@ public class PlainSound {
         Boolean result2 = random2.next();
 
         if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 0.4F;
+            volume = 1F;
 
         }
         if (SoundUtil.getTimeString(time).equalsIgnoreCase("day")) {

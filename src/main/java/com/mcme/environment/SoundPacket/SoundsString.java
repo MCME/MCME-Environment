@@ -48,11 +48,10 @@ public enum SoundsString {
     CAVES_CRUMBLE("environmental.caves.crumble"),
     CAVE_CRICKETS("animals.insect.cave_crickets"),
     //  Ocean
-    WALES("ocean.wales"),
     OCEAN("environmental.ocean"),
     // wind
     WIND("environmental.wind"),
-    ELEVATION("environmental.elevation"),
+    ELEVATION("environmental.wind.elevation"),
     // city
     BELL("city.bell.one");
    

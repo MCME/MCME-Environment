@@ -30,12 +30,12 @@ public class SwamplandSound {
 
     public static void SwampLandSound(Player pl, Long time) {
         RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.4, true);
-        random.add(0.6, false);
+        random.add(0.2, true);
+        random.add(0.8, false);
 
         RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.4, true);
-        random2.add(0.6, false);
+        random2.add(0.2, true);
+        random2.add(0.8, false);
 
         RandomCollection<Boolean> random3 = new RandomCollection<>();
         random3.add(0.2, true);
@@ -45,9 +45,9 @@ public class SwamplandSound {
         Boolean result = random.next();
         Boolean result2 = random2.next();
         Boolean result3 = random3.next();
-        Float volume = 1F;
+        Float volume = 0.3F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 0.4F;
+            volume = 1.0F;
 
         }
 

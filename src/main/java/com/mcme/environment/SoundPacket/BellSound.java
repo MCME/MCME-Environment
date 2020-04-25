@@ -20,7 +20,6 @@ import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -38,9 +37,9 @@ public class BellSound {
 
             @Override
             public void run() {
-                Float volume = 2F;
+                Float volume = 0.5F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
-                    volume = 0.5F;
+                    volume = 2F;
 
                 }
 
@@ -56,7 +55,7 @@ public class BellSound {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 300L, 70L);
+        }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
         PluginData.addBukkitTask(pl, runnable);
     }
 

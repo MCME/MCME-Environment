@@ -36,9 +36,9 @@ public class WindSound {
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 10, pl.getLocation().getBlockX() + 10, pl.getLocation().getBlockZ() - 10, pl.getLocation().getBlockZ() + 10, pl.getWorld(), pl.getLocation().getBlockY());
 
         Boolean result = random.next();
-        Float volume = 13F;
+        Float volume = 0.4F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 1F;
+            volume = 13.0F;
 
         }
         if (result) {
