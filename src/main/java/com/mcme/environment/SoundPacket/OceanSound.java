@@ -16,6 +16,7 @@
  */
 package com.mcme.environment.SoundPacket;
 
+import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.Util.RandomCollection;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
@@ -42,8 +43,8 @@ public class OceanSound {
         random2.add(0.4, true);
         random2.add(0.6, false);
         Location l = null;
-
-        if (re instanceof CuboidRegion) {
+        /*
+     if (re instanceof CuboidRegion) {
             l = SoundUtil.getRandomLocationYW(((CuboidRegion) re).getMinCorner().getBlockX(), ((CuboidRegion) re).getMaxCorner().getBlockX(), ((CuboidRegion) re).getMinCorner().getBlockZ(), ((CuboidRegion) re).getMaxCorner().getBlockZ(), pl.getWorld(), ((CuboidRegion) re).getMinCorner().getBlockY(), ((CuboidRegion) re).getMaxCorner().getBlockY());
         } else if (re instanceof PrismoidRegion) {
             l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
@@ -52,19 +53,17 @@ public class OceanSound {
 
                 l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
             }
-        }
+        }    
+         */
+
+        l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
 
         Boolean result = random.next();
         Boolean result2 = random2.next();
-        Float volume = 1F;
+        Float volume = 0.4F;
         if (l != null) {
             if (SoundUtil.isOutdoor(pl.getLocation())) {
-                volume = 0.4F;
-
-            }
-            if (result) {
-
-                pl.playSound(l, SoundsString.WALES.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+                volume = 2F;
 
             }
             if (result2) {

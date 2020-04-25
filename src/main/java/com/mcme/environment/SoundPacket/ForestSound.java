@@ -30,21 +30,21 @@ public class ForestSound {
 
     public static void ForestSound(Player pl, Long time) {
         RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.4, true);
-        random.add(0.6, false);
+        random.add(0.3, true);
+        random.add(0.7, false);
 
         RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.4, true);
-        random2.add(0.6, false);
+        random2.add(0.3, true);
+        random2.add(0.7, false);
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
 
         Boolean result = random.next();
         Boolean result2 = random2.next();
 
-        Float volume = 1F;
+        Float volume = 0.4F;
 
         if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 0.4F;
+            volume = 1.0F;
 
         }
 
