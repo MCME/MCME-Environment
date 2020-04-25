@@ -66,7 +66,8 @@ public class SoundUtil {
         while (bl.getType() != Material.WATER) {
             int x2 = r.nextInt(maxX - minX + 1) + minX;
             int z2 = r.nextInt(maxZ - minZ + 1) + minZ;
-            rLoc = new Location(world, x2, y, z2);
+            int y2 = r.nextInt(maxY - minY + 1) + minY;
+            rLoc = new Location(world, x2, y2, z2);
 
         }
 
