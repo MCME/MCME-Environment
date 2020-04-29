@@ -248,7 +248,7 @@ public class PlayerListener implements Listener {
         }
 
         if (!re.time.equalsIgnoreCase("default")) {
-            EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
+            e.getPlayer().setPlayerTime(parseLong(re.time), false);
         }
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {

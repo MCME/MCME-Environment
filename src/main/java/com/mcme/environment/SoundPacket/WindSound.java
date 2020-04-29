@@ -32,16 +32,15 @@ public class WindSound {
         RandomCollection<Boolean> random = new RandomCollection<>();
         random.add(0.5, true);
         random.add(0.5, false);
-
-        Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 10, pl.getLocation().getBlockX() + 10, pl.getLocation().getBlockZ() - 10, pl.getLocation().getBlockZ() + 10, pl.getWorld(), pl.getLocation().getBlockY());
-
         Boolean result = random.next();
-        Float volume = 0.4F;
+        Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 5, pl.getLocation().getBlockX() + 5, pl.getLocation().getBlockZ() - 5, pl.getLocation().getBlockZ() + 5, pl.getWorld(), pl.getLocation().getBlockY());
+
+        Float volume = 0.07F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
             volume = 13.0F;
 
         }
-        if (result) {
+        if (SoundUtil.randomBoolean(0.6, 0.4)) {
 
             pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 

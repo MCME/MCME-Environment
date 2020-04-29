@@ -29,35 +29,31 @@ import org.bukkit.entity.Player;
 public class CaveSound {
 
     public static void CaveSound(Player pl) {
-        RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.05, true);
-        random.add(0.95, false);
 
-        RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.3, true);
-        random2.add(0.7, false);
-
-        RandomCollection<Boolean> random3 = new RandomCollection<>();
-        random3.add(0.05, true);
-        random3.add(0.95, false);
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 10, pl.getLocation().getBlockX() + 10, pl.getLocation().getBlockZ() - 10, pl.getLocation().getBlockZ() + 10, pl.getWorld(), pl.getLocation().getBlockY());
 
-        Boolean result = random.next();
-        Boolean result2 = random2.next();
-        Boolean result3 = random3.next();
-        if (result) {
+        if (SoundUtil.randomBoolean(0.05, 0.95)) {
 
             pl.playSound(l, SoundsString.CAVES_CRUMBLE.getPath(), SoundCategory.AMBIENT, 0.7F, 1.0F);
 
         }
-        if (result2) {
+        if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
             pl.playSound(l, SoundsString.CAVES_DROPLETS.getPath(), SoundCategory.AMBIENT, 0.7F, 1.0F);
 
         }
-        if (result3) {
+        if (SoundUtil.randomBoolean(0.05, 0.95)) {
 
             pl.playSound(l, SoundsString.CAVE_CRICKETS.getPath(), SoundCategory.AMBIENT, 0.6F, 1.0F);
+
+        }
+        if (SoundUtil.randomBoolean(0.05, 0.95)) {
+            Float volWind = 0.05F;
+            if (SoundUtil.isOutdoor(pl.getLocation())) {
+                volWind = 0.7F;
+            }
+
+            pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
 
         }
 

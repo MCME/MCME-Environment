@@ -29,23 +29,10 @@ import org.bukkit.entity.Player;
 public class SwamplandSound {
 
     public static void SwampLandSound(Player pl, Long time) {
-        RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.2, true);
-        random.add(0.8, false);
 
-        RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.2, true);
-        random2.add(0.8, false);
-
-        RandomCollection<Boolean> random3 = new RandomCollection<>();
-        random3.add(0.2, true);
-        random3.add(0.8, false);
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
 
-        Boolean result = random.next();
-        Boolean result2 = random2.next();
-        Boolean result3 = random3.next();
-        Float volume = 0.3F;
+        Float volume = 0.2F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
             volume = 1.0F;
 
@@ -53,31 +40,49 @@ public class SwamplandSound {
 
         if (SoundUtil.getTimeString(time).equalsIgnoreCase("day") || SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
 
-            if (result) {
+            if (SoundUtil.randomBoolean(0.2, 0.8)) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_DAY.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (result2) {
+            if (SoundUtil.randomBoolean(0.2, 0.8)) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_DAY.getPath(),SoundCategory.AMBIENT,volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
+            if (SoundUtil.randomBoolean(0.05, 0.95)) {
+                Float volWind = 0.05F;
+                if (SoundUtil.isOutdoor(pl.getLocation())) {
+                    volWind = 0.7F;
+                }
+
+                pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
 
             }
 
         } else {
-            if (result) {
+            if (SoundUtil.randomBoolean(0.2, 0.8)) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_FROGS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
-
-            }
-            if (result2) {
-
-                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_FROGS_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (result3) {
+            if (SoundUtil.randomBoolean(0.2, 0.8)) {
 
-                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_NIGHT.getPath(),SoundCategory.AMBIENT, volume, 1.0F);
+                pl.playSound(l, SoundsString.SWAMPLAND_CRICKETS_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
+            if (SoundUtil.randomBoolean(0.2, 0.8)) {
+
+                pl.playSound(l, SoundsString.SWAMPLAND_BIRDS_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
+            if (SoundUtil.randomBoolean(0.05, 0.95)) {
+                Float volWind = 0.05F;
+                if (SoundUtil.isOutdoor(pl.getLocation())) {
+                    volWind = 0.7F;
+                }
+
+                pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
 
             }
 

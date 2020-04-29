@@ -37,7 +37,7 @@ public class BellSound {
 
             @Override
             public void run() {
-                Float volume = 0.5F;
+                Float volume = 0.3F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
                     volume = 2F;
 

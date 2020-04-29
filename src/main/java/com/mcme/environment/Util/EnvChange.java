@@ -103,12 +103,8 @@ public class EnvChange {
         return result;
     }
 
-    /**
-     * This method changes the player time with an animation
-     *
-     * @param pl Player
-     * @param time Time in ticks
-     */
+    /*
+    
     public static void changePlayerTime(Player pl, Long time) {
         Long playertime = pl.getPlayerTime();
 
@@ -171,16 +167,14 @@ public class EnvChange {
         }
 
     }
-
+     */
+    
     public static void resetAll(Player pl) {
-
         if (pl.getPlayerWeather() != WeatherType.CLEAR) {
             pl.setPlayerWeather(WeatherType.CLEAR);
         }
-
-        if (pl.getPlayerTime() != 12000) {
-            pl.setPlayerTime(12000, false);
-        }
+      
+        pl.resetPlayerTime();
 
         if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
 
