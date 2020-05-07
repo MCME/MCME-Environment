@@ -55,6 +55,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("redefine", new EnvironmentRedefine(permissionStaff));
         addCommandHandler("help", new EnvironmentHelp(permissionStaff, permission));
         addCommandHandler("sound", new EnvironmentSound(permissionStaff));
+        addCommandHandler("location", new EnvironmentSound(permissionStaff));
     }
 
     @Override
@@ -88,6 +89,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("create");
             arguments.add("details");
             arguments.add("sound");
+            arguments.add("location");
             arguments.add("redefine");
         }
         List<String> Flist = new ArrayList<String>();
@@ -98,7 +100,12 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             areas.add(s);
 
         }
-//environment edit[0] test3[1] rain true 15:00
+        List<String> locations = new ArrayList<String>();
+        List<String> flocation = new ArrayList<>();
+
+        for (String s : PluginData.locSounds.keySet()) {
+            locations.add(s);
+        }
 
         if (args.length == 1) {
             for (String s : arguments) {
@@ -117,6 +124,10 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 }
                 return fregion;
 
+            } else if (args[0].equalsIgnoreCase("location")) {
+                List<String> l = Arrays.asList("add", "remove");
+                return l;
+
             } else {
                 return null;
             }
@@ -131,6 +142,17 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
                 return l;
 
+            } else if (args[0].equalsIgnoreCase("location")) {
+                if (args[1].equalsIgnoreCase("remove")) {
+                    for (String s : locations) {
+                        if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                            flocation.add(s);
+                        }
+                    }
+                    return fregion;
+                } else {
+                    return null;
+                }
             } else {
 
                 return null;
@@ -141,11 +163,14 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 List<String> l = Arrays.asList("true", "false");
                 return l;
 
-            } else if (args[0].equalsIgnoreCase("sound")) {
+            } else if (args[0].equalsIgnoreCase("location")) {
+                if (args[1].equalsIgnoreCase("add")) {
+                    List<String> l = Arrays.asList("bell", "none");
+                    return l;
 
-                List<String> l = Arrays.asList("bell", "none");
-                return l;
-
+                } else {
+                    return null;
+                }
             } else {
 
                 return null;
