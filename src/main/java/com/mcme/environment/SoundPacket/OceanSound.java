@@ -17,15 +17,10 @@
 package com.mcme.environment.SoundPacket;
 
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
-import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.Util.RandomCollection;
-import com.mcmiddleearth.pluginutil.region.CuboidRegion;
-import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.Region;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.SoundCategory;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -35,14 +30,7 @@ import org.bukkit.entity.Player;
 public class OceanSound {
 
     public static void OceanSound(Player pl, Region re) {
-        RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.1, true);
-        random.add(0.9, false);
 
-        RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.4, true);
-        random2.add(0.6, false);
-        Location l = null;
         /*
      if (re instanceof CuboidRegion) {
             l = SoundUtil.getRandomLocationYW(((CuboidRegion) re).getMinCorner().getBlockX(), ((CuboidRegion) re).getMaxCorner().getBlockX(), ((CuboidRegion) re).getMinCorner().getBlockZ(), ((CuboidRegion) re).getMaxCorner().getBlockZ(), pl.getWorld(), ((CuboidRegion) re).getMinCorner().getBlockY(), ((CuboidRegion) re).getMaxCorner().getBlockY());
@@ -55,22 +43,29 @@ public class OceanSound {
             }
         }    
          */
+        Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
 
-        l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
-
-        Boolean result = random.next();
-        Boolean result2 = random2.next();
         Float volume = 0.4F;
-        if (l != null) {
-            if (SoundUtil.isOutdoor(pl.getLocation())) {
-                volume = 2F;
+        if (SoundUtil.isOutdoor(pl.getLocation())) {
+            volume = 2F;
 
-            }
-            if (result2) {
-
-                pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
-
-            }
         }
+        
+        
+        if (SoundUtil.randomBoolean(0.3, 0.7)) {
+
+            pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+        }
+        if (SoundUtil.randomBoolean(0.2, 0.8)) {
+            Float volWind = 0.05F;
+            if (SoundUtil.isOutdoor(pl.getLocation())) {
+                volWind = 0.7F;
+            }
+
+            pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
+
+        }
+
     }
 }

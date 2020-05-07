@@ -33,7 +33,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnvironmentSound extends EnvironmentCommand {
 
     public EnvironmentSound(String... permissionNodes) {
-        super(3, true, permissionNodes);
+        super(2, true, permissionNodes);
         setShortDescription(": Edit sounds ");
         setUsageDescription("<nameRegion> <ambientSoundType> <LocatedSoundType>: With this command you can edit sounds of that region");
     }
@@ -42,8 +42,6 @@ public class EnvironmentSound extends EnvironmentCommand {
 
     private SoundType soundAmbient;
 
-    private SoundType soundLocated;
-
     @Override
     protected void execute(final CommandSender cs, final String... args) {
         if (PluginData.AllRegions.containsKey(args[0])) {
@@ -51,13 +49,11 @@ public class EnvironmentSound extends EnvironmentCommand {
 
             soundAmbient = getSoundAmbient(args[1]);
 
-            soundLocated = getSoundLocated(args[2]);
-
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-                    String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + ";" + soundLocated.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                    String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
 
                     try {
                         Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
@@ -94,18 +90,6 @@ public class EnvironmentSound extends EnvironmentCommand {
 
         } else if (arg.equalsIgnoreCase("swampland")) {
             sound = SoundType.SWAMPLAND;
-
-        } else {
-            sound = SoundType.NONE;
-        }
-        return sound;
-    }
-
-    private SoundType getSoundLocated(String arg) {
-        SoundType sound = SoundType.NONE;
-
-        if (arg.equalsIgnoreCase("bell")) {
-            sound = SoundType.BELL;
 
         } else {
             sound = SoundType.NONE;

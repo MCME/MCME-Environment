@@ -22,13 +22,22 @@ package com.mcme.environment.SoundPacket;
  */
 public enum SoundType {
 
-    PLAIN,
-    OCEAN,
-    WIND,
-    CAVE,
-    SWAMPLAND,
-    NONE,
-    FOREST,
-    BELL;
+    PLAIN(0),
+    OCEAN(0),
+    WIND(0),
+    CAVE(0),
+    SWAMPLAND(0),
+    NONE(0),
+    FOREST(0),
+    BELL(100);
 
+    private Integer distance;
+
+    SoundType(Integer env) {
+        this.distance = env;
+    }
+
+    public Integer getDistanceTrigger() {
+        return distance;
+    }
 }

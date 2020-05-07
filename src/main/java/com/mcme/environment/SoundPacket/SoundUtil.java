@@ -17,12 +17,10 @@
 package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.Util.RandomCollection;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.Region;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -87,6 +85,22 @@ public class SoundUtil {
         } else {
             return "day";
         }
+    }
+
+    /**
+     * It returns a boolean with the given possibility
+     *
+     * @param tr True percentage
+     * @param fl False percentage
+     * @return
+     */
+    public static Boolean randomBoolean(Double tr, Double fl) {
+        RandomCollection<Boolean> random = new RandomCollection<>();
+        random.add(tr, true);
+        random.add(fl, false);
+
+        return random.next();
+
     }
 
     public static Boolean isOutdoor(Location l) {
@@ -212,22 +226,13 @@ public class SoundUtil {
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Long time, Location loc, int i) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc) {
         switch (s) {
 
             case BELL:
 
-                BukkitTask bRunnable6 = new BukkitRunnable() {
+                BellSound.BellSound(pl, time, loc);
 
-                    @Override
-                    public void run() {
-
-                        BellSound.BellSound(pl, i, loc);
-
-                    }
-
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
-                PluginData.addBukkitTask(pl, bRunnable6);
                 break;
 
         }

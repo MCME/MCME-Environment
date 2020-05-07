@@ -38,10 +38,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
+import com.mcme.environment.data.LocatedSoundData;
 import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
 import java.util.Map.Entry;
 import java.util.UUID;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -248,18 +250,12 @@ public class PlayerListener implements Listener {
         }
 
         if (!re.time.equalsIgnoreCase("default")) {
-            EnvChange.changePlayerTime(e.getPlayer(), parseLong(re.time));
+            e.getPlayer().setPlayerTime(parseLong(re.time), false);
         }
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {
 
             SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region);
-
-        }
-
-        if (!re.soundLocated.equals(SoundType.NONE)) {
-
-            SoundUtil.playSoundLocated(re.soundLocated, e.getPlayer(), parseLong(re.time), re.loc, BellSound.bellTimes(parseInt(re.time)));
 
         }
 
@@ -269,6 +265,42 @@ public class PlayerListener implements Listener {
     public void onLeaveRegion(LeaveRegionEvent e) {
 
         EnvChange.resetAll(e.getPlayer());
+
+    }
+
+    @EventHandler
+    public void onMoveLocation(PlayerMoveEvent e) {
+
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+            Player pl = e.getPlayer();
+            for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
+
+                if (pl.getLocation().distance(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
+
+                    if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                        int time = 12000;
+                        for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
+                            if (r.getValue().isInside(entry.getValue().loc)) {
+                                time = parseInt(r.getValue().time);
+                            }
+                        }
+
+                        SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
+                        PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
+                    }
+
+                } else {
+
+                    if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+
+                        PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
+
+                    }
+
+                }
+            }
+
+        }
 
     }
 

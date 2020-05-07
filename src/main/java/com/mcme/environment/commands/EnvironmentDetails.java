@@ -38,7 +38,6 @@ public class EnvironmentDetails extends EnvironmentCommand {
     private String time;
     private String type;
     private SoundType soundAmb;
-    private SoundType soundLoc;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -54,7 +53,6 @@ public class EnvironmentDetails extends EnvironmentCommand {
             type = redata.type;
             weather = redata.weather;
             soundAmb = redata.soundAmbient;
-            soundLoc = redata.soundLocated;
 
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtil());
 
@@ -74,10 +72,7 @@ public class EnvironmentDetails extends EnvironmentCommand {
             if (soundAmb != SoundType.NONE) {
                 message.addSimple(ChatColor.GREEN + "Sound heard: " + ChatColor.BLUE + soundAmb.name() + "\n");
             }
-            if (soundLoc != SoundType.NONE) {
-                message.addSimple(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + soundLoc.name().toUpperCase() + "\n");
 
-            }
             message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Region data: \n");
             message.addSimple(ChatColor.GREEN + "Type: " + ChatColor.BLUE + type + "\n");
             message.addSimple(ChatColor.GREEN + "Weight: " + ChatColor.BLUE + weight + "\n");

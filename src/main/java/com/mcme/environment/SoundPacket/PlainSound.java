@@ -17,7 +17,6 @@
 package com.mcme.environment.SoundPacket;
 
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
-import com.mcme.environment.Util.RandomCollection;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -29,18 +28,9 @@ import org.bukkit.entity.Player;
 public class PlainSound {
 
     public static void PlainSound(Player pl, Long time) {
-        Float volume = 0.3F;
-        RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.4, true);
-        random.add(0.6, false);
+        Float volume = 0.2F;
 
-        RandomCollection<Boolean> random2 = new RandomCollection<>();
-        random2.add(0.4, true);
-        random2.add(0.6, false);
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
-
-        Boolean result = random.next();
-        Boolean result2 = random2.next();
 
         if (SoundUtil.isOutdoor(pl.getLocation())) {
             volume = 1F;
@@ -48,38 +38,65 @@ public class PlainSound {
         }
         if (SoundUtil.getTimeString(time).equalsIgnoreCase("day")) {
 
-            if (result) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_BIRD_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (result2) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_INSECT_DAY.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
+            if (SoundUtil.randomBoolean(0.05, 0.95)) {
+                Float volWind = 0.05F;
+                if (SoundUtil.isOutdoor(pl.getLocation())) {
+                    volWind = 0.7F;
+                }
+
+                pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
+
+            }
 
         } else if (SoundUtil.getTimeString(time).equalsIgnoreCase("morning")) {
-            if (result) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_BIRD_MORNING.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (result2) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_INSECT_MORNING.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
+            if (SoundUtil.randomBoolean(0.05, 0.95)) {
+                Float volWind = 0.05F;
+                if (SoundUtil.isOutdoor(pl.getLocation())) {
+                    volWind = 0.7F;
+                }
+
+                pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
+
+            }
 
         } else {
-            if (result) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (result2) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
                 pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+
+            }
+            if (SoundUtil.randomBoolean(0.05, 0.95)) {
+                Float volWind = 0.05F;
+                if (SoundUtil.isOutdoor(pl.getLocation())) {
+                    volWind = 0.7F;
+                }
+
+                pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
 
             }
 

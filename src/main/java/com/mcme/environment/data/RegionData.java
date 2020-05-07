@@ -18,6 +18,7 @@ package com.mcme.environment.data;
 
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcmiddleearth.pluginutil.region.Region;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
 
@@ -46,10 +47,10 @@ public class RegionData {
     public final Integer weight;
 
     public final SoundType soundAmbient;
-    
-    public final SoundType soundLocated;
 
     public final Location loc;
+
+    public final LocationsData locData;
 
     /**
      *
@@ -66,9 +67,9 @@ public class RegionData {
      * @param weg Weight of the region
      * @param sndAmb Sound type of Ambient
      * @param lc Location for soundlocated
-     * @param sndLoc Sound Located type
+     *
      */
-    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc, SoundType sndLoc) {
+    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc) {
 
         name = namem;
 
@@ -89,10 +90,10 @@ public class RegionData {
         weight = weg;
 
         soundAmbient = sndAmb;
-        
-        soundLocated = sndLoc;
 
         loc = lc;
+
+        locData = new LocationsData();
 
     }
 
