@@ -18,7 +18,6 @@ package com.mcme.environment.data;
 
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcmiddleearth.pluginutil.region.Region;
-import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
 

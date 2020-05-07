@@ -216,14 +216,16 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `sound` VARCHAR(45),\n"
                             + "  `location` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
-                            + "  PRIMARY KEY (`idregion`));";
+                            + "  PRIMARY KEY (`idlocation`));";
                     String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
                             + "  `uuid` VARCHAR(45) NOT NULL,\n"
                             + "  `bool` BOOLEAN NOT NULL,\n"
                             + "  PRIMARY KEY (`uuid`));";
                     try {
                         con.createStatement().execute(stat);
+                        
                         con.createStatement().execute(stat2);
+                        
                         con.createStatement().execute(stat3);
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);

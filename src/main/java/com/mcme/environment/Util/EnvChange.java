@@ -34,7 +34,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
