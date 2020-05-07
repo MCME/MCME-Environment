@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mcme</groupId>
     <artifactId>Environment</artifactId>
-    <version>2.5</version>
+    <version>2.7</version>
     <packaging>jar</packaging>
     <name>Environment</name>
     <url>http://www.mcmiddleearth.com/</url>

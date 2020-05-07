@@ -226,22 +226,13 @@ public class SoundUtil {
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Long time, Location loc, int i) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc) {
         switch (s) {
 
             case BELL:
 
-                BukkitTask bRunnable6 = new BukkitRunnable() {
+                BellSound.BellSound(pl, time, loc);
 
-                    @Override
-                    public void run() {
-
-                        BellSound.BellSound(pl, i, loc);
-
-                    }
-
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 6000L);
-                PluginData.addBukkitTask(pl, bRunnable6);
                 break;
 
         }

@@ -24,6 +24,8 @@ import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.listeners.PlayerListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -35,6 +37,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -53,6 +56,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     public ConsoleCommandSender clogger = this.getServer().getConsoleSender();
     @Getter
     private static Environment pluginInstance;
+    @Getter
+    private File envFolder;
+
     @Getter
     @Setter
     public static String nameserver;
@@ -95,6 +101,11 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             ConnectionRunnable();
+            try {
+                onInitiateFile();
+            } catch (IOException ex) {
+                Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+            }
             Environment.setNameserver("default");
 
             new BukkitRunnable() {
@@ -105,6 +116,20 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        PluginData.onLoad(envFolder);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvalidConfigurationException ex) {
+                        Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            }.runTaskLater(Environment.getPluginInstance(), 400L);
         }
 
     }
@@ -119,6 +144,12 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 s.cancel();
             }
         }
+        try {
+            PluginData.onSave(envFolder);
+        } catch (IOException ex) {
+            Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
@@ -179,13 +210,21 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `time` LONGTEXT,\n"
                             + "  `server` VARCHAR(100) NOT NULL,\n"
                             + "  PRIMARY KEY (`idregion`));";
-                    String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
+                    String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_locations_data` (\n"
+                            + "  `name` VARCHAR(45) NOT NULL,\n"
+                            + "  `idlocation` VARCHAR(45) NOT NULL,\n"
+                            + "  `sound` VARCHAR(45),\n"
+                            + "  `location` LONGTEXT,\n"
+                            + "  `server` VARCHAR(100) NOT NULL,\n"
+                            + "  PRIMARY KEY (`idregion`));";
+                    String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
                             + "  `uuid` VARCHAR(45) NOT NULL,\n"
                             + "  `bool` BOOLEAN NOT NULL,\n"
                             + "  PRIMARY KEY (`uuid`));";
                     try {
                         con.createStatement().execute(stat);
                         con.createStatement().execute(stat2);
+                        con.createStatement().execute(stat3);
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -227,6 +266,17 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         out.writeUTF("GetServer");
 
         player.sendPluginMessage(this, "BungeeCord", out.toByteArray());
+    }
+
+    public void onInitiateFile() throws IOException {
+        envFolder = new File(Bukkit.getServer().getPluginManager().getPlugin("Environment").getDataFolder(), "locations");
+
+        if (!envFolder.exists()) {
+
+            envFolder.mkdir();
+
+        }
+
     }
 
 }
