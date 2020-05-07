@@ -31,7 +31,7 @@ public enum SoundType {
     FOREST(0),
     BELL(100);
 
-    private Integer distance;
+    private final Integer distance;
 
     SoundType(Integer env) {
         this.distance = env;

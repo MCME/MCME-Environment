@@ -21,6 +21,8 @@ import com.mcme.environment.Util.RandomCollection;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -104,14 +106,16 @@ public class SoundUtil {
     }
 
     public static Boolean isOutdoor(Location l) {
-        int y = l.getBlockY();
-        int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
+        
+            int y = l.getBlockY();
+            int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
 
-        if (y < worldMaximumY) {
-            return false;
-        } else {
-            return true;
-        }
+            if (y < worldMaximumY) {
+                return false;
+            } else {
+                return true;
+            }
+       
 
     }
 
