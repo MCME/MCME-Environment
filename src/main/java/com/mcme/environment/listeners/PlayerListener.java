@@ -42,6 +42,7 @@ import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
 import java.util.Map.Entry;
 import java.util.UUID;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -254,8 +255,12 @@ public class PlayerListener implements Listener {
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {
 
-            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region);
+            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region, re);
 
+        }
+
+        if (!re.locData.leaves.isEmpty()) {
+            SoundUtil.playSoundAmbient(SoundType.LEAVES, e.getPlayer(), parseLong(re.time), re.region, re);
         }
 
     }
@@ -274,7 +279,7 @@ public class PlayerListener implements Listener {
             Player pl = e.getPlayer();
             for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
                 System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
-               
+
                 if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
 
                     if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {

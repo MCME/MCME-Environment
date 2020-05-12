@@ -23,14 +23,14 @@ package com.mcme.environment.SoundPacket;
 public enum SoundType {
 
     PLAIN(0),
-    OCEAN(0),
+    OCEAN(15),
     WIND(0),
     CAVE(0),
     SWAMPLAND(0),
     NONE(0),
     FOREST(0),
-    BELL(100);
-
+    BELL(100),
+    LEAVES(15);
     private final Integer distance;
 
     SoundType(Integer env) {
