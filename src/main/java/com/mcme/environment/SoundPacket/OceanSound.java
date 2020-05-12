@@ -17,6 +17,7 @@
 package com.mcme.environment.SoundPacket;
 
 import static com.mcme.environment.SoundPacket.SoundUtil.getRandomLocationNW;
+import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
@@ -28,29 +29,26 @@ import org.bukkit.entity.Player;
  */
 public class OceanSound {
 
-    public static void OceanSound(Player pl, Region re) {
+    public static void OceanSound(Player pl, RegionData re) {
 
-        /*
-     if (re instanceof CuboidRegion) {
-            l = SoundUtil.getRandomLocationYW(((CuboidRegion) re).getMinCorner().getBlockX(), ((CuboidRegion) re).getMaxCorner().getBlockX(), ((CuboidRegion) re).getMinCorner().getBlockZ(), ((CuboidRegion) re).getMaxCorner().getBlockZ(), pl.getWorld(), ((CuboidRegion) re).getMinCorner().getBlockY(), ((CuboidRegion) re).getMaxCorner().getBlockY());
-        } else if (re instanceof PrismoidRegion) {
-            l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
-            Block bl = pl.getWorld().getBlockAt(l);
-            while (bl.getType() != Material.WATER) {
+      
+        Location l = null;
+        if (!re.locData.water.isEmpty()) {
+            l = re.locData.water.get(0);
 
-                l = EnvChange.randomLocPrismoid(re, pl.getWorld().getName());
+            for (Location loc : re.locData.water) {
+                if (l.distanceSquared(pl.getLocation()) > loc.distanceSquared(pl.getLocation())) {
+                    l = loc;
+                }
             }
-        }    
-         */
-        Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 20, pl.getLocation().getBlockX() + 20, pl.getLocation().getBlockZ() - 20, pl.getLocation().getBlockZ() + 20, pl.getWorld(), pl.getLocation().getBlockY());
 
+        }
         Float volume = 0.4F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
             volume = 2F;
 
         }
-        
-        
+
         if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
             pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);

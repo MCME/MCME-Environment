@@ -56,27 +56,6 @@ public class SoundUtil {
 
         return rLoc;
     }
-// only water 
-
-    public static Location getRandomLocationYW(int minX, int maxX, int minZ, int maxZ, World world, int minY, int maxY) {
-        Random rand = new Random();
-        Random r = new Random();
-        int x = r.nextInt(maxX - minX + 1) + minX;
-        int z = r.nextInt(maxZ - minZ + 1) + minZ;
-        int y = r.nextInt(maxY - minY + 1) + minY;
-        Location rLoc = new Location(world, x, y, z);
-        Block bl = world.getBlockAt(rLoc);
-
-        while (bl.getType() != Material.WATER) {
-            int x2 = r.nextInt(maxX - minX + 1) + minX;
-            int z2 = r.nextInt(maxZ - minZ + 1) + minZ;
-            int y2 = r.nextInt(maxY - minY + 1) + minY;
-            rLoc = new Location(world, x2, y2, z2);
-
-        }
-
-        return rLoc;
-    }
 
     public static String getTimeString(Long time) {
         if (time >= 0 && time <= 7000) {
@@ -177,7 +156,7 @@ public class SoundUtil {
                     @Override
                     public void run() {
 
-                        OceanSound.OceanSound(pl, re);
+                        OceanSound.OceanSound(pl, r);
 
                     }
 
@@ -245,12 +224,12 @@ public class SoundUtil {
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc,String name) {
         switch (s) {
 
             case BELL:
 
-                BellSound.BellSound(pl, time, loc);
+                BellSound.BellSound(pl, time, loc, name);
 
                 break;
 
