@@ -76,7 +76,7 @@ public class EnvironmentList extends EnvironmentCommand {
                 Location l = PluginData.locSounds.get(location).loc;
 
                 FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
-                        .addSimple(ChatColor.DARK_GREEN + "- " + location + " " + l.getX() + "x," + l.getY() + "y," + l.getZ() + "z" + "\n");
+                        .addSimple(ChatColor.DARK_GREEN + "- " + location + " " + l.getBlockX() + "x," + l.getBlockY() + "y," + l.getBlockZ() + "z" + "\n");
                 messages.add(r);
             }
 

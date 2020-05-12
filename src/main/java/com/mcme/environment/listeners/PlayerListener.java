@@ -279,33 +279,35 @@ public class PlayerListener implements Listener {
             Player pl = e.getPlayer();
 
             for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
-                System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
-               
-                if (pl.getWorld().getName().equalsIgnoreCase(entry.getValue().loc.getWorld().getName())) {
-                    if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
 
-                        if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
-                            int time = 12000;
-                            for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
-                                if (r.getValue().isInside(entry.getValue().loc)) {
-                                    time = parseInt(r.getValue().time);
-                                }
+                if (pl.getWorld().equals(entry.getValue().loc.getWorld())) {
+                    System.out.println("world is good");
+                }
+
+                if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
+
+                    System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
+
+                    if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                        int time = 12000;
+                        for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
+                            if (r.getValue().isInside(entry.getValue().loc)) {
+                                time = parseInt(r.getValue().time);
                             }
-
-                            SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
-                            PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
                         }
 
-                    } else {
+                        SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
+                        PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
+                    }
 
-                        if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                } else {
 
-                            PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
+                    if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
 
-                            for (BukkitTask s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
-                                s.cancel();
-                            }
+                        PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
 
+                        for (BukkitTask s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
+                            s.cancel();
                         }
 
                     }

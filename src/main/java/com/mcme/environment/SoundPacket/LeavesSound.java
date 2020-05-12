@@ -35,9 +35,9 @@ public class LeavesSound {
 
         }
         if (l != null) {
-            if (SoundUtil.randomBoolean(0.3, 0.7)) {
+            if (SoundUtil.randomBoolean(0.4, 0.6)) {
 
-                pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
+                pl.playSound(l, SoundsString.LEAVES.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
             if (SoundUtil.randomBoolean(0.2, 0.8)) {
