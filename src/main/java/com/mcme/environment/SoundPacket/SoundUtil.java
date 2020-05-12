@@ -19,6 +19,7 @@ package com.mcme.environment.SoundPacket;
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.RandomCollection;
 import com.mcme.environment.data.PluginData;
+import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
 import java.util.logging.Level;
@@ -106,16 +107,15 @@ public class SoundUtil {
     }
 
     public static Boolean isOutdoor(Location l) {
-        
-            int y = l.getBlockY();
-            int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
 
-            if (y < worldMaximumY) {
-                return false;
-            } else {
-                return true;
-            }
-       
+        int y = l.getBlockY();
+        int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
+
+        if (y < worldMaximumY) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 
@@ -125,9 +125,9 @@ public class SoundUtil {
      * @param s SoundType
      * @param pl Player
      * @param time The time of the region
-     *
+     * @param r
      */
-    public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re) {
+    public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re, RegionData r) {
         switch (s) {
             case WIND:
 
@@ -212,6 +212,21 @@ public class SoundUtil {
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
                 PluginData.addBukkitTask(pl, bRunnable5);
                 break;
+            case LEAVES:
+
+                BukkitTask bRunnable6 = new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+
+                        LeavesSound.LeavesSound(pl, r);
+
+                    }
+
+                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
+                PluginData.addBukkitTask(pl, bRunnable6);
+                break;
+
             default:
 
                 BukkitTask bRunnable7 = new BukkitRunnable() {

@@ -67,12 +67,12 @@ public class EnvironmentRemove extends EnvironmentCommand {
     }
 
     private void sendDel(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Region deleted!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Region deleted!");
 
     }
 
     private void sendNoRegion(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This region doesn't exists!");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This region doesn't exists!");
 
     }
 }

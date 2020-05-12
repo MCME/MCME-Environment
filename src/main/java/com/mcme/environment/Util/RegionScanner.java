@@ -17,9 +17,14 @@
 package com.mcme.environment.Util;
 
 import com.mcme.environment.Environment;
+import com.mcme.environment.data.PluginData;
+import com.mcme.environment.data.RegionData;
 import com.sk89q.worldedit.regions.Region;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,7 +38,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class RegionScanner {
 
-    public static void getChunkSnaphshot(Region region, World b, String name) {
+    public static void getChunkSnaphshot(Region region, World b, String name, RegionData redata) {
         new BukkitRunnable() {
 
             @Override
@@ -111,8 +116,19 @@ public class RegionScanner {
 
                     }
                 }.runTaskAsynchronously(Environment.getPluginInstance());
+
+                redata.locData.leaves = leavesList;
+                redata.locData.water = waterList;
+
+                try {
+                    PluginData.onSave(Environment.getPluginInstance().getEnvFolder());
+                } catch (IOException ex) {
+                    Logger.getLogger(RegionScanner.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         }.runTaskLater(Environment.getPluginInstance(), 80L);
+
     }
 
 }

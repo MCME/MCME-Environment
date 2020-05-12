@@ -76,10 +76,16 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     String username = this.getConfig().getString("username");
     @Getter
     String password = this.getConfig().getString("password");
+    
+    @Getter
+    @Setter
+    private static boolean engine;
+    
 
     @Override
     public void onEnable() {
         pluginInstance = this;
+        engine = true;
         this.saveDefaultConfig();
         this.getConfig().options().copyDefaults();
         try {

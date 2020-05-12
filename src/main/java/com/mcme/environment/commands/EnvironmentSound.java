@@ -98,12 +98,12 @@ public class EnvironmentSound extends EnvironmentCommand {
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Region updated!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Region updated!");
 
     }
 
     private void sendNo(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This region doesn't exist.Type before /environment create areaName weight");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This region doesn't exist.Type before /environment create areaName weight");
 
     }
 }

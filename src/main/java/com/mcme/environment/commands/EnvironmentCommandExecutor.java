@@ -42,7 +42,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
 
     private final String permission = "env.user";
     private final String permissionStaff = "env.staff";
-    private final String permissionReload = "project.reload";
+    private final String permissionReload = "env.reload";
 
     public EnvironmentCommandExecutor() {
         addCommandHandler("create", new EnvironmentCreate(permissionStaff));
@@ -55,7 +55,8 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         addCommandHandler("redefine", new EnvironmentRedefine(permissionStaff));
         addCommandHandler("help", new EnvironmentHelp(permissionStaff, permission));
         addCommandHandler("sound", new EnvironmentSound(permissionStaff));
-        addCommandHandler("location", new EnvironmentSound(permissionStaff));
+        addCommandHandler("location", new EnvironmentLocation(permissionStaff));
+        addCommandHandler("control", new EnvironmentControl(permissionStaff, permission));
     }
 
     @Override
@@ -91,6 +92,7 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("sound");
             arguments.add("location");
             arguments.add("redefine");
+            arguments.add("control");
         }
         List<String> Flist = new ArrayList<String>();
         List<String> areas = new ArrayList<String>();
@@ -126,6 +128,14 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
 
             } else if (args[0].equalsIgnoreCase("location")) {
                 List<String> l = Arrays.asList("add", "remove");
+                return l;
+
+            } else if (args[0].equalsIgnoreCase("list")) {
+                List<String> l = Arrays.asList("region", "location");
+                return l;
+
+            } else if (args[0].equalsIgnoreCase("control")) {
+                List<String> l = Arrays.asList("shutdown", "enable", "realtime", "reload");
                 return l;
 
             } else {
@@ -184,11 +194,11 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
     private void sendNoSubcommandErrorMessage(CommandSender cs) {
         //MessageUtil.sendErrorMessage(cs, "You're missing subcommand name for this command.");
         PluginDescriptionFile descr = Environment.getPluginInstance().getDescription();
-        PluginData.getMessageUtil().sendErrorMessage(cs, descr.getName() + " - version " + descr.getVersion());
+        PluginData.getMessageUtils().sendErrorMessage(cs, descr.getName() + " - version " + descr.getVersion());
     }
 
     private void sendSubcommandNotFoundErrorMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "Subcommand not found.");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "Subcommand not found.");
     }
 
     private void addCommandHandler(String name, EnvironmentCommand handler) {

@@ -49,12 +49,12 @@ public class EnvironmentOff extends EnvironmentCommand {
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Switched off!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Switched off!");
 
     }
 
     private void sendAlready(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "It's already off");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "It's already off");
 
     }
 

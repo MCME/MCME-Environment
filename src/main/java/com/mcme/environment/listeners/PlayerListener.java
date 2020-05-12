@@ -17,7 +17,6 @@
 package com.mcme.environment.listeners;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.SoundPacket.BellSound;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
@@ -43,6 +42,7 @@ import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
 import java.util.Map.Entry;
 import java.util.UUID;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
         List<String> totalRegions = new ArrayList<>();
         List<String> informed = new ArrayList<>();
 
-        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId()) && Environment.isEngine()) {
 
             for (String region : PluginData.AllRegions.keySet()) {
 
@@ -255,8 +255,12 @@ public class PlayerListener implements Listener {
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {
 
-            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region);
+            SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region, re);
 
+        }
+
+        if (!re.locData.leaves.isEmpty()) {
+            SoundUtil.playSoundAmbient(SoundType.LEAVES, e.getPlayer(), parseLong(re.time), re.region, re);
         }
 
     }
@@ -271,33 +275,43 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onMoveLocation(PlayerMoveEvent e) {
 
-        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId()) && Environment.isEngine()) {
             Player pl = e.getPlayer();
+
             for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
+                System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
+               
+                if (pl.getWorld().getName().equalsIgnoreCase(entry.getValue().loc.getWorld().getName())) {
+                    if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
 
-                if (pl.getLocation().distance(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
-
-                    if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
-                        int time = 12000;
-                        for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
-                            if (r.getValue().isInside(entry.getValue().loc)) {
-                                time = parseInt(r.getValue().time);
+                        if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                            int time = 12000;
+                            for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
+                                if (r.getValue().isInside(entry.getValue().loc)) {
+                                    time = parseInt(r.getValue().time);
+                                }
                             }
+
+                            SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
+                            PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
                         }
 
-                        SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
-                        PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
-                    }
+                    } else {
 
-                } else {
+                        if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
 
-                    if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                            PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
 
-                        PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
+                            for (BukkitTask s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
+                                s.cancel();
+                            }
+
+                        }
 
                     }
 
                 }
+
             }
 
         }

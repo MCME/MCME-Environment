@@ -82,11 +82,13 @@ public class EnvironmentCreate extends EnvironmentCommand {
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
-                                RegionScanner.getChunkSnaphshot((Region) r, loc.getWorld(), args[0]);
+
+                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0], PluginData.AllRegions.get(args[0]));
+
                                 sendDone(cs);
                             } catch (SQLException | NumberFormatException ex) {
                                 if (ex instanceof NumberFormatException) {
-                                    PluginData.getMessageUtil().sendErrorMessage(cs, "It should be an integer number");
+                                    PluginData.getMessageUtils().sendErrorMessage(cs, "It should be an integer number");
                                 } else if (ex instanceof SQLException) {
                                     Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -113,12 +115,12 @@ public class EnvironmentCreate extends EnvironmentCommand {
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
-                                RegionScanner.getChunkSnaphshot((Region) r, loc.getWorld(), args[0]);
+                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0], PluginData.AllRegions.get(args[0]));
 
                                 sendDone(cs);
                             } catch (SQLException | NumberFormatException ex) {
                                 if (ex instanceof NumberFormatException) {
-                                    PluginData.getMessageUtil().sendErrorMessage(cs, "It should be an integer number");
+                                    PluginData.getMessageUtils().sendErrorMessage(cs, "It should be an integer number");
                                 } else if (ex instanceof SQLException) {
                                     Logger.getLogger(EnvironmentCreate.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -148,17 +150,17 @@ public class EnvironmentCreate extends EnvironmentCommand {
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Region created!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Region created!");
 
     }
 
     private void sendAlready(CommandSender cs, String name) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "The region " + name + " already exists!");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "The region " + name + " already exists!");
 
     }
 
     private void sendInvalidSelection(Player player) {
-        PluginData.getMessageUtil().sendErrorMessage(player, "For a cuboid or polygonal area make a valid WorldEdit selection first.");
+        PluginData.getMessageUtils().sendErrorMessage(player, "For a cuboid or polygonal area make a valid WorldEdit selection first.");
     }
 
     public String serialize(Integer[] intlist) {
