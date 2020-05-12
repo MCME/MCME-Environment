@@ -76,7 +76,7 @@ public class PluginData {
     public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
     //IdRegion, Players
     @Getter
-    public static Map<UUID, List<BukkitTask>> PlayersRunnableLocation = new HashMap<>();
+    public static Map<UUID, List<InformedLocData>> PlayersRunnableLocation = new HashMap<>();
 
     @Getter
     public static Map<String, LocatedSoundData> locSounds = new HashMap<>();
@@ -244,17 +244,19 @@ public class PluginData {
         }
 
     }
-
-    public static void addBukkitTaskLocation(Player pl, BukkitTask b) {
+    
+    public static void addBukkitTaskLocation(Player pl, BukkitTask b,SoundType s, String name) {
         if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
-            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(b);
+            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(new InformedLocData(b,name,s));
         } else {
-            List<BukkitTask> listB = new ArrayList<>();
-            listB.add(b);
+            List<InformedLocData> listB = new ArrayList<>();
+            listB.add(new InformedLocData(b,name,s));
             PluginData.PlayersRunnableLocation.put(pl.getUniqueId(), listB);
         }
 
     }
+
+    
 
     public static String getNameFromUUID(UUID uuid) {
         String name = "";

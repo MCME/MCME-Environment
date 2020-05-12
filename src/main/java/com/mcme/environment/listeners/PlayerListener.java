@@ -37,6 +37,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
+import com.mcme.environment.data.InformedLocData;
 import com.mcme.environment.data.LocatedSoundData;
 import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
@@ -281,37 +282,39 @@ public class PlayerListener implements Listener {
             for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
 
                 if (pl.getWorld().equals(entry.getValue().loc.getWorld())) {
-                    System.out.println("world is good");
-                }
 
-                if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
+                    if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
 
-                    System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
+                        if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
 
-                    if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
-                        int time = 12000;
-                        for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
-                            if (r.getValue().isInside(entry.getValue().loc)) {
-                                time = parseInt(r.getValue().time);
+                            System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
+
+                            int time = 12000;
+                            for (Entry<String, RegionData> r : PluginData.AllRegions.entrySet()) {
+                                if (r.getValue().isInside(entry.getValue().loc)) {
+                                    time = parseInt(r.getValue().time);
+                                }
                             }
+
+                            SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc, entry.getValue().name);
+                            PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
                         }
 
-                        SoundUtil.playSoundLocated(entry.getValue().sound, pl, time, entry.getValue().loc);
-                        PluginData.informedLocation.get(entry.getValue().id).add(pl.getUniqueId());
-                    }
+                    } else {
 
-                } else {
+                        if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
 
-                    if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
+                            PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
 
-                        PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
+                            for (InformedLocData s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
+                                if (s.name.equalsIgnoreCase(entry.getValue().name)) {
+                                    s.bcrunnable.cancel();
+                                }
+                            }
 
-                        for (BukkitTask s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
-                            s.cancel();
                         }
 
                     }
-
                 }
 
             }

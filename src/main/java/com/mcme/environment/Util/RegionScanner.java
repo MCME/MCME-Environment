@@ -59,8 +59,8 @@ public class RegionScanner {
                             List<Location> waterListAll = new ArrayList<>();
                             List<Location> leavesListAll = new ArrayList<>();
 
-                            for (int i = 0; i < 16; i++) {
-                                for (int j = 0; j < 16; j++) {
+                            for (int i = 0; i <= 16; i++) {
+                                for (int j = 0; j <= 16; j++) {
                                     for (int k = 255; k > 0; k--) {
                                         BlockData data = chunk.getBlockData(i, k, j);
 
@@ -113,18 +113,21 @@ public class RegionScanner {
                             }
 
                         });
+                        if (!leavesList.isEmpty()) {
+                            redata.locData.leaves = leavesList;
+                        }
+                        if (!waterList.isEmpty()) {
+                            redata.locData.water = waterList;
+                        }
+                        System.out.println(waterList.size() + " | " + leavesList.size());
 
+                        try {
+                            PluginData.onSave(Environment.getPluginInstance().getEnvFolder());
+                        } catch (IOException ex) {
+                            Logger.getLogger(RegionScanner.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }.runTaskAsynchronously(Environment.getPluginInstance());
-
-                redata.locData.leaves = leavesList;
-                redata.locData.water = waterList;
-
-                try {
-                    PluginData.onSave(Environment.getPluginInstance().getEnvFolder());
-                } catch (IOException ex) {
-                    Logger.getLogger(RegionScanner.class.getName()).log(Level.SEVERE, null, ex);
-                }
 
             }
         }.runTaskLater(Environment.getPluginInstance(), 80L);

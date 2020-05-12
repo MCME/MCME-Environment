@@ -30,8 +30,8 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class BellSound {
 
-    public static void BellSound(Player pl, int time, Location l) {
-
+    public static void BellSound(Player pl, int time, Location l, String nameloc) {
+        int timess = bellTimes(time);
         BukkitTask runnable = new BukkitRunnable() {
             int times = 0;
 
@@ -43,7 +43,7 @@ public class BellSound {
 
                 }
 
-                if (times <= time) {
+                if (times <= timess) {
                     times += 1;
 
                     pl.playSound(l, SoundsString.BELL.getPath(), SoundCategory.AMBIENT, volume, 0.8F);
@@ -56,7 +56,8 @@ public class BellSound {
             }
 
         }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
-        PluginData.addBukkitTaskLocation(pl, runnable);
+
+        PluginData.addBukkitTaskLocation(pl, runnable, SoundType.BELL, nameloc);
     }
 
     public static int bellTimes(int time) {
