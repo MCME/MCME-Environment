@@ -47,12 +47,12 @@ public class EnvironmentOn extends EnvironmentCommand {
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Switched on!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Switched on!");
 
     }
 
     private void sendAlready(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "It's already on");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "It's already on");
 
     }
 

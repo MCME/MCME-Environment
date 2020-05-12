@@ -119,26 +119,26 @@ public class EnvironmentLocation extends EnvironmentCommand {
     }
 
     private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "New location added!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "New location added!");
 
     }
     private void sendDel(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Location removed!");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Location removed!");
 
     }
 
     private void sendAlready(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This location already exists");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This location already exists");
 
     }
 
     private void sendNo(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This location doesn't exists");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This location doesn't exists");
 
     }
 
     private void sendNotEnough(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "No enough arguments");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "No enough arguments");
 
     }
 }

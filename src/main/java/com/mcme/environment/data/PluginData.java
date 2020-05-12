@@ -52,10 +52,10 @@ import org.bukkit.util.Vector;
 public class PluginData {
 
     @Getter
-    private static final MessageUtil messageUtil = new MessageUtil();
+    private static final MessageUtil messageUtils = new MessageUtil();
 
     static {
-        messageUtil.setPluginName("Environment-MCME");
+        messageUtils.setPluginName("Environment-MCME");
     }
     /**
      * String and regions data
@@ -75,7 +75,9 @@ public class PluginData {
     @Getter
     public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
     //IdRegion, Players
-
+    @Getter
+    public static Map<UUID, List<BukkitTask>> PlayersRunnableLocation = new HashMap<>();
+   
     @Getter
     public static Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
@@ -243,6 +245,17 @@ public class PluginData {
             List<BukkitTask> listB = new ArrayList<>();
             listB.add(b);
             PluginData.PlayersRunnable.put(pl.getUniqueId(), listB);
+        }
+
+    }
+    
+     public static void addBukkitTaskLocation(Player pl, BukkitTask b) {
+        if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
+            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(b);
+        } else {
+            List<BukkitTask> listB = new ArrayList<>();
+            listB.add(b);
+            PluginData.PlayersRunnableLocation.put(pl.getUniqueId(), listB);
         }
 
     }

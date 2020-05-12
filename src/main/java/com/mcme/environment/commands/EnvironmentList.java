@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 public class EnvironmentList extends EnvironmentCommand {
 
     public EnvironmentList(String... permissionNodes) {
-        super(1, true, permissionNodes);
+        super(2, true, permissionNodes);
         setShortDescription(": List of all regions/locations");
         setUsageDescription(": List");
     }
@@ -55,32 +55,32 @@ public class EnvironmentList extends EnvironmentCommand {
         }
         if (args[0].equalsIgnoreCase("region")) {
 
-            FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
+            FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                     .addSimple(ChatColor.GREEN + "Regions loaded in the network --> " + ChatColor.BOLD + PluginData.AllRegions.size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
             for (String region : PluginData.AllRegions.keySet()) {
-                FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
+                FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + region + "\n");
                 messages.add(r);
             }
 
-            PluginData.getMessageUtil().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
+            PluginData.getMessageUtils().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
         } else {
 
-            FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
+            FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                     .addSimple(ChatColor.GREEN + "Locations loaded in the network --> " + ChatColor.BOLD + PluginData.locSounds.size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
             for (String location : PluginData.locSounds.keySet()) {
                 Location l = PluginData.locSounds.get(location).loc;
 
-                FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtil())
+                FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + location + " " + l.getX() + "x," + l.getY() + "y," + l.getZ() + "z" + "\n");
                 messages.add(r);
             }
 
-            PluginData.getMessageUtil().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
+            PluginData.getMessageUtils().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
 
         }
     }

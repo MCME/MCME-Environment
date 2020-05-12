@@ -58,23 +58,23 @@ public class EnvironmentHelp extends EnvironmentCommand {
     }
 
     private void sendHelpStartMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendInfoMessage(cs, "Help for Environment plugin.");
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Help for Environment plugin.");
     }
 
     private void sendNoSuchCommandMessage(CommandSender cs, String arg) {
-        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "/environment " + arg + ": There is no such command.");
+        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "/environment " + arg + ": There is no such command.");
     }
 
     private void sendDescriptionMessage(CommandSender cs, String arg, String description) {
-        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "/environment " + arg + description);
+        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "/environment " + arg + description);
     }
 
     private void sendNoDescriptionMessage(CommandSender cs, String arg) {
-        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "/environment " + arg + ": There is no help for this command.");
+        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "/environment " + arg + ": There is no help for this command.");
     }
     //Set Manual
 
     private void sendManualMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "Manual: ");
+        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "Manual: ");
     }
 }

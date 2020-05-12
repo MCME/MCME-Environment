@@ -54,11 +54,11 @@ public class EnvironmentDetails extends EnvironmentCommand {
             weather = redata.weather;
             soundAmb = redata.soundAmbient;
 
-            FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtil());
+            FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtils());
 
             message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Name of the region :" + ChatColor.BLUE + args[0] + "\n");
 
-            if (weather != "default") {
+            if (!weather.equalsIgnoreCase("default")) {
                 message.addSimple(ChatColor.GREEN + "Weather type: " + ChatColor.BLUE + weather.toUpperCase() + "\n");
             }
 
@@ -66,7 +66,7 @@ public class EnvironmentDetails extends EnvironmentCommand {
                 message.addTooltipped(ChatColor.GREEN.toString() + " with " + ChatColor.UNDERLINE.toString() + " THUNDERS" + "\n", ChatColor.BLUE.toString() + "Every 1 second 20% of thunderbolt ");
 
             }
-            if (time != "default") {
+            if (!time.equalsIgnoreCase("default")) {
                 message.addSimple(ChatColor.GREEN + "Time set as: " + ChatColor.BLUE + parseTime(parseLong(time)) + " [" + time + " ticks]" + "\n");
             }
             if (soundAmb != SoundType.NONE) {
@@ -116,7 +116,7 @@ public class EnvironmentDetails extends EnvironmentCommand {
     }
 
     private void sendNo(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "This region doesn't exists.Type before /environment create areaName");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This region doesn't exists.Type before /environment create areaName");
 
     }
 

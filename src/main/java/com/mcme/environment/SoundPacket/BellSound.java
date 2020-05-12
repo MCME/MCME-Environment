@@ -39,7 +39,7 @@ public class BellSound {
             public void run() {
                 Float volume = 0.3F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
-                    volume = 2F;
+                    volume = 20F;
 
                 }
 
@@ -56,7 +56,7 @@ public class BellSound {
             }
 
         }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
-        PluginData.addBukkitTask(pl, runnable);
+        PluginData.addBukkitTaskLocation(pl, runnable);
     }
 
     public static int bellTimes(int time) {

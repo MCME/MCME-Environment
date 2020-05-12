@@ -17,7 +17,6 @@
 package com.mcme.environment.listeners;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.SoundPacket.BellSound;
 import com.mcme.environment.Util.EnvChange;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
@@ -151,7 +150,7 @@ public class PlayerListener implements Listener {
         List<String> totalRegions = new ArrayList<>();
         List<String> informed = new ArrayList<>();
 
-        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId()) && Environment.isEngine()) {
 
             for (String region : PluginData.AllRegions.keySet()) {
 
@@ -271,11 +270,12 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onMoveLocation(PlayerMoveEvent e) {
 
-        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId()) && Environment.isEngine()) {
             Player pl = e.getPlayer();
             for (Entry<String, LocatedSoundData> entry : PluginData.locSounds.entrySet()) {
-
-                if (pl.getLocation().distance(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
+                System.out.println(pl.getLocation().distanceSquared(entry.getValue().loc) + "  ||  " + entry.getValue().sound.getDistanceTrigger());
+               
+                if (pl.getLocation().distanceSquared(entry.getValue().loc) <= entry.getValue().sound.getDistanceTrigger()) {
 
                     if (!PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
                         int time = 12000;
@@ -294,6 +294,10 @@ public class PlayerListener implements Listener {
                     if (PluginData.informedLocation.get(entry.getValue().id).contains(pl.getUniqueId())) {
 
                         PluginData.informedLocation.get(entry.getValue().id).remove(pl.getUniqueId());
+
+                        for (BukkitTask s : PluginData.PlayersRunnableLocation.get(pl.getUniqueId())) {
+                            s.cancel();
+                        }
 
                     }
 

@@ -72,15 +72,15 @@ public abstract class EnvironmentCommand {
     protected abstract void execute(CommandSender cs, String... args);
 
     private void sendPlayerOnlyErrorMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "You have to be logged in to run this command.");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "You have to be logged in to run this command.");
     }
 
     private void sendNoPermsErrorMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "You don't have permission to run this command.");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "You don't have permission to run this command.");
     }
 
     protected void sendMissingArgumentErrorMessage(CommandSender cs) {
-        PluginData.getMessageUtil().sendErrorMessage(cs, "You're missing arguments for this command.");
+        PluginData.getMessageUtils().sendErrorMessage(cs, "You're missing arguments for this command.");
     }
 
     protected boolean hasPermissions(Player p) {
