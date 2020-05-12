@@ -77,7 +77,7 @@ public class PluginData {
     //IdRegion, Players
     @Getter
     public static Map<UUID, List<BukkitTask>> PlayersRunnableLocation = new HashMap<>();
-   
+
     @Getter
     public static Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
@@ -184,17 +184,13 @@ public class PluginData {
 
                             if (Environment.nameserver.equalsIgnoreCase(r.getString("server"))) {
                                 loc = new Location(Bukkit.getWorld(location[0]), parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
+                                
+                                locSounds.put(r.getString("name"), new LocatedSoundData(loc, r.getString("name"), r.getString("server"), SoundType.valueOf(r.getString("sound")), UUID.fromString(r.getString("idlocation"))));
 
-                            } else {
-                                loc = new Location(null, parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
+                                List<UUID> s = new ArrayList<>();
 
+                                informedLocation.put(UUID.fromString(r.getString("idlocation")), s);
                             }
-
-                            locSounds.put(r.getString("name"), new LocatedSoundData(loc, r.getString("name"), r.getString("server"), SoundType.valueOf(r.getString("sound")), UUID.fromString(r.getString("idlocation"))));
-
-                            List<UUID> s = new ArrayList<>();
-
-                            informedLocation.put(UUID.fromString(r.getString("idlocation")), s);
 
                         } while (r.next());
 
@@ -248,8 +244,8 @@ public class PluginData {
         }
 
     }
-    
-     public static void addBukkitTaskLocation(Player pl, BukkitTask b) {
+
+    public static void addBukkitTaskLocation(Player pl, BukkitTask b) {
         if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
             PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(b);
         } else {
