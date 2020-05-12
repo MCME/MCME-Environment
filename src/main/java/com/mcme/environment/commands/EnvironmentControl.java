@@ -72,11 +72,11 @@ public class EnvironmentControl extends EnvironmentCommand {
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtils());
 
             message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Metrics :" + "\n");
-            message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Players that are using the sound engine : " + ChatColor.YELLOW + currentPlayerRunnable + " / " + totalPlayers + " " + Math.round(s) + "\n");
+            message.addSimple(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Players that are using the sound engine : " + ChatColor.YELLOW + currentPlayerRunnable + "/" + totalPlayers + " [" + Math.round(s) + "%]" + "\n");
 
             for (int i = 0; i <= 100; i++) {
 
-                if (i <= s) {
+                if (i <= Math.round(s)) {
 
                     if (i <= 40) {
                         message.addSimple(ChatColor.GREEN.toString() + "|");

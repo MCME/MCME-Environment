@@ -53,8 +53,10 @@ public enum SoundsString {
     WIND("environmental.wind"),
     ELEVATION("environmental.wind.elevation"),
     // city
-    BELL("city.bell.one");
-   
+    BELL("city.bell.one"),
+    //Leaves
+    LEAVES("environmental.leaves_rustle");
+
     private String path;
 
     SoundsString(String envUrl) {

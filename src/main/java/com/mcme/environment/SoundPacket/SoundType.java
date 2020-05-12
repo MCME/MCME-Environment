@@ -29,8 +29,8 @@ public enum SoundType {
     SWAMPLAND(0),
     NONE(0),
     FOREST(0),
-    BELL(100),
-    LEAVES(15);
+    BELL(10000),
+    LEAVES(150);
     private final Integer distance;
 
     SoundType(Integer env) {

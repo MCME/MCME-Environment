@@ -61,6 +61,7 @@ public class EnvironmentLocation extends EnvironmentCommand {
                             try {
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
                                 sendDone(cs);
+                                
                                 PluginData.loadLocations();
 
                             } catch (SQLException ex) {
