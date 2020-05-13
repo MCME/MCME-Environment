@@ -22,6 +22,7 @@ import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,26 +53,29 @@ public class EnvironmentLocation extends EnvironmentCommand {
                     if (args[2].equalsIgnoreCase("bell")) {
                         soundLocated = getSoundLocated(args[2]);
                     }
+                    if (checkOtherSounds(pl.getLocation(), soundLocated)) {
+                        new BukkitRunnable() {
 
-                    new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.nameserver + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
+                                try {
+                                    Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                                    sendDone(cs);
 
-                        @Override
-                        public void run() {
-                            String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.nameserver + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
-                            try {
-                                Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                                sendDone(cs);
-                                
-                                PluginData.loadLocations();
+                                    PluginData.loadLocations();
 
-                            } catch (SQLException ex) {
-                                Logger.getLogger(EnvironmentEdit.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(EnvironmentEdit.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
                             }
 
-                        }
+                        }.runTaskAsynchronously(Environment.getPluginInstance());
+                    } else {
 
-                    }.runTaskAsynchronously(Environment.getPluginInstance());
-
+                        sendNear(cs);
+                    }
                 } else {
                     sendAlready(cs);
                 }
@@ -119,10 +123,32 @@ public class EnvironmentLocation extends EnvironmentCommand {
         return sound;
     }
 
+    private boolean checkOtherSounds(Location loc, SoundType p) {
+        Boolean bool = true;
+
+        for (String s : PluginData.locSounds.keySet()) {
+            if (!PluginData.locSounds.get(s).loc.equals(loc)) {
+                if (loc.distanceSquared(PluginData.locSounds.get(s).loc) <= p.getDistanceTrigger()) {
+                    bool = false;
+                }
+            }
+
+        }
+
+        return bool;
+
+    }
+
     private void sendDone(CommandSender cs) {
         PluginData.getMessageUtils().sendInfoMessage(cs, "New location added!");
 
     }
+
+    private void sendNear(CommandSender cs) {
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This sound is near another sound!");
+
+    }
+
     private void sendDel(CommandSender cs) {
         PluginData.getMessageUtils().sendInfoMessage(cs, "Location removed!");
 

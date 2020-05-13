@@ -22,6 +22,7 @@ import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
@@ -224,12 +225,12 @@ public class SoundUtil {
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc,String name) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc,UUID id) {
         switch (s) {
 
             case BELL:
 
-                BellSound.BellSound(pl, time, loc, name);
+                BellSound.BellSound(pl, time, loc, id);
 
                 break;
 

@@ -6,6 +6,7 @@
 package com.mcme.environment.data;
 
 import com.mcme.environment.SoundPacket.SoundType;
+import java.util.UUID;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -16,14 +17,14 @@ public class InformedLocData {
 
     public BukkitTask bcrunnable;
 
-    public String name;
+    public UUID idlocation;
 
     public SoundType sound;
 
-    public InformedLocData(BukkitTask l, String n, SoundType sou) {
+    public InformedLocData(BukkitTask l, UUID idloc, SoundType sou) {
         bcrunnable = l;
 
-        name = n;
+        idlocation = idloc;
 
         sound = sou;
 

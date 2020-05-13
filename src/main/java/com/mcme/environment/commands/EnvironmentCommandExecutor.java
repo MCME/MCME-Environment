@@ -152,14 +152,14 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
                 return l;
 
-            } else if (args[0].equalsIgnoreCase("location")) {
+            } else if (args[0].equalsIgnoreCase("location")) {   
                 if (args[1].equalsIgnoreCase("remove")) {
                     for (String s : locations) {
                         if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                             flocation.add(s);
                         }
                     }
-                    return fregion;
+                    return flocation;
                 } else {
                     return null;
                 }

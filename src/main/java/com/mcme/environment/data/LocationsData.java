@@ -19,9 +19,13 @@ package com.mcme.environment.data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import static java.lang.Double.parseDouble;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -32,6 +36,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class LocationsData {
 
     public List<Location> water;
+
     public List<Location> leaves;
 
     public LocationsData() {
@@ -41,23 +46,57 @@ public class LocationsData {
 
     }
 
+    public LocationsData(List<Location> s, List<Location> l) {
+
+        water = s;
+
+        leaves = l;
+
+    }
+
     public void save(File file) throws IOException {
 
         YamlConfiguration config = new YamlConfiguration();
+        List<String> locationsWater = new ArrayList<>();
+        List<String> locationsLeaves = new ArrayList<>();
 
-        config.set("waterList", water);
-        config.set("leavesList", leaves);
+        for (Location w : water) {
+            String s = w.getX() + ";" + w.getY() + ";" + w.getZ();
+            locationsWater.add(s);
+        }
+        for (Location w : leaves) {
+            String s = w.getX() + ";" + w.getY() + ";" + w.getZ();
+            locationsLeaves.add(s);
+        }
+
+        config.set("waterList", locationsWater);
+        config.set("leavesList", locationsLeaves);
 
         config.save(file);
     }
 
-    public void load(File file) throws IOException, FileNotFoundException, InvalidConfigurationException {
+    public void load(File file, World world) throws IOException, FileNotFoundException, InvalidConfigurationException {
         YamlConfiguration config = new YamlConfiguration();
 
         config.load(file);
 
-        water = (List<Location>) config.getList("waterList");
-        leaves = (List<Location>) config.getList("leavesList");
+        List<String> waterList = (List<String>) config.getList("waterList");
+        List<String> leavesList = (List<String>) config.getList("leavesList");
+
+        for (String s : waterList) {
+
+            String[] line = PluginData.unserialize(s);
+
+            Location l = new Location(world, parseDouble(line[0]), parseDouble(line[1]), parseDouble(line[2]));
+            water.add(l);
+        }
+        for (String s : leavesList) {
+
+            String[] line = PluginData.unserialize(s);
+
+            Location l = new Location(world, parseDouble(line[0]), parseDouble(line[1]), parseDouble(line[2]));
+            leaves.add(l);
+        }
 
     }
 }

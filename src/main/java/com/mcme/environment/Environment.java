@@ -24,6 +24,7 @@ import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.listeners.PlayerListener;
+import com.mcme.environment.runnable.runnableplayer;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -76,11 +77,10 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     String username = this.getConfig().getString("username");
     @Getter
     String password = this.getConfig().getString("password");
-    
+
     @Getter
     @Setter
     private static boolean engine;
-    
 
     @Override
     public void onEnable() {
@@ -119,6 +119,8 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 @Override
                 public void run() {
                     PluginData.loadRegions();
+                    runnableLocations();
+                    runnableplayer.runnableLocationsPlayers();
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
@@ -229,9 +231,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  PRIMARY KEY (`uuid`));";
                     try {
                         con.createStatement().execute(stat);
-                        
+
                         con.createStatement().execute(stat2);
-                        
+
                         con.createStatement().execute(stat3);
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
@@ -284,6 +286,21 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             envFolder.mkdir();
 
         }
+
+    }
+
+    public static void runnableLocations() {
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if (!nameserver.equalsIgnoreCase("default")) {
+                    PluginData.loadLocations();
+                }
+
+            }
+
+        }.runTaskTimer(Environment.getPluginInstance(), 50L, 200L);
 
     }
 

@@ -18,9 +18,14 @@ package com.mcme.environment.commands;
 
 import com.google.common.base.Strings;
 import com.mcme.environment.Environment;
+import com.mcme.environment.data.InformedLocData;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -65,7 +70,7 @@ public class EnvironmentControl extends EnvironmentCommand {
 
         } else if (args[0].equalsIgnoreCase("realtime")) {
 
-            Integer currentPlayerRunnable = PluginData.PlayersRunnable.size();
+            Integer currentPlayerRunnable = getSPlayers(PluginData.getPlayersRunnable(), PluginData.getPlayersRunnableLocation());
             Integer totalPlayers = Bukkit.getOnlinePlayers().size();
             Double s = 100.0 * currentPlayerRunnable / totalPlayers;
 
@@ -118,9 +123,13 @@ public class EnvironmentControl extends EnvironmentCommand {
                         for (BukkitTask b : PluginData.getPlayersRunnable().get(s)) {
                             b.cancel();
                             PluginData.getPlayersRunnable().get(s).remove(b);
-                            if (PluginData.getPlayersRunnable().get(s).isEmpty()) {
-                                PluginData.getPlayersRunnable().remove(s);
-                            }
+                        }
+                    }
+
+                    for (UUID s : PluginData.PlayersRunnableLocation.keySet()) {
+                        for (InformedLocData b : PluginData.getPlayersRunnableLocation().get(s)) {
+                            b.bcrunnable.cancel();
+                            PluginData.getPlayersRunnableLocation().get(s).remove(b);
 
                         }
                     }
@@ -167,6 +176,29 @@ public class EnvironmentControl extends EnvironmentCommand {
 
     private void sendNoPerm(CommandSender cs) {
         PluginData.getMessageUtils().sendErrorMessage(cs, "No permission for this command");
+
+    }
+
+    private Integer getSPlayers(Map<UUID, List<BukkitTask>> s, Map<UUID, List<InformedLocData>> ss) {
+        List<UUID> list = new ArrayList<>();
+
+        for (UUID uuid : s.keySet()) {
+            if (!list.contains(uuid)) {
+
+                list.add(uuid);
+            }
+
+        }
+
+        for (UUID uuid : ss.keySet()) {
+            if (!list.contains(uuid)) {
+
+                list.add(uuid);
+            }
+
+        }
+
+        return list.size();
 
     }
 

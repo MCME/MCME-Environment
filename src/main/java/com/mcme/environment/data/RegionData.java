@@ -19,6 +19,7 @@ package com.mcme.environment.data;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.UUID;
+import lombok.Setter;
 import org.bukkit.Location;
 
 /**
@@ -48,8 +49,9 @@ public class RegionData {
     public final SoundType soundAmbient;
 
     public final Location loc;
-
-    public final LocationsData locData;
+    
+    @Setter
+    public LocationsData locData;
 
     /**
      *

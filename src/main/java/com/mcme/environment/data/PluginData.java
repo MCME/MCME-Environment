@@ -36,6 +36,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -184,7 +185,7 @@ public class PluginData {
 
                             if (Environment.nameserver.equalsIgnoreCase(r.getString("server"))) {
                                 loc = new Location(Bukkit.getWorld(location[0]), parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
-                                
+
                                 locSounds.put(r.getString("name"), new LocatedSoundData(loc, r.getString("name"), r.getString("server"), SoundType.valueOf(r.getString("sound")), UUID.fromString(r.getString("idlocation"))));
 
                                 List<UUID> s = new ArrayList<>();
@@ -244,19 +245,17 @@ public class PluginData {
         }
 
     }
-    
-    public static void addBukkitTaskLocation(Player pl, BukkitTask b,SoundType s, String name) {
+
+    public static void addBukkitTaskLocation(Player pl, BukkitTask b, SoundType s, UUID idLocation) {
         if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
-            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(new InformedLocData(b,name,s));
+            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(new InformedLocData(b, idLocation, s));
         } else {
             List<InformedLocData> listB = new ArrayList<>();
-            listB.add(new InformedLocData(b,name,s));
+            listB.add(new InformedLocData(b, idLocation, s));
             PluginData.PlayersRunnableLocation.put(pl.getUniqueId(), listB);
         }
 
     }
-
-    
 
     public static String getNameFromUUID(UUID uuid) {
         String name = "";
@@ -271,25 +270,33 @@ public class PluginData {
     }
 
     public static void onSave(File projectFolder) throws IOException {
-        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Saving " + ChatColor.DARK_GRAY + AllRegions.size() + " regions...");
 
         for (String regionName : AllRegions.keySet()) {
+            if (!AllRegions.get(regionName).locData.leaves.isEmpty() || !AllRegions.get(regionName).locData.water.isEmpty()) {
+                File regionFile = new File(projectFolder, regionName + ".yml");
 
-            File regionFile = new File(projectFolder, regionName + ".yml");
-
-            AllRegions.get(regionName).locData.save(regionFile);
-
+                AllRegions.get(regionName).locData.save(regionFile);
+            }
         }
+
+        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Saving " + ChatColor.DARK_GRAY + AllRegions.size() + " regions...");
 
     }
 
     public static void onLoad(File projectFolder) throws IOException, FileNotFoundException, InvalidConfigurationException {
 
-        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Loading regions: " + ChatColor.DARK_GRAY + projectFolder.listFiles().length + ChatColor.BLUE + " Found");
         for (File projectFile : projectFolder.listFiles()) {
+            if (AllRegions.containsKey(projectFile.getName().substring(0, projectFile.getName().length() - 4))) {
+                RegionData redata = AllRegions.get(projectFile.getName().substring(0, projectFile.getName().length() - 4));
 
-            AllRegions.get(projectFile.getName().substring(0, projectFile.getName().length() - 4)).locData.load(projectFile);
+                redata.locData.load(projectFile, redata.loc.getWorld());
+            } else {
+                projectFile.delete();
+            }
+
         }
+
+        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Loading regions: " + ChatColor.DARK_GRAY + projectFolder.listFiles().length + ChatColor.BLUE + " Found");
 
     }
 

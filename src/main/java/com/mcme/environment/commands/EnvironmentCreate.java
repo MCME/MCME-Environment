@@ -83,7 +83,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                                 PluginData.loadRegions();
 
-                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0], PluginData.AllRegions.get(args[0]));
+                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);
 
                                 sendDone(cs);
                             } catch (SQLException | NumberFormatException ex) {
@@ -115,7 +115,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
-                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0], PluginData.AllRegions.get(args[0]));
+                                RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);
 
                                 sendDone(cs);
                             } catch (SQLException | NumberFormatException ex) {
