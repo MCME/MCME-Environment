@@ -129,7 +129,7 @@ public class RegionScanner {
     
     public static void saveAll(List<Location> waterList, List<Location> leavesList, String name) throws IOException {
         
-        PluginData.AllRegions.get(name).setLocData(new LocationsData(waterList, leavesList));
+        PluginData.getAllRegions().get(name).setLocData(new LocationsData(waterList, leavesList));
         PluginData.onSave(Environment.getPluginInstance().getEnvFolder());
     }
     

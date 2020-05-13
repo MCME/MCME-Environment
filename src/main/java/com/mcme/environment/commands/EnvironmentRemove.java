@@ -40,14 +40,14 @@ public class EnvironmentRemove extends EnvironmentCommand {
     @Override
     protected void execute(final CommandSender cs, final String... args) {
 
-        if (PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.getAllRegions().containsKey(args[0])) {
 
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
-                    String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".environment_regions_data WHERE idregion = '" + PluginData.AllRegions.get(args[0]).idr.toString() + "' ;";
+                    String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".environment_regions_data WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
                     try {
                         Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
                         PluginData.loadRegions();

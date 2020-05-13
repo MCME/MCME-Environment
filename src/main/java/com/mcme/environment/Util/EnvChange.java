@@ -102,89 +102,23 @@ public class EnvChange {
         return result;
     }
 
-    /*
-    
-    public static void changePlayerTime(Player pl, Long time) {
-        Long playertime = pl.getPlayerTime();
-
-        Double ptime = playertime.doubleValue() / 24000.0;
-        long ptime1 = Math.round(ptime);
-       
-        double pp = ptime1 * 24000.0;
-        ptime = pl.getPlayerTime() - pp;
-
-        pl.setPlayerTime(ptime.longValue(), false);
-
-        Long startTime = ptime.longValue();
-
-        if (startTime < time) {
-
-            BukkitTask s = new BukkitRunnable() {
-                long effectiveTime = startTime;
-
-                @Override
-                public void run() {
-                    Long i = time - 60;
-                    if (effectiveTime >= time) {
-                        pl.setPlayerTime(time, false);
-                        cancel();
-                    }
-
-                    effectiveTime += 50L;
-                    pl.setPlayerTime(effectiveTime, false);
-
-                }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
-            PluginData.addBukkitTask(pl, s);
-        } else {
-            BukkitTask s = new BukkitRunnable() {
-                long effectiveTime = startTime;
-
-                @Override
-                public void run() {
-                    Long i = time - 70;
-                    if (effectiveTime >= 23900 && effectiveTime <= 24000) {
-                        pl.setPlayerTime(0L, false);
-                        effectiveTime = 0L;
-                    } else if (effectiveTime > time && effectiveTime < 23900) {
-                        effectiveTime += 50L;
-                        pl.setPlayerTime(effectiveTime, false);
-                    } else if (effectiveTime < i) {
-                        effectiveTime += 50L;
-                        pl.setPlayerTime(effectiveTime, false);
-                    } else if (effectiveTime >= i && effectiveTime <= time) {
-                        pl.setPlayerTime(time, false);
-                        cancel();
-                    } else {
-                        effectiveTime += 50L;
-                    }
-
-                }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
-            PluginData.addBukkitTask(pl, s);
-
-        }
-
-    }
-     */
-    
     public static void resetAll(Player pl) {
         if (pl.getPlayerWeather() != WeatherType.CLEAR) {
             pl.setPlayerWeather(WeatherType.CLEAR);
         }
-      
+
         pl.resetPlayerTime();
 
-        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
+        if (PluginData.getPlayersRunnable().containsKey(pl.getUniqueId())) {
 
-            for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
+            for (BukkitTask b : PluginData.getPlayersRunnable().get(pl.getUniqueId())) {
                 b.cancel();
             }
         }
 
-        for (UUID region : PluginData.informedRegion.keySet()) {
-            if (PluginData.informedRegion.get(region).contains(pl.getUniqueId())) {
-                PluginData.informedRegion.get(region).remove(pl.getUniqueId());
+        for (UUID region : PluginData.getInformedRegion().keySet()) {
+            if (PluginData.getInformedRegion().get(region).contains(pl.getUniqueId())) {
+                PluginData.getInformedRegion().get(region).remove(pl.getUniqueId());
             }
 
         }

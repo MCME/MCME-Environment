@@ -44,7 +44,7 @@ public class EnvironmentSound extends EnvironmentCommand {
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
-        if (PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.getAllRegions().containsKey(args[0])) {
             Player pl = (Player) cs;
 
             soundAmbient = getSoundAmbient(args[1]);

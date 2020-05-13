@@ -37,7 +37,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
-import com.mcme.environment.data.InformedLocData;
 import com.mcme.environment.data.LocatedSoundData;
 import com.mcme.environment.event.LeaveRegionEvent;
 import static java.lang.Integer.parseInt;
@@ -81,13 +80,13 @@ public class PlayerListener implements Listener {
 
                     if (r.first()) {
 
-                        PluginData.boolPlayers.put(e.getPlayer().getUniqueId(), r.getBoolean("bool"));
+                        PluginData.getBoolPlayers().put(e.getPlayer().getUniqueId(), r.getBoolean("bool"));
 
                     } else {
 
                         String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_players (bool, uuid) VALUES (1,'" + e.getPlayer().getUniqueId().toString() + "') ; ";
                         Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                        PluginData.boolPlayers.put(e.getPlayer().getUniqueId(), Boolean.TRUE);
+                        PluginData.getBoolPlayers().put(e.getPlayer().getUniqueId(), Boolean.TRUE);
                     }
 
                 } catch (SQLException ex) {
@@ -104,9 +103,9 @@ public class PlayerListener implements Listener {
 
     public void onQuit(PlayerQuitEvent e) {
 
-        if (PluginData.boolPlayers.containsKey(e.getPlayer().getUniqueId())) {
+        if (PluginData.getBoolPlayers().containsKey(e.getPlayer().getUniqueId())) {
 
-            if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId())) {
+            if (PluginData.getBoolPlayers().get(e.getPlayer().getUniqueId())) {
                 new BukkitRunnable() {
 
                     @Override
@@ -115,7 +114,7 @@ public class PlayerListener implements Listener {
                         String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                            PluginData.boolPlayers.remove(e.getPlayer().getUniqueId());
+                            PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -132,7 +131,7 @@ public class PlayerListener implements Listener {
                         String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
                             Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
-                            PluginData.boolPlayers.remove(e.getPlayer().getUniqueId());
+                            PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -147,85 +146,9 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-
-        List<String> regions = new ArrayList<>();
-        List<String> totalRegions = new ArrayList<>();
-        List<String> informed = new ArrayList<>();
-
-        if (PluginData.boolPlayers.get(e.getPlayer().getUniqueId()) && Environment.isEngine()) {
-
-            for (String region : PluginData.AllRegions.keySet()) {
-
-                RegionData re = PluginData.AllRegions.get(region);
-
-                if (re.region.isInside(e.getPlayer().getLocation())) {
-                    totalRegions.add(region);
-                }
-
-                if (re.region.isInside(e.getPlayer().getLocation())
-                        && !PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
-                    regions.add(region);
-
-                } else if (re.region.isInside(e.getPlayer().getLocation())
-                        && PluginData.informedRegion.get(re.idr).contains(e.getPlayer().getUniqueId())) {
-                    informed.add(region);
-
-                }
-
-            }
-
-            if (totalRegions.isEmpty()) {
-                for (Entry<UUID, List<UUID>> r : PluginData.informedRegion.entrySet()) {
-
-                    if (r.getValue().contains(e.getPlayer().getUniqueId())) {
-
-                        LeaveRegionEvent event = new LeaveRegionEvent(e.getPlayer(), PluginData.getNameFromUUID(r.getKey()));
-                        Bukkit.getPluginManager().callEvent(event);
-                        r.getValue().remove(e.getPlayer().getUniqueId());
-
-                    }
-
-                }
-
-            }
-
-            if (!regions.isEmpty()) {
-                String weightMax = regions.get(0);
-
-                for (String re : regions) {
-                    if (PluginData.AllRegions.get(re).weight > PluginData.AllRegions.get(weightMax).weight) {
-                        weightMax = re;
-                    }
-                }
-
-                if (!informed.contains(weightMax)) {
-                    String ll = "";
-                    if (!informed.isEmpty()) {
-                        ll = informed.get(0);
-                        PluginData.informedRegion.get(PluginData.AllRegions.get(ll).idr).remove(e.getPlayer().getUniqueId());
-                    }
-                    if (PluginData.PlayersRunnable.containsKey(e.getPlayer().getUniqueId())) {
-                        for (BukkitTask b : PluginData.PlayersRunnable.get(e.getPlayer().getUniqueId())) {
-                            b.cancel();
-                        }
-                    }
-                    if (!PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).contains(e.getPlayer().getUniqueId())) {
-                        PluginData.informedRegion.get(PluginData.AllRegions.get(weightMax).idr).add(e.getPlayer().getUniqueId());
-                    }
-
-                    EnterRegionEvent event = new EnterRegionEvent(e.getPlayer(), weightMax);
-                    Bukkit.getPluginManager().callEvent(event);
-                }
-            }
-        }
-
-    }
-
-    @EventHandler
     public void onEnterRegion(EnterRegionEvent e) {
 
-        RegionData re = PluginData.AllRegions.get(e.getNameRegion());
+        RegionData re = PluginData.getAllRegions().get(e.getNameRegion());
 
         if (re.weather.equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
@@ -277,22 +200,3 @@ public class PlayerListener implements Listener {
     }
 
 }
-
-/*
-     new BukkitRunnable() {
-
-                @Override
-                public void run() {
-
-                    if (!PluginData.SoundPlayer.contains(e.getPlayer().getUniqueId())) {
-                       Sound.playSound(re.sound, e.getPlayer(), parseLong(re.time));
-                    } else {
-                        cancel();
-                        PluginData.SoundPlayer.remove(e.getPlayer().getUniqueId());
-                    }
-
-                }
-
-            }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-    
- */

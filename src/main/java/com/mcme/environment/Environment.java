@@ -121,6 +121,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                     PluginData.loadRegions();
                     runnableLocations();
                     runnableplayer.runnableLocationsPlayers();
+                    runnableplayer.runnableRegionsPlayers();
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
@@ -147,8 +148,8 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
         clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " disabled!");
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
-        for (UUID uuid : PluginData.PlayersRunnable.keySet()) {
-            for (BukkitTask s : PluginData.PlayersRunnable.get(uuid)) {
+        for (UUID uuid : PluginData.getPlayersRunnable().keySet()) {
+            for (BukkitTask s : PluginData.getPlayersRunnable().get(uuid)) {
                 s.cancel();
             }
         }

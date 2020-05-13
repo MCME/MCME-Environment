@@ -36,9 +36,9 @@ public class EnvironmentOn extends EnvironmentCommand {
     protected void execute(final CommandSender cs, final String... args) {
         Player pl = (Player) cs;
 
-        if (!PluginData.boolPlayers.get(pl.getUniqueId())) {
-            PluginData.boolPlayers.remove(pl.getUniqueId());
-            PluginData.boolPlayers.put(pl.getUniqueId(), Boolean.TRUE);
+        if (!PluginData.getBoolPlayers().get(pl.getUniqueId())) {
+            PluginData.getBoolPlayers().remove(pl.getUniqueId());
+            PluginData.getBoolPlayers().put(pl.getUniqueId(), Boolean.TRUE);
             sendDone(cs);
         } else {
             sendAlready(cs);

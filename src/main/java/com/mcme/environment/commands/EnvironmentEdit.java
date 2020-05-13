@@ -51,7 +51,7 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
         thunder = false;
 
-        if (PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.getAllRegions().containsKey(args[0])) {
 
             if (args[1].equalsIgnoreCase("rain")) {
                 weather = "rain";

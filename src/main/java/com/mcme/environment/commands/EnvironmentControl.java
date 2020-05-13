@@ -18,7 +18,6 @@ package com.mcme.environment.commands;
 
 import com.google.common.base.Strings;
 import com.mcme.environment.Environment;
-import com.mcme.environment.data.InformedLocData;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
@@ -70,7 +69,7 @@ public class EnvironmentControl extends EnvironmentCommand {
 
         } else if (args[0].equalsIgnoreCase("realtime")) {
 
-            Integer currentPlayerRunnable = getSPlayers(PluginData.getPlayersRunnable(), PluginData.getPlayersRunnableLocation());
+            Integer currentPlayerRunnable = PluginData.getPlayersRunnable().size();
             Integer totalPlayers = Bukkit.getOnlinePlayers().size();
             Double s = 100.0 * currentPlayerRunnable / totalPlayers;
 
@@ -119,18 +118,10 @@ public class EnvironmentControl extends EnvironmentCommand {
                 if (Environment.isEngine()) {
                     Environment.setEngine(false);
 
-                    for (UUID s : PluginData.PlayersRunnable.keySet()) {
+                    for (UUID s : PluginData.getPlayersRunnable().keySet()) {
                         for (BukkitTask b : PluginData.getPlayersRunnable().get(s)) {
                             b.cancel();
                             PluginData.getPlayersRunnable().get(s).remove(b);
-                        }
-                    }
-
-                    for (UUID s : PluginData.PlayersRunnableLocation.keySet()) {
-                        for (InformedLocData b : PluginData.getPlayersRunnableLocation().get(s)) {
-                            b.bcrunnable.cancel();
-                            PluginData.getPlayersRunnableLocation().get(s).remove(b);
-
                         }
                     }
 
@@ -176,29 +167,6 @@ public class EnvironmentControl extends EnvironmentCommand {
 
     private void sendNoPerm(CommandSender cs) {
         PluginData.getMessageUtils().sendErrorMessage(cs, "No permission for this command");
-
-    }
-
-    private Integer getSPlayers(Map<UUID, List<BukkitTask>> s, Map<UUID, List<InformedLocData>> ss) {
-        List<UUID> list = new ArrayList<>();
-
-        for (UUID uuid : s.keySet()) {
-            if (!list.contains(uuid)) {
-
-                list.add(uuid);
-            }
-
-        }
-
-        for (UUID uuid : ss.keySet()) {
-            if (!list.contains(uuid)) {
-
-                list.add(uuid);
-            }
-
-        }
-
-        return list.size();
 
     }
 

@@ -98,14 +98,14 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         List<String> areas = new ArrayList<String>();
         List<String> fregion = new ArrayList<>();
 
-        for (String s : PluginData.AllRegions.keySet()) {
+        for (String s : PluginData.getAllRegions().keySet()) {
             areas.add(s);
 
         }
         List<String> locations = new ArrayList<String>();
         List<String> flocation = new ArrayList<>();
 
-        for (String s : PluginData.locSounds.keySet()) {
+        for (String s : PluginData.getLocSounds().keySet()) {
             locations.add(s);
         }
 

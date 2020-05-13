@@ -56,10 +56,10 @@ public class EnvironmentList extends EnvironmentCommand {
         if (args[0].equalsIgnoreCase("region")) {
 
             FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
-                    .addSimple(ChatColor.GREEN + "Regions loaded in the network --> " + ChatColor.BOLD + PluginData.AllRegions.size() + "\n");
+                    .addSimple(ChatColor.GREEN + "Regions loaded in the network --> " + ChatColor.BOLD + PluginData.getAllRegions().size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
-            for (String region : PluginData.AllRegions.keySet()) {
+            for (String region : PluginData.getAllRegions().keySet()) {
                 FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + region + "\n");
                 messages.add(r);
@@ -69,11 +69,11 @@ public class EnvironmentList extends EnvironmentCommand {
         } else {
 
             FancyMessage header = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
-                    .addSimple(ChatColor.GREEN + "Locations loaded in the network --> " + ChatColor.BOLD + PluginData.locSounds.size() + "\n");
+                    .addSimple(ChatColor.GREEN + "Locations loaded in the network --> " + ChatColor.BOLD + PluginData.getLocSounds().size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
-            for (String location : PluginData.locSounds.keySet()) {
-                Location l = PluginData.locSounds.get(location).loc;
+            for (String location : PluginData.getLocSounds().keySet()) {
+                Location l = PluginData.getLocSounds().get(location).getLoc();
 
                 FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + location + " " + l.getBlockX() + "x," + l.getBlockY() + "y," + l.getBlockZ() + "z" + "\n");

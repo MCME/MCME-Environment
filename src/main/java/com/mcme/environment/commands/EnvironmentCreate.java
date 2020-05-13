@@ -58,7 +58,7 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
         Player pl = (Player) cs;
         final Location loc = pl.getLocation();
-        if (!PluginData.AllRegions.containsKey(args[0])) {
+        if (!PluginData.getAllRegions().containsKey(args[0])) {
 
             try {
                 WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");

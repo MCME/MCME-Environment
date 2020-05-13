@@ -62,25 +62,19 @@ public class PluginData {
      * String and regions data
      */
     @Getter
-    public static Map<String, RegionData> AllRegions = new HashMap<>();
+    private static Map<String, RegionData> AllRegions = new HashMap<>();
 
     @Getter
-    public static Map<UUID, Boolean> boolPlayers = new HashMap<>();
+    private static Map<UUID, Boolean> boolPlayers = new HashMap<>();
 
     @Getter
-    public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
+    private static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
     //id region, uuid
     @Getter
-    public static Map<UUID, List<UUID>> informedLocation = new HashMap<>();
-    //id location, uuid
-    @Getter
-    public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
+    private static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
     //IdRegion, Players
     @Getter
-    public static Map<UUID, List<InformedLocData>> PlayersRunnableLocation = new HashMap<>();
-
-    @Getter
-    public static Map<String, LocatedSoundData> locSounds = new HashMap<>();
+    private static Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
     /**
      * It reloads all regions from database
@@ -188,9 +182,6 @@ public class PluginData {
 
                                 locSounds.put(r.getString("name"), new LocatedSoundData(loc, r.getString("name"), r.getString("server"), SoundType.valueOf(r.getString("sound")), UUID.fromString(r.getString("idlocation"))));
 
-                                List<UUID> s = new ArrayList<>();
-
-                                informedLocation.put(UUID.fromString(r.getString("idlocation")), s);
                             }
 
                         } while (r.next());
@@ -219,9 +210,7 @@ public class PluginData {
 
     public static UUID createId() {
 
-        UUID uuid = UUID.randomUUID();
-
-        return uuid;
+        return UUID.randomUUID();
 
     }
 
@@ -232,6 +221,7 @@ public class PluginData {
         for (int i = 0; i < s.length; i++) {
             list.add(Integer.parseInt(s[i]));
         }
+        
         return list;
     }
 
@@ -242,17 +232,6 @@ public class PluginData {
             List<BukkitTask> listB = new ArrayList<>();
             listB.add(b);
             PluginData.PlayersRunnable.put(pl.getUniqueId(), listB);
-        }
-
-    }
-
-    public static void addBukkitTaskLocation(Player pl, BukkitTask b, SoundType s, UUID idLocation) {
-        if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
-            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(new InformedLocData(b, idLocation, s));
-        } else {
-            List<InformedLocData> listB = new ArrayList<>();
-            listB.add(new InformedLocData(b, idLocation, s));
-            PluginData.PlayersRunnableLocation.put(pl.getUniqueId(), listB);
         }
 
     }

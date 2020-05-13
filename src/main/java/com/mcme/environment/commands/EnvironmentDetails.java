@@ -42,9 +42,9 @@ public class EnvironmentDetails extends EnvironmentCommand {
     @Override
     protected void execute(final CommandSender cs, final String... args) {
 
-        if (PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.getAllRegions().containsKey(args[0])) {
             Player pl = (Player) cs;
-            RegionData redata = PluginData.AllRegions.get(args[0]);
+            RegionData redata = PluginData.getAllRegions().get(args[0]);
 
             weight = redata.weight;
             thunder = redata.thunder;
