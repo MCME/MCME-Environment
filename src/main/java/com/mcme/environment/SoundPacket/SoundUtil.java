@@ -23,8 +23,6 @@ import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -91,11 +89,7 @@ public class SoundUtil {
         int y = l.getBlockY();
         int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
 
-        if (y < worldMaximumY) {
-            return false;
-        } else {
-            return true;
-        }
+        return y >= worldMaximumY;
 
     }
 
@@ -105,7 +99,8 @@ public class SoundUtil {
      * @param s SoundType
      * @param pl Player
      * @param time The time of the region
-     * @param r
+     * @param r RegionData
+     * @param re Region
      */
     public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re, RegionData r) {
         switch (s) {
@@ -225,7 +220,7 @@ public class SoundUtil {
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc,UUID id) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc, UUID id) {
         switch (s) {
 
             case BELL:

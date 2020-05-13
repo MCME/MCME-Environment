@@ -19,7 +19,6 @@ package com.mcme.environment.Util;
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.LocationsData;
 import com.mcme.environment.data.PluginData;
-import com.mcme.environment.data.RegionData;
 import com.sk89q.worldedit.regions.Region;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -16,15 +16,10 @@
  */
 package com.mcme.environment.commands;
 
-import com.google.common.base.Strings;
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,7 +58,7 @@ public class EnvironmentControl extends EnvironmentCommand {
 
                 }.runTaskLater(Environment.getPluginInstance(), 40L);
 
-            } catch (Exception e) {
+            } catch (IllegalArgumentException | IllegalStateException e) {
                 pl.sendMessage(ChatColor.RED + "Errors Found - " + e.getClass().getName());
             }
 

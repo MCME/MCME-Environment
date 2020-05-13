@@ -91,8 +91,6 @@ public class EnvironmentSound extends EnvironmentCommand {
         } else if (arg.equalsIgnoreCase("swampland")) {
             sound = SoundType.SWAMPLAND;
 
-        } else {
-            sound = SoundType.NONE;
         }
         return sound;
     }

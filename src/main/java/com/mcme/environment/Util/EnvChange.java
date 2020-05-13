@@ -77,7 +77,6 @@ public class EnvChange {
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
             } catch (InvocationTargetException es) {
-                es.printStackTrace();
             }
         }
 

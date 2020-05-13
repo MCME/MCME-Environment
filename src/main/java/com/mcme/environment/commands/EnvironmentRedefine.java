@@ -73,7 +73,7 @@ public class EnvironmentRedefine extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'prismoid', xlist = " + serialize(r.getXPoints()) + "', zlist = '" + serialize(r.getZPoints()) + "', ymin = '" + r.getMinY() + "', ymax = '" + r.getMaxY() + "', location = '" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "';";
+                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'prismoid', xlist = " + serialize(r.getXPoints()) + "', zlist = '" + serialize(r.getZPoints()) + "', ymin = '" + r.getMinY() + "', ymax = '" + r.getMaxY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "';";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 
@@ -103,7 +103,7 @@ public class EnvironmentRedefine extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'cuboid', xlist = '" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "', zlist = '" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "', ymin = '" + minCorner.getBlockY() + "', ymax = '" + maxCorner.getBlockY() + "', location = '" + pl.getLocation().getWorld().getName().toString() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "';";
+                                String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET type = 'cuboid', xlist = '" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "', zlist = '" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "', ymin = '" + minCorner.getBlockY() + "', ymax = '" + maxCorner.getBlockY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getPluginInstance().nameserver + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr + "';";
 
                                 Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
 

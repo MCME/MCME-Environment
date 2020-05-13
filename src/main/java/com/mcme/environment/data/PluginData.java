@@ -36,7 +36,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -62,19 +61,19 @@ public class PluginData {
      * String and regions data
      */
     @Getter
-    private static Map<String, RegionData> AllRegions = new HashMap<>();
+    private static final Map<String, RegionData> AllRegions = new HashMap<>();
 
     @Getter
-    private static Map<UUID, Boolean> boolPlayers = new HashMap<>();
+    private static final Map<UUID, Boolean> boolPlayers = new HashMap<>();
 
     @Getter
-    private static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
+    private static final Map<UUID, List<UUID>> informedRegion = new HashMap<>();
     //id region, uuid
     @Getter
-    private static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
+    private static final Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
     //IdRegion, Players
     @Getter
-    private static Map<String, LocatedSoundData> locSounds = new HashMap<>();
+    private static final Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
     /**
      * It reloads all regions from database
@@ -124,8 +123,6 @@ public class PluginData {
 
                             } else {
 
-                                String[] xl = unserialize(r.getString("xlist"));
-                                String[] zl = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
 
@@ -218,10 +215,10 @@ public class PluginData {
 
         List<Integer> list = new ArrayList();
 
-        for (int i = 0; i < s.length; i++) {
-            list.add(Integer.parseInt(s[i]));
+        for (String item : s) {
+            list.add(Integer.parseInt(item));
         }
-        
+
         return list;
     }
 

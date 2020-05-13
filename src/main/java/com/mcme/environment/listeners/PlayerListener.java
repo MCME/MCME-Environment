@@ -24,26 +24,16 @@ import com.mcme.environment.event.EnterRegionEvent;
 import static java.lang.Long.parseLong;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
-import com.mcme.environment.data.LocatedSoundData;
 import com.mcme.environment.event.LeaveRegionEvent;
-import static java.lang.Integer.parseInt;
-import java.util.Map.Entry;
-import java.util.UUID;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -179,13 +169,13 @@ public class PlayerListener implements Listener {
         }
 
         if (!re.soundAmbient.equals(SoundType.NONE)) {
-            if (re.time != "default") {
+            if (!re.time.equals("default")) {
                 SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region, re);
             }
         }
 
         if (!re.locData.leaves.isEmpty()) {
-            if (re.time != "default") {
+            if (!re.time.equals("default")) {
                 SoundUtil.playSoundAmbient(SoundType.LEAVES, e.getPlayer(), parseLong(re.time), re.region, re);
 
             }

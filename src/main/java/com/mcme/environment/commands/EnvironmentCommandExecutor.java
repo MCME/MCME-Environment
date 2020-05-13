@@ -94,99 +94,100 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
             arguments.add("redefine");
             arguments.add("control");
         }
-        List<String> Flist = new ArrayList<String>();
-        List<String> areas = new ArrayList<String>();
+        List<String> Flist = new ArrayList<>();
+        List<String> areas = new ArrayList<>();
         List<String> fregion = new ArrayList<>();
 
         for (String s : PluginData.getAllRegions().keySet()) {
             areas.add(s);
 
         }
-        List<String> locations = new ArrayList<String>();
+        List<String> locations = new ArrayList<>();
         List<String> flocation = new ArrayList<>();
 
         for (String s : PluginData.getLocSounds().keySet()) {
             locations.add(s);
         }
 
-        if (args.length == 1) {
-            for (String s : arguments) {
-                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
-                    Flist.add(s);
-                }
-            }
-            return Flist;
-        } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound") || args[0].equalsIgnoreCase("redefine")) {
-
-                for (String s : areas) {
-                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                        fregion.add(s);
+        switch (args.length) {
+            case 1:
+                for (String s : arguments) {
+                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                        Flist.add(s);
                     }
                 }
-                return fregion;
-
-            } else if (args[0].equalsIgnoreCase("location")) {
-                List<String> l = Arrays.asList("add", "remove");
-                return l;
-
-            } else if (args[0].equalsIgnoreCase("list")) {
-                List<String> l = Arrays.asList("region", "location");
-                return l;
-
-            } else if (args[0].equalsIgnoreCase("control")) {
-                List<String> l = Arrays.asList("shutdown", "enable", "realtime", "reload");
-                return l;
-
-            } else {
-                return null;
-            }
-        } else if (args.length == 3) {
-            if (args[0].equalsIgnoreCase("edit")) {
-
-                List<String> l = Arrays.asList("rain", "sun");
-                return l;
-
-            } else if (args[0].equalsIgnoreCase("sound")) {
-
-                List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
-                return l;
-
-            } else if (args[0].equalsIgnoreCase("location")) {   
-                if (args[1].equalsIgnoreCase("remove")) {
-                    for (String s : locations) {
+                return Flist;
+            case 2:
+                if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound") || args[0].equalsIgnoreCase("redefine")) {
+                    
+                    for (String s : areas) {
                         if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                            flocation.add(s);
+                            fregion.add(s);
                         }
                     }
-                    return flocation;
+                    return fregion;
+                    
+                } else if (args[0].equalsIgnoreCase("location")) {
+                    List<String> l = Arrays.asList("add", "remove");
+                    return l;
+                    
+                } else if (args[0].equalsIgnoreCase("list")) {
+                    List<String> l = Arrays.asList("region", "location");
+                    return l;
+                    
+                } else if (args[0].equalsIgnoreCase("control")) {
+                    List<String> l = Arrays.asList("shutdown", "enable", "realtime", "reload");
+                    return l;
+                    
                 } else {
                     return null;
                 }
-            } else {
-
-                return null;
-            }
-        } else if (args.length == 4) {
-            if (args[0].equalsIgnoreCase("edit")) {
-
-                List<String> l = Arrays.asList("true", "false");
-                return l;
-
-            } else if (args[0].equalsIgnoreCase("location")) {
-                if (args[1].equalsIgnoreCase("add")) {
-                    List<String> l = Arrays.asList("bell", "none");
+            case 3:
+                if (args[0].equalsIgnoreCase("edit")) {
+                    
+                    List<String> l = Arrays.asList("rain", "sun");
                     return l;
 
+                } else if (args[0].equalsIgnoreCase("sound")) {
+                    
+                    List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
+                    return l;
+                    
+                } else if (args[0].equalsIgnoreCase("location")) {
+                    if (args[1].equalsIgnoreCase("remove")) {
+                        for (String s : locations) {
+                            if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                                flocation.add(s);
+                            }
+                        }
+                        return flocation;
+                    } else {
+                        return null;
+                    }
                 } else {
+                    
                     return null;
                 }
-            } else {
-
+            case 4:
+                if (args[0].equalsIgnoreCase("edit")) {
+                    
+                    List<String> l = Arrays.asList("true", "false");
+                    return l;
+                    
+                } else if (args[0].equalsIgnoreCase("location")) {
+                    if (args[1].equalsIgnoreCase("add")) {
+                        List<String> l = Arrays.asList("bell", "none");
+                        return l;
+                        
+                    } else {
+                        return null;
+                    }
+                } else {
+                    
+                    return null;
+                }
+            default:
                 return null;
-            }
-        } else {
-            return null;
         }
 
     }

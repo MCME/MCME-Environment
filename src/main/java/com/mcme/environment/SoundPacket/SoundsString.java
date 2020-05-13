@@ -58,7 +58,7 @@ public enum SoundsString {
     //Leaves
     LEAVES("environmental.leaves_rustle");
 
-    private String path;
+    private final String path;
 
     SoundsString(String envUrl) {
         this.path = envUrl;
