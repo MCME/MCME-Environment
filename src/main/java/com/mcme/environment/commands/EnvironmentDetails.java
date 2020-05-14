@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 MCME (Fraspace5)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.mcme.environment.commands;
 
@@ -29,8 +40,6 @@ public class EnvironmentDetails extends EnvironmentCommand {
         setShortDescription(": Details about a region ");
         setUsageDescription(": Used to get all details about a region");
     }
-//environment details nameRegion 
-    //               0
 
     private String weather;
     private int weight;
@@ -42,17 +51,17 @@ public class EnvironmentDetails extends EnvironmentCommand {
     @Override
     protected void execute(final CommandSender cs, final String... args) {
 
-        if (PluginData.AllRegions.containsKey(args[0])) {
+        if (PluginData.getAllRegions().containsKey(args[0])) {
             Player pl = (Player) cs;
-            RegionData redata = PluginData.AllRegions.get(args[0]);
+            RegionData redata = PluginData.getAllRegions().get(args[0]);
 
-            weight = redata.weight;
-            thunder = redata.thunder;
-            Region r = redata.region;
-            time = redata.time;
-            type = redata.type;
-            weather = redata.weather;
-            soundAmb = redata.soundAmbient;
+            weight = redata.getWeight();
+            thunder = redata.getThunder();
+            Region r = redata.getRegion();
+            time = redata.getTime();
+            type = redata.getType();
+            weather = redata.getWeather();
+            soundAmb = redata.getSoundAmbient();
 
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtils());
 

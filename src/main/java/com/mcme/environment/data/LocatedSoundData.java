@@ -17,7 +17,11 @@
 package com.mcme.environment.data;
 
 import com.mcme.environment.SoundPacket.SoundType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 
 /**
@@ -26,15 +30,23 @@ import org.bukkit.Location;
  */
 public class LocatedSoundData {
 
-    public Location loc;
-
-    public String server;
-
-    public String name;
-
-    public SoundType sound;
-
-    public UUID id;
+    @Getter
+    @Setter
+    private Location loc;
+    @Getter
+    @Setter
+    private String server;
+    @Getter
+    @Setter
+    private String name;
+    @Getter
+    @Setter
+    private SoundType sound;
+    @Getter
+    @Setter
+    private UUID id;
+    @Setter
+    private List<UUID> informed;
 
     /**
      *
@@ -54,6 +66,32 @@ public class LocatedSoundData {
         sound = sou;
 
         id = uuid;
+
+        informed = new ArrayList<>();
+    }
+
+    public Boolean playerInRange(Location location) {
+        return location.distanceSquared(loc) <= sound.getDistanceTrigger();
+    }
+
+    public Boolean isInformed(UUID uuid) {
+        return informed.contains(uuid);
+    }
+
+    public void addInformed(UUID uuid) {
+
+        if (!informed.contains(uuid)) {
+            informed.add(uuid);
+        }
+
+    }
+
+    public void removeInformed(UUID uuid) {
+
+        if (informed.contains(uuid)) {
+            informed.remove(uuid);
+        }
+
     }
 
 }

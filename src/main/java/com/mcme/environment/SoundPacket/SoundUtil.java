@@ -18,12 +18,10 @@ package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.RandomCollection;
-import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -38,7 +36,7 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class SoundUtil {
 
-// NW no water 
+
     public static Location getRandomLocationNW(int minX, int maxX, int minZ, int maxZ, World world, int y) {
         Random rand = new Random();
         Random r = new Random();
@@ -90,11 +88,7 @@ public class SoundUtil {
         int y = l.getBlockY();
         int worldMaximumY = l.getWorld().getHighestBlockYAt(l);
 
-        if (y < worldMaximumY) {
-            return false;
-        } else {
-            return true;
-        }
+        return y >= worldMaximumY;
 
     }
 
@@ -104,9 +98,12 @@ public class SoundUtil {
      * @param s SoundType
      * @param pl Player
      * @param time The time of the region
-     * @param r
+     * @param r RegionData
+     * @param re Region
      */
     public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re, RegionData r) {
+        UUID uuid = pl.getUniqueId();
+
         switch (s) {
             case WIND:
 
@@ -116,11 +113,14 @@ public class SoundUtil {
                     public void run() {
 
                         WindSound.WindSound(pl);
-
+                        if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 100L);
-                PluginData.addBukkitTask(pl, bRunnable);
+
+                r.addInfoTask(uuid, bRunnable);
                 break;
             case CAVE:
                 BukkitTask bRunnable1 = new BukkitRunnable() {
@@ -129,11 +129,13 @@ public class SoundUtil {
                     public void run() {
 
                         CaveSound.CaveSound(pl);
-
+                        if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 40L);
-                PluginData.addBukkitTask(pl, bRunnable1);
+                r.addInfoTask(uuid, bRunnable1);
                 break;
             case FOREST:
 
@@ -143,11 +145,13 @@ public class SoundUtil {
                     public void run() {
 
                         ForestSound.ForestSound(pl, time);
-
+                       if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                PluginData.addBukkitTask(pl, bRunnable2);
+                r.addInfoTask(uuid, bRunnable2);
                 break;
             case OCEAN:
 
@@ -157,11 +161,13 @@ public class SoundUtil {
                     public void run() {
 
                         OceanSound.OceanSound(pl, r);
-
+                        if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 40L);
-                PluginData.addBukkitTask(pl, bRunnable3);
+                r.addInfoTask(uuid, bRunnable3);
                 break;
             case PLAIN:
 
@@ -171,11 +177,13 @@ public class SoundUtil {
                     public void run() {
 
                         PlainSound.PlainSound(pl, time);
-
+                        if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                PluginData.addBukkitTask(pl, bRunnable4);
+                r.addInfoTask(uuid, bRunnable4);
                 break;
             case SWAMPLAND:
 
@@ -185,51 +193,41 @@ public class SoundUtil {
                     public void run() {
 
                         SwamplandSound.SwampLandSound(pl, time);
-
+                       if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                PluginData.addBukkitTask(pl, bRunnable5);
+                r.addInfoTask(uuid, bRunnable5);
                 break;
-            case LEAVES:
+
+            default:
 
                 BukkitTask bRunnable6 = new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        LeavesSound.LeavesSound(pl, r);
-
-                    }
-
-                }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                PluginData.addBukkitTask(pl, bRunnable6);
-                break;
-
-            default:
-
-                BukkitTask bRunnable7 = new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-
                         PlainSound.PlainSound(pl, time);
-
+                        if (!r.locData.getLeaves().isEmpty()) {
+                            LeavesSound.LeavesSound(pl, r);
+                        }
                     }
 
                 }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
-                PluginData.addBukkitTask(pl, bRunnable7);
+                r.addInfoTask(uuid, bRunnable6);
                 break;
         }
 
     }
 
-    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc,String name) {
+    public static void playSoundLocated(SoundType s, Player pl, Integer time, Location loc, UUID id) {
         switch (s) {
 
             case BELL:
 
-                BellSound.BellSound(pl, time, loc, name);
+                BellSound.BellSound(pl, time, loc, id);
 
                 break;
 

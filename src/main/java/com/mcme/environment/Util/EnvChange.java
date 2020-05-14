@@ -28,13 +28,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -65,7 +63,7 @@ public class EnvChange {
             } else if (reg instanceof PrismoidRegion) {
                 l = randomLocPrismoid(reg, w);
             }
-            PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
+            PacketContainer thunder = Environment.getPluginInstance().getManager().createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
             thunder.getIntegers().
                     write(0, randomReturn()).
                     write(1, 1);
@@ -77,7 +75,6 @@ public class EnvChange {
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
             } catch (InvocationTargetException es) {
-                es.printStackTrace();
             }
         }
 
@@ -102,92 +99,16 @@ public class EnvChange {
         return result;
     }
 
-    /*
-    
-    public static void changePlayerTime(Player pl, Long time) {
-        Long playertime = pl.getPlayerTime();
-
-        Double ptime = playertime.doubleValue() / 24000.0;
-        long ptime1 = Math.round(ptime);
-       
-        double pp = ptime1 * 24000.0;
-        ptime = pl.getPlayerTime() - pp;
-
-        pl.setPlayerTime(ptime.longValue(), false);
-
-        Long startTime = ptime.longValue();
-
-        if (startTime < time) {
-
-            BukkitTask s = new BukkitRunnable() {
-                long effectiveTime = startTime;
-
-                @Override
-                public void run() {
-                    Long i = time - 60;
-                    if (effectiveTime >= time) {
-                        pl.setPlayerTime(time, false);
-                        cancel();
-                    }
-
-                    effectiveTime += 50L;
-                    pl.setPlayerTime(effectiveTime, false);
-
-                }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
-            PluginData.addBukkitTask(pl, s);
-        } else {
-            BukkitTask s = new BukkitRunnable() {
-                long effectiveTime = startTime;
-
-                @Override
-                public void run() {
-                    Long i = time - 70;
-                    if (effectiveTime >= 23900 && effectiveTime <= 24000) {
-                        pl.setPlayerTime(0L, false);
-                        effectiveTime = 0L;
-                    } else if (effectiveTime > time && effectiveTime < 23900) {
-                        effectiveTime += 50L;
-                        pl.setPlayerTime(effectiveTime, false);
-                    } else if (effectiveTime < i) {
-                        effectiveTime += 50L;
-                        pl.setPlayerTime(effectiveTime, false);
-                    } else if (effectiveTime >= i && effectiveTime <= time) {
-                        pl.setPlayerTime(time, false);
-                        cancel();
-                    } else {
-                        effectiveTime += 50L;
-                    }
-
-                }
-            }.runTaskTimer(Environment.getPluginInstance(), 0L, 3L);
-            PluginData.addBukkitTask(pl, s);
-
-        }
-
-    }
-     */
-    
     public static void resetAll(Player pl) {
         if (pl.getPlayerWeather() != WeatherType.CLEAR) {
             pl.setPlayerWeather(WeatherType.CLEAR);
         }
-      
+
         pl.resetPlayerTime();
 
-        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
-
-            for (BukkitTask b : PluginData.PlayersRunnable.get(pl.getUniqueId())) {
-                b.cancel();
-            }
-        }
-
-        for (UUID region : PluginData.informedRegion.keySet()) {
-            if (PluginData.informedRegion.get(region).contains(pl.getUniqueId())) {
-                PluginData.informedRegion.get(region).remove(pl.getUniqueId());
-            }
-
-        }
+        PluginData.getAllRegions().values().forEach((s) -> {
+            s.cancelAllTasks(pl.getUniqueId());
+        });
 
     }
 
@@ -205,7 +126,7 @@ public class EnvChange {
 
     }
 
-    public static Location randomLocPrismoid(Region r, String world) {
+    private static Location randomLocPrismoid(Region r, String world) {
         if (r instanceof PrismoidRegion) {
             List<Integer> X = Arrays.asList(((PrismoidRegion) r).getXPoints());
             List<Integer> Z = Arrays.asList(((PrismoidRegion) r).getZPoints());
@@ -230,7 +151,7 @@ public class EnvChange {
 
     }
 
-    public static Integer getMin(List<Integer> list) {
+    private static Integer getMin(List<Integer> list) {
 
         Integer min = Integer.MAX_VALUE;
 
@@ -244,7 +165,7 @@ public class EnvChange {
         return min;
     }
 
-    public static Integer getMax(List<Integer> list) {
+    private static Integer getMax(List<Integer> list) {
 
         Integer max = Integer.MIN_VALUE;
 

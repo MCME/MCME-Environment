@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  *
  * @author Fraspace5
  */
-public class PlainSound {
+public class PlainSound extends SoundUtil {
 
     public static void PlainSound(Player pl, Long time) {
         Float volume = 0.2F;
@@ -80,12 +80,12 @@ public class PlainSound {
             }
 
         } else {
-            if (SoundUtil.randomBoolean(0.4, 0.6)) {
+            if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
                 pl.playSound(l, SoundsString.PLAINS_BIRD_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
             }
-            if (SoundUtil.randomBoolean(0.4, 0.6)) {
+            if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
                 pl.playSound(l, SoundsString.PLAINS_INSECT_NIGHT.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
 
@@ -93,7 +93,7 @@ public class PlainSound {
             if (SoundUtil.randomBoolean(0.05, 0.95)) {
                 Float volWind = 0.05F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
-                    volWind = 0.7F;
+                    volWind = 0.3F;
                 }
 
                 pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);

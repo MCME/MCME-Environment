@@ -48,7 +48,8 @@ public enum SoundsString {
     CAVES_CRUMBLE("environmental.caves.crumble"),
     CAVE_CRICKETS("animals.insect.cave_crickets"),
     //  Ocean
-    OCEAN("environmental.ocean"),
+    OCEAN("coastal.waves"),
+    OCEAN_BIRD("coastal.gull"),
     // wind
     WIND("environmental.wind"),
     ELEVATION("environmental.wind.elevation"),
@@ -57,7 +58,7 @@ public enum SoundsString {
     //Leaves
     LEAVES("environmental.leaves_rustle");
 
-    private String path;
+    private final String path;
 
     SoundsString(String envUrl) {
         this.path = envUrl;

@@ -16,18 +16,18 @@
  */
 package com.mcme.environment.commands;
 
-import com.google.common.base.Strings;
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -59,13 +59,13 @@ public class EnvironmentControl extends EnvironmentCommand {
 
                 }.runTaskLater(Environment.getPluginInstance(), 40L);
 
-            } catch (Exception e) {
+            } catch (IllegalArgumentException | IllegalStateException e) {
                 pl.sendMessage(ChatColor.RED + "Errors Found - " + e.getClass().getName());
             }
 
         } else if (args[0].equalsIgnoreCase("realtime")) {
 
-            Integer currentPlayerRunnable = PluginData.PlayersRunnable.size();
+            Integer currentPlayerRunnable = getTasksSize();
             Integer totalPlayers = Bukkit.getOnlinePlayers().size();
             Double s = 100.0 * currentPlayerRunnable / totalPlayers;
 
@@ -114,16 +114,11 @@ public class EnvironmentControl extends EnvironmentCommand {
                 if (Environment.isEngine()) {
                     Environment.setEngine(false);
 
-                    for (UUID s : PluginData.PlayersRunnable.keySet()) {
-                        for (BukkitTask b : PluginData.getPlayersRunnable().get(s)) {
-                            b.cancel();
-                            PluginData.getPlayersRunnable().get(s).remove(b);
-                            if (PluginData.getPlayersRunnable().get(s).isEmpty()) {
-                                PluginData.getPlayersRunnable().remove(s);
-                            }
-
-                        }
-                    }
+                    PluginData.getAllRegions().values().forEach((s) -> {
+                        s.getInformedLoc().forEach((b) -> {
+                            s.cancelAllTasks(b);
+                        });
+                    });
 
                     PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine switched off");
                 } else {
@@ -155,19 +150,23 @@ public class EnvironmentControl extends EnvironmentCommand {
 
     }
 
-    private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtils().sendInfoMessage(cs, "Switched on!");
-
-    }
-
-    private void sendAlready(CommandSender cs) {
-        PluginData.getMessageUtils().sendErrorMessage(cs, "It's already on");
-
-    }
-
     private void sendNoPerm(CommandSender cs) {
         PluginData.getMessageUtils().sendErrorMessage(cs, "No permission for this command");
 
+    }
+
+    private Integer getTasksSize() {
+        List<UUID> list = new ArrayList<>();
+
+        PluginData.getAllRegions().values().forEach((region) -> {
+            region.getTasks().keySet().forEach((uuid) -> {
+                if (!list.contains(uuid)) {
+                    list.add(uuid);
+                }
+            });
+        });
+
+        return list.size();
     }
 
 }

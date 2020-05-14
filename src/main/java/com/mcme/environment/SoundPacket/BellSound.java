@@ -17,12 +17,11 @@
 package com.mcme.environment.SoundPacket;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.data.PluginData;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -30,16 +29,17 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class BellSound {
 
-    public static void BellSound(Player pl, int time, Location l, String nameloc) {
+    public static void BellSound(Player pl, int time, Location l, UUID idlocation) {
         int timess = bellTimes(time);
-        BukkitTask runnable = new BukkitRunnable() {
+        
+        new BukkitRunnable() {
             int times = 0;
 
             @Override
             public void run() {
                 Float volume = 0.3F;
                 if (SoundUtil.isOutdoor(pl.getLocation())) {
-                    volume = 20F;
+                    volume = 15F;
 
                 }
 
@@ -57,7 +57,6 @@ public class BellSound {
 
         }.runTaskTimer(Environment.getPluginInstance(), 300L, 60L);
 
-        PluginData.addBukkitTaskLocation(pl, runnable, SoundType.BELL, nameloc);
     }
 
     public static int bellTimes(int time) {

@@ -37,9 +37,9 @@ public class EnvironmentOff extends EnvironmentCommand {
     protected void execute(final CommandSender cs, final String... args) {
         Player pl = (Player) cs;
 
-        if (PluginData.boolPlayers.get(pl.getUniqueId())) {
-            PluginData.boolPlayers.remove(pl.getUniqueId());
-            PluginData.boolPlayers.put(pl.getUniqueId(), Boolean.FALSE);
+        if (PluginData.getBoolPlayers().get(pl.getUniqueId())) {
+            PluginData.getBoolPlayers().remove(pl.getUniqueId());
+            PluginData.getBoolPlayers().put(pl.getUniqueId(), Boolean.FALSE);
             EnvChange.resetAll(pl);
             sendDone(cs);
         } else {

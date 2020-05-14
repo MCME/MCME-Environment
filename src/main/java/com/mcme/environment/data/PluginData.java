@@ -40,9 +40,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -61,32 +59,19 @@ public class PluginData {
      * String and regions data
      */
     @Getter
-    public static Map<String, RegionData> AllRegions = new HashMap<>();
+    private static final Map<String, RegionData> AllRegions = new HashMap<>();
 
     @Getter
-    public static Map<UUID, Boolean> boolPlayers = new HashMap<>();
-
-    @Getter
-    public static Map<UUID, List<UUID>> informedRegion = new HashMap<>();
-    //id region, uuid
-    @Getter
-    public static Map<UUID, List<UUID>> informedLocation = new HashMap<>();
-    //id location, uuid
-    @Getter
-    public static Map<UUID, List<BukkitTask>> PlayersRunnable = new HashMap<>();
+    private static final Map<UUID, Boolean> boolPlayers = new HashMap<>();
     //IdRegion, Players
     @Getter
-    public static Map<UUID, List<InformedLocData>> PlayersRunnableLocation = new HashMap<>();
-
-    @Getter
-    public static Map<String, LocatedSoundData> locSounds = new HashMap<>();
+    private static final Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
     /**
      * It reloads all regions from database
      */
     public static void loadRegions() {
         AllRegions.clear();
-        informedRegion.clear();
 
         new BukkitRunnable() {
 
@@ -94,9 +79,9 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM " + Environment.getPluginInstance().database + ".environment_regions_data ;";
+                    String statement = "SELECT * FROM environment_regions_data ;";
 
-                    final ResultSet r = Environment.getPluginInstance().con.prepareStatement(statement).executeQuery();
+                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
 
                     if (r.first()) {
                         do {
@@ -123,14 +108,8 @@ public class PluginData {
 
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
 
-                                List<UUID> s = new ArrayList<>();
-
-                                informedRegion.put(UUID.fromString(r.getString("idregion")), s);
-
                             } else {
 
-                                String[] xl = unserialize(r.getString("xlist"));
-                                String[] zl = unserialize(r.getString("zlist"));
                                 String[] location = unserialize(r.getString("location"));
                                 String[] location2 = unserialize(r.getString("info_sound"));
 
@@ -143,10 +122,6 @@ public class PluginData {
 
                                 PrismoidRegion rr = new PrismoidRegion(loc, xlist, zlist, ymin, ymax);
                                 AllRegions.put(r.getString("name"), new RegionData(r.getString("name"), UUID.fromString(r.getString("idregion")), rr, r.getString("server"), r.getString("type"), r.getString("weather"), r.getBoolean("thunders"), r.getString("time"), r.getInt("weight"), SoundType.valueOf(r.getString("sound")), loc2));
-
-                                List<UUID> s = new ArrayList<>();
-
-                                informedRegion.put(UUID.fromString(r.getString("idregion")), s);
 
                             }
 
@@ -172,9 +147,9 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM " + Environment.getPluginInstance().database + ".environment_locations_data ;";
+                    String statement = "SELECT * FROM environment_locations_data ;";
 
-                    final ResultSet r = Environment.getPluginInstance().con.prepareStatement(statement).executeQuery();
+                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
 
                     if (r.first()) {
                         do {
@@ -182,14 +157,11 @@ public class PluginData {
 
                             Location loc;
 
-                            if (Environment.nameserver.equalsIgnoreCase(r.getString("server"))) {
+                            if (Environment.getNameserver().equalsIgnoreCase(r.getString("server"))) {
                                 loc = new Location(Bukkit.getWorld(location[0]), parseDouble(location[1]), parseDouble(location[2]), parseDouble(location[3]));
-                                
+
                                 locSounds.put(r.getString("name"), new LocatedSoundData(loc, r.getString("name"), r.getString("server"), SoundType.valueOf(r.getString("sound")), UUID.fromString(r.getString("idlocation"))));
 
-                                List<UUID> s = new ArrayList<>();
-
-                                informedLocation.put(UUID.fromString(r.getString("idlocation")), s);
                             }
 
                         } while (r.next());
@@ -205,10 +177,6 @@ public class PluginData {
 
     }
 
-    public static String serialize(UUID uuid, Boolean bool) {
-        return uuid + ";" + bool;
-    }
-
     public static String[] unserialize(String line) {
         String[] dataArray = line.split(";");
 
@@ -218,51 +186,26 @@ public class PluginData {
 
     public static UUID createId() {
 
-        UUID uuid = UUID.randomUUID();
-
-        return uuid;
+        return UUID.randomUUID();
 
     }
 
-    public static List<Integer> StringtoListInt(String[] s) {
+    private static List<Integer> StringtoListInt(String[] s) {
 
         List<Integer> list = new ArrayList();
 
-        for (int i = 0; i < s.length; i++) {
-            list.add(Integer.parseInt(s[i]));
+        for (String item : s) {
+            list.add(Integer.parseInt(item));
         }
+
         return list;
     }
-
-    public static void addBukkitTask(Player pl, BukkitTask b) {
-        if (PluginData.PlayersRunnable.containsKey(pl.getUniqueId())) {
-            PluginData.PlayersRunnable.get(pl.getUniqueId()).add(b);
-        } else {
-            List<BukkitTask> listB = new ArrayList<>();
-            listB.add(b);
-            PluginData.PlayersRunnable.put(pl.getUniqueId(), listB);
-        }
-
-    }
-    
-    public static void addBukkitTaskLocation(Player pl, BukkitTask b,SoundType s, String name) {
-        if (PluginData.PlayersRunnableLocation.containsKey(pl.getUniqueId())) {
-            PluginData.PlayersRunnableLocation.get(pl.getUniqueId()).add(new InformedLocData(b,name,s));
-        } else {
-            List<InformedLocData> listB = new ArrayList<>();
-            listB.add(new InformedLocData(b,name,s));
-            PluginData.PlayersRunnableLocation.put(pl.getUniqueId(), listB);
-        }
-
-    }
-
-    
 
     public static String getNameFromUUID(UUID uuid) {
         String name = "";
 
         for (String s : PluginData.AllRegions.keySet()) {
-            if (PluginData.AllRegions.get(s).idr.equals(uuid)) {
+            if (PluginData.AllRegions.get(s).getIdregion().equals(uuid)) {
                 name = s;
             }
         }
@@ -271,25 +214,33 @@ public class PluginData {
     }
 
     public static void onSave(File projectFolder) throws IOException {
-        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Saving " + ChatColor.DARK_GRAY + AllRegions.size() + " regions...");
 
         for (String regionName : AllRegions.keySet()) {
+            if (!AllRegions.get(regionName).locData.getLeaves().isEmpty() || !AllRegions.get(regionName).locData.getWater().isEmpty()) {
+                File regionFile = new File(projectFolder, regionName + ".yml");
 
-            File regionFile = new File(projectFolder, regionName + ".yml");
-
-            AllRegions.get(regionName).locData.save(regionFile);
-
+                AllRegions.get(regionName).locData.save(regionFile);
+            }
         }
+
+        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Saving " + ChatColor.DARK_GRAY + AllRegions.size() + " regions...");
 
     }
 
     public static void onLoad(File projectFolder) throws IOException, FileNotFoundException, InvalidConfigurationException {
 
-        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Loading regions: " + ChatColor.DARK_GRAY + projectFolder.listFiles().length + ChatColor.BLUE + " Found");
         for (File projectFile : projectFolder.listFiles()) {
+            if (AllRegions.containsKey(projectFile.getName().substring(0, projectFile.getName().length() - 4))) {
+                RegionData redata = AllRegions.get(projectFile.getName().substring(0, projectFile.getName().length() - 4));
 
-            AllRegions.get(projectFile.getName().substring(0, projectFile.getName().length() - 4)).locData.load(projectFile);
+                redata.locData.load(projectFile, redata.getLoc().getWorld());
+            } else {
+                projectFile.delete();
+            }
+
         }
+
+        Environment.getPluginInstance().getClogger().sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.BLUE + "Loading regions: " + ChatColor.DARK_GRAY + projectFolder.listFiles().length + ChatColor.BLUE + " Found");
 
     }
 

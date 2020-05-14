@@ -24,12 +24,14 @@ import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.listeners.PlayerListener;
+import com.mcme.environment.runnable.RunnablePlayer;
+import com.mcme.environment.runnable.SystemRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.UUID;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -52,35 +54,36 @@ import org.bukkit.scheduler.BukkitTask;
 public class Environment extends JavaPlugin implements PluginMessageListener {
 
     static final Logger Logger = Bukkit.getLogger();
+
     @Getter
-    public ConsoleCommandSender clogger = this.getServer().getConsoleSender();
+    private ConsoleCommandSender clogger = this.getServer().getConsoleSender();
+
     @Getter
     private static Environment pluginInstance;
+
     @Getter
     private File envFolder;
 
     @Getter
     @Setter
-    public static String nameserver;
+    private static String nameserver;
+
+    @Setter
     @Getter
-    public static ProtocolManager manager;
+    private ProtocolManager manager;
+
     @Getter
-    public Connection con;
-    @Getter
+    private Connection connection;
+
     String host = this.getConfig().getString("host");
-    @Getter
     String port = this.getConfig().getString("port");
-    @Getter
-    public String database = this.getConfig().getString("database");
-    @Getter
+    String database = this.getConfig().getString("database");
     String username = this.getConfig().getString("username");
-    @Getter
     String password = this.getConfig().getString("password");
-    
+
     @Getter
     @Setter
     private static boolean engine;
-    
 
     @Override
     public void onEnable() {
@@ -106,7 +109,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
-            ConnectionRunnable();
+            SystemRunnable.ConnectionRunnable();
             try {
                 onInitiateFile();
             } catch (IOException ex) {
@@ -119,6 +122,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 @Override
                 public void run() {
                     PluginData.loadRegions();
+                    SystemRunnable.runnableLocations();
+                    RunnablePlayer.runnableLocationsPlayers();
+                    RunnablePlayer.runnableRegionsPlayers();
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
@@ -145,11 +151,15 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
         clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " disabled!");
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
-        for (UUID uuid : PluginData.PlayersRunnable.keySet()) {
-            for (BukkitTask s : PluginData.PlayersRunnable.get(uuid)) {
-                s.cancel();
+        for (String str : PluginData.getAllRegions().keySet()) {
+            for (List<BukkitTask> s : PluginData.getAllRegions().get(str).getTasks().values()) {
+                for (BukkitTask task : s) {
+                    task.cancel();
+                }
             }
+
         }
+
         try {
             PluginData.onSave(envFolder);
         } catch (IOException ex) {
@@ -179,7 +189,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
      *
      */
     public void openConnection() throws SQLException {
-        if (con != null && !con.isClosed()) {
+        if (connection != null && !connection.isClosed()) {
             return;
         }
         if (Environment.getPluginInstance().password.equalsIgnoreCase("default")) {
@@ -187,7 +197,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             Bukkit.getPluginManager().disablePlugin(this);
         } else {
 
-            con = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
+            connection = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
                     + Environment.pluginInstance.port + "/"
                     + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
                     Environment.getPluginInstance().username,
@@ -228,39 +238,17 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                             + "  `bool` BOOLEAN NOT NULL,\n"
                             + "  PRIMARY KEY (`uuid`));";
                     try {
-                        con.createStatement().execute(stat);
-                        
-                        con.createStatement().execute(stat2);
-                        
-                        con.createStatement().execute(stat3);
+                        connection.createStatement().execute(stat);
+
+                        connection.createStatement().execute(stat2);
+
+                        connection.createStatement().execute(stat3);
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }.runTaskAsynchronously(Environment.getPluginInstance());
         }
-
-    }
-
-    public void ConnectionRunnable() {
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                try {
-                    if (!con.isValid(2)) {
-
-                        openConnection();
-
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
-
-        }.runTaskTimer(Environment.getPluginInstance(), 60L, 600L);
 
     }
 
@@ -276,7 +264,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         player.sendPluginMessage(this, "BungeeCord", out.toByteArray());
     }
 
-    public void onInitiateFile() throws IOException {
+    private void onInitiateFile() throws IOException {
         envFolder = new File(Bukkit.getServer().getPluginManager().getPlugin("Environment").getDataFolder(), "locations");
 
         if (!envFolder.exists()) {
