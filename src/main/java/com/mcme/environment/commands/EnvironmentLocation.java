@@ -58,9 +58,9 @@ public class EnvironmentLocation extends EnvironmentCommand {
 
                             @Override
                             public void run() {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.nameserver + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
+                                String stat = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
                                 try {
-                                    Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                                    Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                                     sendDone(cs);
 
                                     PluginData.loadLocations();
@@ -91,9 +91,9 @@ public class EnvironmentLocation extends EnvironmentCommand {
                     @Override
                     public void run() {
 
-                        String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".environment_locations_data WHERE idlocation = '" + PluginData.getLocSounds().get(args[1]).getId() + "' ;";
+                        String stat = "DELETE FROM environment_locations_data WHERE idlocation = '" + PluginData.getLocSounds().get(args[1]).getId() + "' ;";
                         try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
+                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
                             PluginData.loadLocations();
                             sendDel(cs);
                         } catch (SQLException ex) {

@@ -18,9 +18,15 @@ package com.mcme.environment.data;
 
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcmiddleearth.pluginutil.region.Region;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -28,28 +34,33 @@ import org.bukkit.Location;
  */
 public class RegionData {
 
-    public final String name;
+    @Getter
+    private final String name;
+    @Getter
+    private final UUID idregion;
+    @Getter
+    private final Region region;
+    @Getter
+    private final String server;
+    @Getter
+    private final String type;
+    @Getter
+    private final String weather;
+    @Getter
+    private final Boolean thunder;
+    @Getter
+    private final String time;
+    @Getter
+    private final Integer weight;
+    @Getter
+    private final SoundType soundAmbient;
+    @Getter
+    private final Location loc;
+    @Getter
+    private final Map<UUID, List<BukkitTask>> tasks;
+    @Getter
+    private final List<UUID> informedLoc;
 
-    public final UUID idr;
-
-    public final Region region;
-
-    public final String server;
-
-    public final String type;
-
-    public final String weather;
-
-    public final Boolean thunder;
-
-    public final String time;
-
-    public final Integer weight;
-
-    public final SoundType soundAmbient;
-
-    public final Location loc;
-    
     @Setter
     public LocationsData locData;
 
@@ -58,7 +69,7 @@ public class RegionData {
      * Create a new region data
      *
      * @param namem Name of the region
-     * @param idregion Id of the region
+     * @param idregi Id of the region
      * @param rn The PluginUtil region
      * @param sr The name of the server as in BungeeCord file
      * @param t Type of the region (Cuboid or Prismoid)
@@ -70,11 +81,11 @@ public class RegionData {
      * @param lc Location for soundlocated
      *
      */
-    public RegionData(String namem, UUID idregion, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc) {
+    public RegionData(String namem, UUID idregi, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc) {
 
         name = namem;
 
-        idr = idregion;
+        idregion = idregi;
 
         region = rn;
 
@@ -96,6 +107,10 @@ public class RegionData {
 
         locData = new LocationsData();
 
+        informedLoc = new ArrayList<>();
+
+        tasks = new HashMap<>();
+
     }
 
     public Location getLocation() {
@@ -105,6 +120,44 @@ public class RegionData {
     public boolean isInside(Location loc) {
 
         return region.isInside(loc);
+
+    }
+
+    public void addInform(UUID uuid) {
+        if (!informedLoc.contains(uuid)) {
+            informedLoc.add(uuid);
+        }
+
+    }
+
+    public void addTask(UUID uuid, BukkitTask task) {
+        if (!tasks.containsKey(uuid)) {
+            List<BukkitTask> s = new ArrayList<>();
+            s.add(task);
+            tasks.put(uuid, s);
+
+        } else {
+            tasks.get(uuid).add(task);
+        }
+    }
+
+    public void cancelAllTasks(UUID uuid) {
+        if (tasks.containsKey(uuid)) {
+            tasks.get(uuid).forEach((s) -> {
+                s.cancel();
+            });
+        }
+
+        if (informedLoc.contains(uuid)) {
+            informedLoc.remove(uuid);
+        }
+
+    }
+
+    public void addInfoTask(UUID uuid, BukkitTask task) {
+
+        addTask(uuid, task);
+        addInform(uuid);
 
     }
 }

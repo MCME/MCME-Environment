@@ -35,7 +35,6 @@ public class EnvironmentRemove extends EnvironmentCommand {
         setShortDescription(": Remove a region");
         setUsageDescription(" <areaName>: Remove a region");
     }
-//environment remove nameRegion
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -47,9 +46,9 @@ public class EnvironmentRemove extends EnvironmentCommand {
                 @Override
                 public void run() {
 
-                    String stat = "DELETE FROM " + Environment.getPluginInstance().database + ".environment_regions_data WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                    String stat = "DELETE FROM environment_regions_data WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
                     try {
-                        Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
+                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
                         PluginData.loadRegions();
                         sendDel(cs);
                     } catch (SQLException ex) {

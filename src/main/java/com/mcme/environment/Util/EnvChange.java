@@ -28,13 +28,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 /**
@@ -65,7 +63,7 @@ public class EnvChange {
             } else if (reg instanceof PrismoidRegion) {
                 l = randomLocPrismoid(reg, w);
             }
-            PacketContainer thunder = Environment.getPluginInstance().manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
+            PacketContainer thunder = Environment.getPluginInstance().getManager().createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
             thunder.getIntegers().
                     write(0, randomReturn()).
                     write(1, 1);
@@ -108,19 +106,9 @@ public class EnvChange {
 
         pl.resetPlayerTime();
 
-        if (PluginData.getPlayersRunnable().containsKey(pl.getUniqueId())) {
-
-            for (BukkitTask b : PluginData.getPlayersRunnable().get(pl.getUniqueId())) {
-                b.cancel();
-            }
-        }
-
-        for (UUID region : PluginData.getInformedRegion().keySet()) {
-            if (PluginData.getInformedRegion().get(region).contains(pl.getUniqueId())) {
-                PluginData.getInformedRegion().get(region).remove(pl.getUniqueId());
-            }
-
-        }
+        PluginData.getAllRegions().values().forEach((s) -> {
+            s.cancelAllTasks(pl.getUniqueId());
+        });
 
     }
 
@@ -138,7 +126,7 @@ public class EnvChange {
 
     }
 
-    public static Location randomLocPrismoid(Region r, String world) {
+    private static Location randomLocPrismoid(Region r, String world) {
         if (r instanceof PrismoidRegion) {
             List<Integer> X = Arrays.asList(((PrismoidRegion) r).getXPoints());
             List<Integer> Z = Arrays.asList(((PrismoidRegion) r).getZPoints());
@@ -163,7 +151,7 @@ public class EnvChange {
 
     }
 
-    public static Integer getMin(List<Integer> list) {
+    private static Integer getMin(List<Integer> list) {
 
         Integer min = Integer.MAX_VALUE;
 
@@ -177,7 +165,7 @@ public class EnvChange {
         return min;
     }
 
-    public static Integer getMax(List<Integer> list) {
+    private static Integer getMax(List<Integer> list) {
 
         Integer max = Integer.MIN_VALUE;
 

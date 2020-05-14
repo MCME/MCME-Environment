@@ -35,10 +35,8 @@ public class EnvironmentSound extends EnvironmentCommand {
     public EnvironmentSound(String... permissionNodes) {
         super(2, true, permissionNodes);
         setShortDescription(": Edit sounds ");
-        setUsageDescription("<nameRegion> <ambientSoundType> <LocatedSoundType>: With this command you can edit sounds of that region");
+        setUsageDescription("<nameRegion> <ambientSoundType> : With this command you can edit sounds of that region");
     }
-//environment sound nameRegion ambientsound addedsound
-    //               0            1              2
 
     private SoundType soundAmbient;
 
@@ -53,10 +51,10 @@ public class EnvironmentSound extends EnvironmentCommand {
 
                 @Override
                 public void run() {
-                    String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                    String stat = "UPDATE environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
 
                     try {
-                        Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                         sendDone(cs);
                         PluginData.loadRegions();
                     } catch (SQLException ex) {
@@ -67,6 +65,8 @@ public class EnvironmentSound extends EnvironmentCommand {
 
             }.runTaskAsynchronously(Environment.getPluginInstance());
 
+        } else {
+            sendNo(cs);
         }
     }
 

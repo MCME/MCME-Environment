@@ -29,35 +29,25 @@ public class LeavesSound {
 
     public static void LeavesSound(Player pl, RegionData re) {
 
-        Location l = re.locData.leaves.get(0);
+        Location l = re.locData.getLeaves().get(0);
 
-        for (Location loc : re.locData.leaves) {
+        for (Location loc : re.locData.getLeaves()) {
             if (l.distanceSquared(pl.getLocation()) > loc.distanceSquared(pl.getLocation())) {
                 l = loc;
             }
         }
 
-        Float volume = 0.4F;
+        Float volume = 0.3F;
         if (SoundUtil.isOutdoor(pl.getLocation())) {
-            volume = 3F;
+            volume = 0.7F;
 
         }
 
-        if (SoundUtil.randomBoolean(0.4, 0.6)) {
+        if (SoundUtil.randomBoolean(0.5, 0.5)) {
 
             pl.playSound(l, SoundsString.LEAVES.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
-           
-            System.out.println("leaves vanno");
-        }
-
-        if (SoundUtil.randomBoolean(0.2, 0.8)) {
-            Float volWind = 0.05F;
-            if (SoundUtil.isOutdoor(pl.getLocation())) {
-                volWind = 0.7F;
-            }
-
-            pl.playSound(l, SoundsString.WIND.getPath(), SoundCategory.AMBIENT, volWind, 1.0F);
 
         }
+
     }
 }

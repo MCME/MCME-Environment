@@ -29,10 +29,6 @@ import org.bukkit.entity.Player;
 public class WindSound {
 
     public static void WindSound(Player pl) {
-        RandomCollection<Boolean> random = new RandomCollection<>();
-        random.add(0.5, true);
-        random.add(0.5, false);
-        Boolean result = random.next();
         Location l = getRandomLocationNW(pl.getLocation().getBlockX() - 5, pl.getLocation().getBlockX() + 5, pl.getLocation().getBlockZ() - 5, pl.getLocation().getBlockZ() + 5, pl.getWorld(), pl.getLocation().getBlockY());
 
         Float volume = 0.07F;

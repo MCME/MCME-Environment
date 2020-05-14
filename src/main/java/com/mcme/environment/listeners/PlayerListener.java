@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
 
             @Override
             public void run() {
-                if (Environment.nameserver.equalsIgnoreCase("default")) {
+                if (Environment.getNameserver().equalsIgnoreCase("default")) {
                     Environment.getPluginInstance().sendNameServer(e.getPlayer());
 
                 }
@@ -57,16 +57,14 @@ public class PlayerListener implements Listener {
 
         }.runTaskLater(Environment.getPluginInstance(), 150L);
 
-        System.out.println("Env " + Environment.getNameserver());
-
         new BukkitRunnable() {
 
             @Override
             public void run() {
                 try {
-                    String statement = "SELECT * FROM " + Environment.getPluginInstance().database + ".environment_players WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
+                    String statement = "SELECT * FROM environment_players WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
 
-                    final ResultSet r = Environment.getPluginInstance().con.prepareStatement(statement).executeQuery();
+                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
 
                     if (r.first()) {
 
@@ -74,8 +72,8 @@ public class PlayerListener implements Listener {
 
                     } else {
 
-                        String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_players (bool, uuid) VALUES (1,'" + e.getPlayer().getUniqueId().toString() + "') ; ";
-                        Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                        String stat = "INSERT INTO environment_players (bool, uuid) VALUES (1,'" + e.getPlayer().getUniqueId().toString() + "') ; ";
+                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                         PluginData.getBoolPlayers().put(e.getPlayer().getUniqueId(), Boolean.TRUE);
                     }
 
@@ -101,9 +99,9 @@ public class PlayerListener implements Listener {
                     @Override
                     public void run() {
 
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
+                        String stat = "UPDATE environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,9 +116,9 @@ public class PlayerListener implements Listener {
                     @Override
                     public void run() {
 
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
+                        String stat = "UPDATE environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,6 +131,10 @@ public class PlayerListener implements Listener {
 
         }
 
+        PluginData.getAllRegions().values().forEach((r) -> {
+            r.cancelAllTasks(e.getPlayer().getUniqueId());
+        });
+
     }
 
     @EventHandler
@@ -140,46 +142,40 @@ public class PlayerListener implements Listener {
 
         RegionData re = PluginData.getAllRegions().get(e.getNameRegion());
 
-        if (re.weather.equalsIgnoreCase("rain")) {
+        if (re.getWeather().equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
-        } else if (re.weather.equalsIgnoreCase("sun")) {
+        } else if (re.getWeather().equalsIgnoreCase("sun")) {
             e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
         }
 
-        if (re.thunder) {
+        if (re.getThunder()) {
 
             BukkitTask bRunnable = new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
-                    EnvChange.spawnThunderstorm(e.getPlayer(), true, re.region);
+                    EnvChange.spawnThunderstorm(e.getPlayer(), true, re.getRegion());
 
                 }
 
             }.runTaskTimer(Environment.getPluginInstance(), 30L, 20L);
 
-            PluginData.addBukkitTask(e.getPlayer(), bRunnable);
+            re.addInfoTask(e.getPlayer().getUniqueId(), bRunnable);
 
         }
 
-        if (!re.time.equalsIgnoreCase("default")) {
-            e.getPlayer().setPlayerTime(parseLong(re.time), false);
+        if (!re.getTime().equalsIgnoreCase("default")) {
+            e.getPlayer().setPlayerTime(parseLong(re.getTime()), false);
         }
 
-        if (!re.soundAmbient.equals(SoundType.NONE)) {
-            if (!re.time.equals("default")) {
-                SoundUtil.playSoundAmbient(re.soundAmbient, e.getPlayer(), parseLong(re.time), re.region, re);
+        if (!re.getSoundAmbient().equals(SoundType.NONE)) {
+            if (!re.getTime().equals("default")) {
+                SoundUtil.playSoundAmbient(re.getSoundAmbient(), e.getPlayer(), parseLong(re.getTime()), re.getRegion(), re);
             }
         }
 
-        if (!re.locData.leaves.isEmpty()) {
-            if (!re.time.equals("default")) {
-                SoundUtil.playSoundAmbient(SoundType.LEAVES, e.getPlayer(), parseLong(re.time), re.region, re);
-
-            }
-        }
     }
 
     @EventHandler

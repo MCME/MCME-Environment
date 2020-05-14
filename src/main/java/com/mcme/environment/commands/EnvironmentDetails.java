@@ -40,8 +40,6 @@ public class EnvironmentDetails extends EnvironmentCommand {
         setShortDescription(": Details about a region ");
         setUsageDescription(": Used to get all details about a region");
     }
-//environment details nameRegion 
-    //               0
 
     private String weather;
     private int weight;
@@ -57,13 +55,13 @@ public class EnvironmentDetails extends EnvironmentCommand {
             Player pl = (Player) cs;
             RegionData redata = PluginData.getAllRegions().get(args[0]);
 
-            weight = redata.weight;
-            thunder = redata.thunder;
-            Region r = redata.region;
-            time = redata.time;
-            type = redata.type;
-            weather = redata.weather;
-            soundAmb = redata.soundAmbient;
+            weight = redata.getWeight();
+            thunder = redata.getThunder();
+            Region r = redata.getRegion();
+            time = redata.getTime();
+            type = redata.getType();
+            weather = redata.getWeather();
+            soundAmb = redata.getSoundAmbient();
 
             FancyMessage message = new FancyMessage(MessageType.INFO_NO_PREFIX, PluginData.getMessageUtils());
 

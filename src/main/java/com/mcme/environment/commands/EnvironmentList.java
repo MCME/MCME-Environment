@@ -38,7 +38,6 @@ public class EnvironmentList extends EnvironmentCommand {
         setShortDescription(": List of all regions/locations");
         setUsageDescription(": List");
     }
-//environment list region|location 1
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -59,11 +58,11 @@ public class EnvironmentList extends EnvironmentCommand {
                     .addSimple(ChatColor.GREEN + "Regions loaded in the network --> " + ChatColor.BOLD + PluginData.getAllRegions().size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
-            for (String region : PluginData.getAllRegions().keySet()) {
+            PluginData.getAllRegions().keySet().forEach((region) -> {
                 FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + region + "\n");
                 messages.add(r);
-            }
+            });
 
             PluginData.getMessageUtils().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
         } else {
@@ -72,13 +71,13 @@ public class EnvironmentList extends EnvironmentCommand {
                     .addSimple(ChatColor.GREEN + "Locations loaded in the network --> " + ChatColor.BOLD + PluginData.getLocSounds().size() + "\n");
             List<FancyMessage> messages = new ArrayList<>();
 
-            for (String location : PluginData.getLocSounds().keySet()) {
+            PluginData.getLocSounds().keySet().forEach((location) -> {
                 Location l = PluginData.getLocSounds().get(location).getLoc();
 
                 FancyMessage r = new FancyMessage(MessageType.WHITE, PluginData.getMessageUtils())
                         .addSimple(ChatColor.DARK_GREEN + "- " + location + " " + l.getBlockX() + "x," + l.getBlockY() + "y," + l.getBlockZ() + "z" + "\n");
                 messages.add(r);
-            }
+            });
 
             PluginData.getMessageUtils().sendFancyListMessage((Player) cs, header, messages, "/environment list ", page);
 

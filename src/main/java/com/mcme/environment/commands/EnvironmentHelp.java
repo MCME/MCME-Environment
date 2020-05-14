@@ -56,14 +56,14 @@ public class EnvironmentHelp extends EnvironmentCommand {
             }
         } else {
             Set<String> keys = commands.keySet();
-            for (String key : keys) {
+            keys.forEach((key) -> {
                 String description = commands.get(key).getShortDescription();
                 if (description != null) {
                     sendDescriptionMessage(cs, key, description);
                 } else {
                     sendNoDescriptionMessage(cs, key);
                 }
-            }
+            });
         }
         sendManualMessage(cs);
     }
@@ -83,9 +83,8 @@ public class EnvironmentHelp extends EnvironmentCommand {
     private void sendNoDescriptionMessage(CommandSender cs, String arg) {
         PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "/environment " + arg + ": There is no help for this command.");
     }
-    //Set Manual
 
     private void sendManualMessage(CommandSender cs) {
-        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "Manual: ");
+        PluginData.getMessageUtils().sendNoPrefixInfoMessage(cs, "Manual: https://www.mcmiddleearth.com/community/resources/mcme-environment-plugin.149/ ");
     }
 }

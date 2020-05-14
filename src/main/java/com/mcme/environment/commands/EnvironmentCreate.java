@@ -49,9 +49,8 @@ public class EnvironmentCreate extends EnvironmentCommand {
         setShortDescription(": Create a new region");
         setUsageDescription(" <areaName> <weight>: Create a new region");
     }
-//environment create nameRegion 
 
-    public Region weRegion;
+    private Region weRegion;
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
@@ -77,9 +76,9 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
-                                Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
+                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
 
@@ -110,9 +109,9 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "INSERT INTO " + Environment.getPluginInstance().database + ".environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getPluginInstance().nameserver + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
+                                String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
-                                Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate();
+                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
 
                                 PluginData.loadRegions();
                                 RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);

@@ -42,7 +42,6 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
 
     private final String permission = "env.user";
     private final String permissionStaff = "env.staff";
-    private final String permissionReload = "env.reload";
 
     public EnvironmentCommandExecutor() {
         addCommandHandler("create", new EnvironmentCreate(permissionStaff));
@@ -98,16 +97,15 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
         List<String> areas = new ArrayList<>();
         List<String> fregion = new ArrayList<>();
 
-        for (String s : PluginData.getAllRegions().keySet()) {
+        PluginData.getAllRegions().keySet().forEach((s) -> {
             areas.add(s);
-
-        }
+        });
         List<String> locations = new ArrayList<>();
         List<String> flocation = new ArrayList<>();
 
-        for (String s : PluginData.getLocSounds().keySet()) {
+        PluginData.getLocSounds().keySet().forEach((s) -> {
             locations.add(s);
-        }
+        });
 
         switch (args.length) {
             case 1:
@@ -119,44 +117,44 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                 return Flist;
             case 2:
                 if (args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("details") || args[0].equalsIgnoreCase("sound") || args[0].equalsIgnoreCase("redefine")) {
-                    
+
                     for (String s : areas) {
                         if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                             fregion.add(s);
                         }
                     }
                     return fregion;
-                    
+
                 } else if (args[0].equalsIgnoreCase("location")) {
                     List<String> l = Arrays.asList("add", "remove");
                     return l;
-                    
+
                 } else if (args[0].equalsIgnoreCase("list")) {
                     List<String> l = Arrays.asList("region", "location");
                     return l;
-                    
+
                 } else if (args[0].equalsIgnoreCase("control")) {
                     List<String> l = Arrays.asList("shutdown", "enable", "realtime", "reload");
                     return l;
-                    
+
                 } else {
                     return null;
                 }
             case 3:
                 if (args[0].equalsIgnoreCase("edit")) {
-                    
+
                     List<String> l = Arrays.asList("rain", "sun");
                     return l;
 
                 } else if (args[0].equalsIgnoreCase("sound")) {
-                    
+
                     List<String> l = Arrays.asList("none", "plain", "cave", "forest", "ocean", "wind", "swampland");
                     return l;
-                    
+
                 } else if (args[0].equalsIgnoreCase("location")) {
                     if (args[1].equalsIgnoreCase("remove")) {
                         for (String s : locations) {
-                            if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                            if (s.toLowerCase().startsWith(args[2].toLowerCase())) {
                                 flocation.add(s);
                             }
                         }
@@ -165,25 +163,25 @@ public class EnvironmentCommandExecutor implements CommandExecutor, TabExecutor 
                         return null;
                     }
                 } else {
-                    
+
                     return null;
                 }
             case 4:
                 if (args[0].equalsIgnoreCase("edit")) {
-                    
+
                     List<String> l = Arrays.asList("true", "false");
                     return l;
-                    
+
                 } else if (args[0].equalsIgnoreCase("location")) {
                     if (args[1].equalsIgnoreCase("add")) {
                         List<String> l = Arrays.asList("bell", "none");
                         return l;
-                        
+
                     } else {
                         return null;
                     }
                 } else {
-                    
+
                     return null;
                 }
             default:

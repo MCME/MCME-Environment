@@ -29,9 +29,9 @@ public class OceanSound {
 
     public static void OceanSound(Player pl, RegionData re) {
 
-        Location l = re.locData.water.get(0);
+        Location l = re.locData.getWater().get(0);
 
-        for (Location loc : re.locData.water) {
+        for (Location loc : re.locData.getWater()) {
             if (l.distanceSquared(pl.getLocation()) > loc.distanceSquared(pl.getLocation())) {
                 l = loc;
             }
@@ -46,12 +46,12 @@ public class OceanSound {
         if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
             pl.playSound(l, SoundsString.OCEAN.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
-            System.out.println("water va");
+
         }
         if (SoundUtil.randomBoolean(0.3, 0.7)) {
 
             pl.playSound(l, SoundsString.OCEAN_BIRD.getPath(), SoundCategory.AMBIENT, volume, 1.0F);
-            System.out.println("water va");
+
         }
         if (SoundUtil.randomBoolean(0.2, 0.8)) {
             Float volWind = 0.05F;

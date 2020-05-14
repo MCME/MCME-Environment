@@ -38,8 +38,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
         setShortDescription(": Edit a region ");
         setUsageDescription("<nameRegion> rain|sun true|false time: With this command you can edit a region, then set his weather and time");
     }
-//environment edit nameRegion rain|sun true|false time
-    //               0
 
     private String weather;
     private boolean thunder;
@@ -71,10 +69,10 @@ public class EnvironmentEdit extends EnvironmentCommand {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        String stat = "UPDATE " + Environment.getPluginInstance().database + ".environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).idr.toString() + "' ;";
+                        String stat = "UPDATE environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
 
                         try {
-                            Environment.getPluginInstance().con.prepareStatement(stat).executeUpdate(stat);
+                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                             sendDone(cs);
                             PluginData.loadRegions();
                         } catch (SQLException ex) {
@@ -146,33 +144,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
         return dataArray;
 
     }
-    
-    
-    
-    MCME-Environment Plugin v2.5
---------------
-Weather and Daytime control
-
-A plugin to control weather,  time and sounds of player's client in a defined region
-
-USAGE and PERMISSIONS
-
-
-Colours indicate the ranks which have permission for a command :
-Adventurer (+ all ranks except OB)
-Guide +
-List of all commands: [/environment, /env]
-To create a new region: 
-/environment create <nameRegion> <weight> (Eg. /environment create Bree 0)
-Weight define the priority of the region, important when two or more regions are overlapping.
-To remove a region:
-/environment remove <nameRegion> (Eg. /environment remove Bree)
-To edit weather and time of a region:
-/environment edit <nameRegion> rain|sun true|false <time>
-rain: when a player is inside this region it will start raining or snowing. This depends on biome type.
-sun: wean a player is inside this region the player's weather will be set as clear.
-true|false, this is for thunders, you can set thunders on with true or off with false 
-time: time in Ticks
-
+ 
      */
 }

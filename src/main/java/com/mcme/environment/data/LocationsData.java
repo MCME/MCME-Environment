@@ -22,6 +22,7 @@ import java.io.IOException;
 import static java.lang.Double.parseDouble;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -33,9 +34,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class LocationsData {
 
-    public List<Location> water;
-
-    public List<Location> leaves;
+    @Getter
+    private List<Location> water;
+    
+    @Getter
+    private List<Location> leaves;
 
     public LocationsData() {
 
@@ -58,14 +61,16 @@ public class LocationsData {
         List<String> locationsWater = new ArrayList<>();
         List<String> locationsLeaves = new ArrayList<>();
 
-        for (Location w : water) {
+        water.forEach((w) -> {
+
             String s = w.getX() + ";" + w.getY() + ";" + w.getZ();
             locationsWater.add(s);
-        }
-        for (Location w : leaves) {
+        });
+
+        leaves.forEach((w) -> {
             String s = w.getX() + ";" + w.getY() + ";" + w.getZ();
             locationsLeaves.add(s);
-        }
+        });
 
         config.set("waterList", locationsWater);
         config.set("leavesList", locationsLeaves);
@@ -81,20 +86,21 @@ public class LocationsData {
         List<String> waterList = (List<String>) config.getList("waterList");
         List<String> leavesList = (List<String>) config.getList("leavesList");
 
-        for (String s : waterList) {
+        waterList.forEach((s) -> {
 
             String[] line = PluginData.unserialize(s);
 
             Location l = new Location(world, parseDouble(line[0]), parseDouble(line[1]), parseDouble(line[2]));
             water.add(l);
-        }
-        for (String s : leavesList) {
+        });
+
+        leavesList.forEach((s) -> {
 
             String[] line = PluginData.unserialize(s);
 
             Location l = new Location(world, parseDouble(line[0]), parseDouble(line[1]), parseDouble(line[2]));
             leaves.add(l);
-        }
+        });
 
     }
 }

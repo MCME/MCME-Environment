@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  *
  * @author Fraspace5
  */
-public class PlainSound {
+public class PlainSound extends SoundUtil {
 
     public static void PlainSound(Player pl, Long time) {
         Float volume = 0.2F;

@@ -27,25 +27,23 @@ import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
  * @author Fraspace5
  */
-public class runnableplayer {
+public class RunnablePlayer {
 
     public static void runnableLocationsPlayers() {
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                for (Player pl : Bukkit.getOnlinePlayers()) {
+
+                Bukkit.getOnlinePlayers().forEach((pl) -> {
                     if (PluginData.getBoolPlayers().get(pl.getUniqueId()) && Environment.isEngine()) {
 
                         for (Map.Entry<String, LocatedSoundData> entry : PluginData.getLocSounds().entrySet()) {
@@ -57,7 +55,6 @@ public class runnableplayer {
                                 if (data.playerInRange(pl.getLocation())) {
 
                                     if (!data.isInformed(pl.getUniqueId())) {
-                                        System.out.println(pl.getLocation().distanceSquared(data.getLoc()) + "  ||  " + data.getSound().getDistanceTrigger());
 
                                         data.addInformed(pl.getUniqueId());
 
@@ -78,7 +75,7 @@ public class runnableplayer {
 
                     }
 
-                }
+                });
             }
 
         }.runTaskTimer(Environment.getPluginInstance(), 100L, 175L);
@@ -89,83 +86,72 @@ public class runnableplayer {
 
             @Override
             public void run() {
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-
+                Bukkit.getOnlinePlayers().forEach((pl) -> {
                     List<String> regions = new ArrayList<>();
                     List<String> totalRegions = new ArrayList<>();
                     List<String> informed = new ArrayList<>();
-
                     if (PluginData.getBoolPlayers().get(pl.getUniqueId()) && Environment.isEngine()) {
-
-                        for (String region : PluginData.getAllRegions().keySet()) {
-
+                        PluginData.getAllRegions().keySet().forEach((region) -> {
                             RegionData re = PluginData.getAllRegions().get(region);
 
-                            if (re.region.isInside(pl.getLocation())) {
+                            if (re.getRegion().isInside(pl.getLocation())) {
                                 totalRegions.add(region);
                             }
 
-                            if (re.region.isInside(pl.getLocation())
-                                    && !PluginData.getInformedRegion().get(re.idr).contains(pl.getUniqueId())) {
+                            if (re.getRegion().isInside(pl.getLocation())
+                                    && !re.getInformedLoc().contains(pl.getUniqueId())) {
                                 regions.add(region);
 
-                            } else if (re.region.isInside(pl.getLocation())
-                                    && PluginData.getInformedRegion().get(re.idr).contains(pl.getUniqueId())) {
+                            } else if (re.getRegion().isInside(pl.getLocation())
+                                    && re.getInformedLoc().contains(pl.getUniqueId())) {
                                 informed.add(region);
 
                             }
-
-                        }
-
+                        });
                         if (totalRegions.isEmpty()) {
-                            for (Map.Entry<UUID, List<UUID>> r : PluginData.getInformedRegion().entrySet()) {
+                            PluginData.getAllRegions().values().forEach((r) -> {
 
-                                if (r.getValue().contains(pl.getUniqueId())) {
+                                if (r.getInformedLoc().contains(pl.getUniqueId())) {
 
-                                    LeaveRegionEvent event = new LeaveRegionEvent(pl, PluginData.getNameFromUUID(r.getKey()));
+                                    LeaveRegionEvent event = new LeaveRegionEvent(pl, r.getName());
                                     Bukkit.getPluginManager().callEvent(event);
-                                    r.getValue().remove(pl.getUniqueId());
+                                    r.cancelAllTasks(pl.getUniqueId());
 
                                 }
-
-                            }
+                            });
 
                         }
-
                         if (!regions.isEmpty()) {
                             String weightMax = regions.get(0);
-
                             for (String re : regions) {
-                                if (PluginData.getAllRegions().get(re).weight > PluginData.getAllRegions().get(weightMax).weight) {
+                                if (PluginData.getAllRegions().get(re).getWeight() > PluginData.getAllRegions().get(weightMax).getWeight()) {
                                     weightMax = re;
                                 }
                             }
-
                             if (!informed.contains(weightMax)) {
                                 String ll = "";
                                 if (!informed.isEmpty()) {
                                     ll = informed.get(0);
-                                    PluginData.getInformedRegion().get(PluginData.getAllRegions().get(ll).idr).remove(pl.getUniqueId());
+                                    PluginData.getAllRegions().get(PluginData.getAllRegions().get(ll).getName()).cancelAllTasks(pl.getUniqueId());
+
                                 }
-                                if (PluginData.getPlayersRunnable().containsKey(pl.getUniqueId())) {
-                                    for (BukkitTask b : PluginData.getPlayersRunnable().get(pl.getUniqueId())) {
-                                        b.cancel();
-                                    }
-                                }
-                                if (!PluginData.getInformedRegion().get(PluginData.getAllRegions().get(weightMax).idr).contains(pl.getUniqueId())) {
-                                    PluginData.getInformedRegion().get(PluginData.getAllRegions().get(weightMax).idr).add(pl.getUniqueId());
-                                }
+
+                                PluginData.getAllRegions().values().forEach((b) -> {
+                                    b.cancelAllTasks(pl.getUniqueId());
+                                });
+
+                                PluginData.getAllRegions().get(weightMax).addInform(pl.getUniqueId());
 
                                 EnterRegionEvent event = new EnterRegionEvent(pl, weightMax);
                                 Bukkit.getPluginManager().callEvent(event);
                             }
                         }
                     }
-                }
+                });
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 200L, 100L);
+        }.runTaskTimer(Environment.getPluginInstance(), 200L, 75L);
     }
 
     private static int setTime(Location loc) {
@@ -173,7 +159,7 @@ public class runnableplayer {
         int time = 12000;
         for (Map.Entry<String, RegionData> r : PluginData.getAllRegions().entrySet()) {
             if (r.getValue().isInside(loc)) {
-                time = parseInt(r.getValue().time);
+                time = parseInt(r.getValue().getTime());
             }
         }
         return time;

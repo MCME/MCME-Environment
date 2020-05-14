@@ -22,7 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -32,7 +31,8 @@ public class BellSound {
 
     public static void BellSound(Player pl, int time, Location l, UUID idlocation) {
         int timess = bellTimes(time);
-        BukkitTask runnable = new BukkitRunnable() {
+        
+        new BukkitRunnable() {
             int times = 0;
 
             @Override
