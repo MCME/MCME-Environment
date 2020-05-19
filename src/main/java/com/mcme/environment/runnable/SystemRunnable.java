@@ -52,7 +52,7 @@ public class SystemRunnable {
             public void run() {
                 try {
                     if (!Environment.getPluginInstance().getConnection().isValid(2)) {
-
+                        Environment.getPluginInstance().getConnection().close();
                         Environment.getPluginInstance().openConnection();
 
                     }
@@ -62,7 +62,7 @@ public class SystemRunnable {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 60L, 600L);
+        }.runTaskTimer(Environment.getPluginInstance(), 60L, 800L);
 
     }
 }

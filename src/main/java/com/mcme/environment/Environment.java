@@ -166,6 +166,12 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
