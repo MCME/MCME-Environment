@@ -62,7 +62,7 @@ public class SystemRunnable {
 
             }
 
-        }.runTaskTimer(Environment.getPluginInstance(), 60L, 800L);
+        }.runTaskTimerAsynchronously(Environment.getPluginInstance(), 60L, 800L);
 
     }
 }

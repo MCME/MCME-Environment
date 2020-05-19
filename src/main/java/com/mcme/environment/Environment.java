@@ -202,53 +202,55 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.YELLOW + "Plugin INITIALIZED, change database information!");
             Bukkit.getPluginManager().disablePlugin(this);
         } else {
-
-            connection = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
-                    + Environment.pluginInstance.port + "/"
-                    + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
-                    Environment.getPluginInstance().username,
-                    Environment.getPluginInstance().password);
-            clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.GREEN + "Database Found! ");
-
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-
-                    String stat = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_regions_data` (\n"
-                            + "  `idregion` VARCHAR(45) NOT NULL,\n"
-                            + "  `name` VARCHAR(45) NOT NULL,\n"
-                            + "  `type` VARCHAR(45) NOT NULL,\n"
-                            + "  `xlist` LONGTEXT NOT NULL,\n"
-                            + "  `zlist` LONGTEXT NOT NULL,\n"
-                            + "  `ymin` INT NOT NULL,\n"
-                            + "  `ymax` INT NOT NULL,\n"
-                            + "  `weather` VARCHAR(45),\n"
-                            + "  `sound` VARCHAR(45),\n"
-                            + "  `info_sound` LONGTEXT,\n"
-                            + "  `thunders` BOOLEAN,\n"
-                            + "  `location` LONGTEXT NOT NULL,\n"
-                            + "  `weight` INT,\n"
-                            + "  `time` LONGTEXT,\n"
-                            + "  `server` VARCHAR(100) NOT NULL,\n"
-                            + "  PRIMARY KEY (`idregion`));";
-                    String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_locations_data` (\n"
-                            + "  `name` VARCHAR(45) NOT NULL,\n"
-                            + "  `idlocation` VARCHAR(45) NOT NULL,\n"
-                            + "  `sound` VARCHAR(45),\n"
-                            + "  `location` LONGTEXT,\n"
-                            + "  `server` VARCHAR(100) NOT NULL,\n"
-                            + "  PRIMARY KEY (`idlocation`));";
-                    String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
-                            + "  `uuid` VARCHAR(45) NOT NULL,\n"
-                            + "  `bool` BOOLEAN NOT NULL,\n"
-                            + "  PRIMARY KEY (`uuid`));";
                     try {
-                        connection.createStatement().execute(stat);
-
-                        connection.createStatement().execute(stat2);
-
-                        connection.createStatement().execute(stat3);
+                        connection = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
+                                + Environment.pluginInstance.port + "/"
+                                + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
+                                Environment.getPluginInstance().username,
+                                Environment.getPluginInstance().password);
+                        clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.GREEN + "Database Found! ");
+                        
+                        String stat = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_regions_data` (\n"
+                                + "  `idregion` VARCHAR(45) NOT NULL,\n"
+                                + "  `name` VARCHAR(45) NOT NULL,\n"
+                                + "  `type` VARCHAR(45) NOT NULL,\n"
+                                + "  `xlist` LONGTEXT NOT NULL,\n"
+                                + "  `zlist` LONGTEXT NOT NULL,\n"
+                                + "  `ymin` INT NOT NULL,\n"
+                                + "  `ymax` INT NOT NULL,\n"
+                                + "  `weather` VARCHAR(45),\n"
+                                + "  `sound` VARCHAR(45),\n"
+                                + "  `info_sound` LONGTEXT,\n"
+                                + "  `thunders` BOOLEAN,\n"
+                                + "  `location` LONGTEXT NOT NULL,\n"
+                                + "  `weight` INT,\n"
+                                + "  `time` LONGTEXT,\n"
+                                + "  `server` VARCHAR(100) NOT NULL,\n"
+                                + "  PRIMARY KEY (`idregion`));";
+                        String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_locations_data` (\n"
+                                + "  `name` VARCHAR(45) NOT NULL,\n"
+                                + "  `idlocation` VARCHAR(45) NOT NULL,\n"
+                                + "  `sound` VARCHAR(45),\n"
+                                + "  `location` LONGTEXT,\n"
+                                + "  `server` VARCHAR(100) NOT NULL,\n"
+                                + "  PRIMARY KEY (`idlocation`));";
+                        String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
+                                + "  `uuid` VARCHAR(45) NOT NULL,\n"
+                                + "  `bool` BOOLEAN NOT NULL,\n"
+                                + "  PRIMARY KEY (`uuid`));";
+                        try {
+                            connection.createStatement().execute(stat);
+                            
+                            connection.createStatement().execute(stat2);
+                            
+                            connection.createStatement().execute(stat3);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
