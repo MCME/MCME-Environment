@@ -45,7 +45,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
-        Player pl = (Player) cs;
 
         thunder = false;
 
@@ -57,13 +56,10 @@ public class EnvironmentEdit extends EnvironmentCommand {
                 weather = "sun";
             }
 
-            if (args[2].equalsIgnoreCase("true")) {
-                thunder = true;
-            } else {
-                thunder = false;
-            }
+            thunder = args[2].equalsIgnoreCase("true");
+
             try {
-                
+
                 time = parseLong(args[3]);
 
                 new BukkitRunnable() {
@@ -91,16 +87,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     }
 
-    private void sendDone(CommandSender cs) {
-        PluginData.getMessageUtils().sendInfoMessage(cs, "Region updated!");
-
-    }
-
-    private void sendNo(CommandSender cs) {
-        PluginData.getMessageUtils().sendErrorMessage(cs, "This region doesn't exist.Type before /environment create areaName");
-
-    }
-
     private String boolString(Boolean b) {
 
         if (b) {
@@ -112,38 +98,14 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     }
 
-    /**
-     *
-     * @param s The string of the 24h times to be converted to ticks
-     * @return
-     */
-    /*
-     private Integer toTicks(String s) {
-
-        String[] l = unserialize(s);
-        int minute = 1200;
-        int hour = 72000;
-        if (l[1].substring(0, 0).equals("0")) {
-            int hours = Integer.parseInt(l[0].substring(1)) * hour;
-            int minutes = Integer.parseInt(l[1]) * minute;
-            System.out.println(minutes + hours);
-            return (minutes + hours);
-        } else {
-            int hours = Integer.parseInt(l[0]) * hour;
-            int minutes = Integer.parseInt(l[1]) * minute;
-            System.out.println(minutes + hours);
-            return (minutes + hours);
-
-        }
+    private void sendDone(CommandSender cs) {
+        PluginData.getMessageUtils().sendInfoMessage(cs, "Region updated!");
 
     }
 
-    public static String[] unserialize(String line) {
-        String[] dataArray = line.split(":");
-
-        return dataArray;
+    private void sendNo(CommandSender cs) {
+        PluginData.getMessageUtils().sendErrorMessage(cs, "This region doesn't exist.Type before /environment create areaName");
 
     }
- 
-     */
+
 }

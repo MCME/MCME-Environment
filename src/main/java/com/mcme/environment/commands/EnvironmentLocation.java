@@ -125,10 +125,10 @@ public class EnvironmentLocation extends EnvironmentCommand {
         Boolean bool = true;
 
         for (String s : PluginData.getLocSounds().keySet()) {
-            if (!PluginData.getLocSounds().get(s).getLoc().equals(loc)) {
-                if (PluginData.getLocSounds().get(s).playerInRange(loc)) {
-                    bool = false;
-                }
+            if (!PluginData.getLocSounds().get(s).getLoc().equals(loc) && PluginData.getLocSounds().get(s).playerInRange(loc)) {
+
+                bool = false;
+
             }
 
         }

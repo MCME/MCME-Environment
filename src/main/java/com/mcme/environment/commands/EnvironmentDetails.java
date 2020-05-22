@@ -50,9 +50,10 @@ public class EnvironmentDetails extends EnvironmentCommand {
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
-
+        Player pl = (Player) cs;
+        
         if (PluginData.getAllRegions().containsKey(args[0])) {
-            Player pl = (Player) cs;
+
             RegionData redata = PluginData.getAllRegions().get(args[0]);
 
             weight = redata.getWeight();

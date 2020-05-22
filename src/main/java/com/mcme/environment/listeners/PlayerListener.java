@@ -98,9 +98,9 @@ public class PlayerListener implements Listener {
 
                     @Override
                     public void run() {
-
-                        String stat = "UPDATE environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
+                            String stat = "UPDATE environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
+
                             Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
@@ -115,9 +115,9 @@ public class PlayerListener implements Listener {
 
                     @Override
                     public void run() {
-
-                        String stat = "UPDATE environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
                         try {
+                            String stat = "UPDATE environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
+
                             Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
@@ -170,10 +170,10 @@ public class PlayerListener implements Listener {
             e.getPlayer().setPlayerTime(parseLong(re.getTime()), false);
         }
 
-        if (!re.getSoundAmbient().equals(SoundType.NONE)) {
-            if (!re.getTime().equals("default")) {
-                SoundUtil.playSoundAmbient(re.getSoundAmbient(), e.getPlayer(), parseLong(re.getTime()), re.getRegion(), re);
-            }
+        if (!re.getSoundAmbient().equals(SoundType.NONE) && !re.getTime().equals("default")) {
+
+            SoundUtil.playSoundAmbient(re.getSoundAmbient(), e.getPlayer(), parseLong(re.getTime()), re.getRegion(), re);
+
         }
 
     }

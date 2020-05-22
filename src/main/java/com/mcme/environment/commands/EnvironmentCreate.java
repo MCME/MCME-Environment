@@ -148,6 +148,18 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
     }
 
+    public String serialize(Integer[] intlist) {
+
+        StringBuilder builder = new StringBuilder();
+
+        for (Integer intlist1 : intlist) {
+            builder.append(String.valueOf(intlist1)).append(";");
+        }
+
+        return builder.toString();
+
+    }
+
     private void sendDone(CommandSender cs) {
         PluginData.getMessageUtils().sendInfoMessage(cs, "Region created!");
 
@@ -160,18 +172,6 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
     private void sendInvalidSelection(Player player) {
         PluginData.getMessageUtils().sendErrorMessage(player, "For a cuboid or polygonal area make a valid WorldEdit selection first.");
-    }
-
-    public String serialize(Integer[] intlist) {
-
-        StringBuilder builder = new StringBuilder();
-
-        for (Integer intlist1 : intlist) {
-            builder.append(String.valueOf(intlist1)).append(";");
-        }
-
-        return builder.toString();
-
     }
 
 }

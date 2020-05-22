@@ -51,9 +51,9 @@ public class EnvironmentSound extends EnvironmentCommand {
 
                 @Override
                 public void run() {
-                    String stat = "UPDATE environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
-
                     try {
+                        String stat = "UPDATE environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
+
                         Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
                         sendDone(cs);
                         PluginData.loadRegions();

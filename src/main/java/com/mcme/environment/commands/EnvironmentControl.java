@@ -150,11 +150,6 @@ public class EnvironmentControl extends EnvironmentCommand {
 
     }
 
-    private void sendNoPerm(CommandSender cs) {
-        PluginData.getMessageUtils().sendErrorMessage(cs, "No permission for this command");
-
-    }
-
     private Integer getTasksSize() {
         List<UUID> list = new ArrayList<>();
 
@@ -167,6 +162,11 @@ public class EnvironmentControl extends EnvironmentCommand {
         });
 
         return list.size();
+    }
+
+    private void sendNoPerm(CommandSender cs) {
+        PluginData.getMessageUtils().sendErrorMessage(cs, "No permission for this command");
+
     }
 
 }
