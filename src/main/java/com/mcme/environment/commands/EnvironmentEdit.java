@@ -21,10 +21,10 @@ import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import static java.lang.Long.parseLong;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -68,7 +68,10 @@ public class EnvironmentEdit extends EnvironmentCommand {
                         String stat = "UPDATE environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
 
                         try {
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                            Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                            statm.setQueryTimeout(10);
+                            statm.executeUpdate(stat);
+
                             sendDone(cs);
                             PluginData.loadRegions();
                         } catch (SQLException ex) {

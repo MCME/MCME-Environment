@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -213,7 +214,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                                 Environment.getPluginInstance().username,
                                 Environment.getPluginInstance().password);
                         clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.GREEN + "Database Found! ");
-                        
+
                         String stat = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_regions_data` (\n"
                                 + "  `idregion` VARCHAR(45) NOT NULL,\n"
                                 + "  `name` VARCHAR(45) NOT NULL,\n"
@@ -243,11 +244,18 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                                 + "  `bool` BOOLEAN NOT NULL,\n"
                                 + "  PRIMARY KEY (`uuid`));";
                         try {
-                            connection.createStatement().execute(stat);
-                            
-                            connection.createStatement().execute(stat2);
-                            
-                            connection.createStatement().execute(stat3);
+                            Statement statm1 = connection.prepareStatement(stat);
+                            statm1.setQueryTimeout(10);
+                            statm1.execute(stat);
+
+                            Statement statm2 = connection.prepareStatement(stat2);
+                            statm2.setQueryTimeout(10);
+                            statm2.execute(stat2);
+
+                            Statement statm3 = connection.prepareStatement(stat3);
+                            statm3.setQueryTimeout(10);
+                            statm3.execute(stat3);
+
                         } catch (SQLException ex) {
                             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -282,6 +290,5 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         }
 
     }
-    
 
 }

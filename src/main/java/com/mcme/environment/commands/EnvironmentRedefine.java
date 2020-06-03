@@ -25,6 +25,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.regions.Region;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -74,7 +75,9 @@ public class EnvironmentRedefine extends EnvironmentCommand {
                             try {
                                 String stat = "UPDATE environment_regions_data SET type = 'prismoid', xlist = " + serialize(r.getXPoints()) + "', zlist = '" + serialize(r.getZPoints()) + "', ymin = '" + r.getMinY() + "', ymax = '" + r.getMaxY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getNameserver() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion() + "';";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                                statm.setQueryTimeout(10);
+                                statm.executeUpdate(stat);
 
                                 PluginData.loadRegions();
                                 sendDone(cs);
@@ -104,7 +107,9 @@ public class EnvironmentRedefine extends EnvironmentCommand {
                             try {
                                 String stat = "UPDATE environment_regions_data SET type = 'cuboid', xlist = '" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "', zlist = '" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "', ymin = '" + minCorner.getBlockY() + "', ymax = '" + maxCorner.getBlockY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getNameserver() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion() + "';";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                                statm.setQueryTimeout(10);
+                                statm.executeUpdate(stat);
 
                                 PluginData.loadRegions();
                                 sendDone(cs);

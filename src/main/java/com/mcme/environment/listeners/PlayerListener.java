@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.event.LeaveRegionEvent;
+import java.sql.Statement;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -64,7 +65,9 @@ public class PlayerListener implements Listener {
                 try {
                     String statement = "SELECT * FROM environment_players WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
 
-                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
+                    Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(statement);
+                    statm.setQueryTimeout(10);
+                    final ResultSet r = statm.executeQuery(statement);
 
                     if (r.first()) {
 
@@ -73,7 +76,11 @@ public class PlayerListener implements Listener {
                     } else {
 
                         String stat = "INSERT INTO environment_players (bool, uuid) VALUES (1,'" + e.getPlayer().getUniqueId().toString() + "') ; ";
-                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+
+                        Statement statm1 = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                        statm1.setQueryTimeout(10);
+                        statm1.executeUpdate(stat);
+
                         PluginData.getBoolPlayers().put(e.getPlayer().getUniqueId(), Boolean.TRUE);
                     }
 
@@ -101,7 +108,10 @@ public class PlayerListener implements Listener {
                         try {
                             String stat = "UPDATE environment_players SET bool = '1' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
 
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                            Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                            statm.setQueryTimeout(10);
+                            statm.executeUpdate(stat);
+
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,7 +128,10 @@ public class PlayerListener implements Listener {
                         try {
                             String stat = "UPDATE environment_players SET bool = '0' WHERE uuid = '" + e.getPlayer().getUniqueId().toString() + "' ;";
 
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                            Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                            statm.setQueryTimeout(10);
+                            statm.executeUpdate(stat);
+
                             PluginData.getBoolPlayers().remove(e.getPlayer().getUniqueId());
                         } catch (SQLException ex) {
                             Logger.getLogger(PlayerListener.class.getName()).log(Level.SEVERE, null, ex);

@@ -19,6 +19,7 @@ package com.mcme.environment.commands;
 import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
@@ -48,7 +49,10 @@ public class EnvironmentRemove extends EnvironmentCommand {
 
                     String stat = "DELETE FROM environment_regions_data WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
                     try {
-                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                        Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                        statm.setQueryTimeout(10);
+                        statm.executeUpdate(stat);
+
                         PluginData.loadRegions();
                         sendDel(cs);
                     } catch (SQLException ex) {

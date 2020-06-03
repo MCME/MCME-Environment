@@ -20,6 +20,7 @@ import com.mcme.environment.Environment;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
@@ -54,7 +55,10 @@ public class EnvironmentSound extends EnvironmentCommand {
                     try {
                         String stat = "UPDATE environment_regions_data SET sound = '" + soundAmbient.name().toUpperCase() + "', info_sound = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
 
-                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                        Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                        statm.setQueryTimeout(10);
+                        statm.executeUpdate(stat);
+
                         sendDone(cs);
                         PluginData.loadRegions();
                     } catch (SQLException ex) {

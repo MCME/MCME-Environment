@@ -20,6 +20,7 @@ import com.mcme.environment.Environment;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.data.PluginData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Location;
@@ -60,7 +61,10 @@ public class EnvironmentLocation extends EnvironmentCommand {
                             public void run() {
                                 String stat = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
                                 try {
-                                    Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                                    Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                                    statm.setQueryTimeout(10);
+                                    statm.executeUpdate(stat);
+
                                     sendDone(cs);
 
                                     PluginData.loadLocations();
@@ -93,7 +97,10 @@ public class EnvironmentLocation extends EnvironmentCommand {
 
                         String stat = "DELETE FROM environment_locations_data WHERE idlocation = '" + PluginData.getLocSounds().get(args[1]).getId() + "' ;";
                         try {
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                            Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                            statm.setQueryTimeout(10);
+                            statm.executeUpdate(stat);
+
                             PluginData.loadLocations();
                             sendDel(cs);
                         } catch (SQLException ex) {

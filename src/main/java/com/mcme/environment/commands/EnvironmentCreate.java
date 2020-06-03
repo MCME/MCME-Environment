@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import static java.lang.Integer.parseInt;
+import java.sql.Statement;
 
 /**
  *
@@ -78,7 +79,9 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             try {
                                 String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                                statm.setQueryTimeout(10);
+                                statm.executeUpdate(stat);
 
                                 PluginData.loadRegions();
 
@@ -111,7 +114,9 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             try {
                                 String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
+                                statm.setQueryTimeout(10);
+                                statm.executeUpdate(stat);
 
                                 PluginData.loadRegions();
                                 RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);
