@@ -76,12 +76,20 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight, info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','prismoid','" + serialize(r.getXPoints()) + "','" + serialize(r.getZPoints()) + "','" + r.getMinY() + "','" + r.getMaxY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
-
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Environment.getCreateRegion().setString(1, PluginData.createId().toString());
+                                Environment.getCreateRegion().setString(2, args[0]);
+                                Environment.getCreateRegion().setString(3, "prismoid");
+                                Environment.getCreateRegion().setString(4, serialize(r.getXPoints()));
+                                Environment.getCreateRegion().setString(5, serialize(r.getZPoints()));
+                                Environment.getCreateRegion().setInt(6, r.getMinY());
+                                Environment.getCreateRegion().setInt(7, r.getMaxY());
+                                Environment.getCreateRegion().setString(8, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
+                                Environment.getCreateRegion().setString(9, Environment.getNameserver());
+                                Environment.getCreateRegion().setString(10, SoundType.NONE.name().toUpperCase());
+                                Environment.getCreateRegion().setInt(11, parseInt(args[1]));
+                                Environment.getCreateRegion().executeUpdate();
 
                                 PluginData.loadRegions();
-
                                 RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);
 
                                 sendDone(cs);
@@ -109,9 +117,19 @@ public class EnvironmentCreate extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight,info_sound ) VALUES ('" + PluginData.createId().toString() + "','" + args[0] + "','cuboid','" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "','" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "','" + minCorner.getBlockY() + "','" + maxCorner.getBlockY() + "','" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','default','0','default','" + SoundType.NONE.name().toUpperCase() + "','" + parseInt(args[1]) + "', '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "' ) ;";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Environment.getCreateRegion().setString(1, PluginData.createId().toString());
+                                Environment.getCreateRegion().setString(2, args[0]);
+                                Environment.getCreateRegion().setString(3, "cuboid");
+                                Environment.getCreateRegion().setString(4, minCorner.getBlockX() + ";" + maxCorner.getBlockX());
+                                Environment.getCreateRegion().setString(5, minCorner.getBlockZ() + ";" + maxCorner.getBlockZ());
+                                Environment.getCreateRegion().setInt(6, minCorner.getBlockY());
+                                Environment.getCreateRegion().setInt(7, maxCorner.getBlockY());
+                                Environment.getCreateRegion().setString(8, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
+                                Environment.getCreateRegion().setString(9, Environment.getNameserver());
+                                Environment.getCreateRegion().setString(10, SoundType.NONE.name().toUpperCase());
+                                Environment.getCreateRegion().setInt(11, parseInt(args[1]));
+                                Environment.getCreateRegion().executeUpdate();
 
                                 PluginData.loadRegions();
                                 RegionScanner.getChunkSnaphshot((Region) weRegion, loc.getWorld(), args[0]);
@@ -148,6 +166,18 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
     }
 
+    private String serialize(Integer[] intlist) {
+
+        StringBuilder builder = new StringBuilder();
+
+        for (Integer intlist1 : intlist) {
+            builder.append(String.valueOf(intlist1)).append(";");
+        }
+
+        return builder.toString();
+
+    }
+
     private void sendDone(CommandSender cs) {
         PluginData.getMessageUtils().sendInfoMessage(cs, "Region created!");
 
@@ -160,18 +190,6 @@ public class EnvironmentCreate extends EnvironmentCommand {
 
     private void sendInvalidSelection(Player player) {
         PluginData.getMessageUtils().sendErrorMessage(player, "For a cuboid or polygonal area make a valid WorldEdit selection first.");
-    }
-
-    public String serialize(Integer[] intlist) {
-
-        StringBuilder builder = new StringBuilder();
-
-        for (Integer intlist1 : intlist) {
-            builder.append(String.valueOf(intlist1)).append(";");
-        }
-
-        return builder.toString();
-
     }
 
 }

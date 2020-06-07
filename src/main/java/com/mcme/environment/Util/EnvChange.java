@@ -20,6 +20,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.mcme.environment.Environment;
+import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
@@ -50,19 +51,18 @@ public class EnvChange {
      *
      */
     public static void spawnThunderstorm(Player pl, boolean bol, Region reg) {
-        RandomCollection<Boolean> r = new RandomCollection<>();
-        r.add(0.2, true);
-        r.add(0.8, false);
-        Boolean result1 = r.next();
+
         Location l = pl.getLocation();
-        if (result1) {
+        if (SoundUtil.randomBoolean(0.2, 0.8)) {
 
             String w = reg.getWorld().getName();
+
             if (reg instanceof CuboidRegion) {
                 l = randomLocCuboid(reg, w);
-            } else if (reg instanceof PrismoidRegion) {
+            } else {
                 l = randomLocPrismoid(reg, w);
             }
+
             PacketContainer thunder = Environment.getPluginInstance().getManager().createPacket(PacketType.Play.Server.SPAWN_ENTITY_WEATHER);
             thunder.getIntegers().
                     write(0, randomReturn()).
@@ -78,15 +78,10 @@ public class EnvChange {
             }
         }
 
-        if (bol) {
-            RandomCollection<Boolean> random = new RandomCollection<>();
-            random.add(0.15, true);
-            random.add(0.85, false);
+        if (bol && SoundUtil.randomBoolean(0.15, 0.85)) {
 
-            Boolean result = random.next();
-            if (result) {
-                pl.playSound(l, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
-            }
+            pl.playSound(l, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.7F, 1.0F);
+
         }
 
     }

@@ -72,9 +72,16 @@ public class EnvironmentRedefine extends EnvironmentCommand {
 
                             PrismoidRegion r = new PrismoidRegion(loc, (com.sk89q.worldedit.regions.Polygonal2DRegion) weRegion);
                             try {
-                                String stat = "UPDATE environment_regions_data SET type = 'prismoid', xlist = " + serialize(r.getXPoints()) + "', zlist = '" + serialize(r.getZPoints()) + "', ymin = '" + r.getMinY() + "', ymax = '" + r.getMaxY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getNameserver() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion() + "';";
+                                Environment.getUpdateRegion().setString(1, "prismoid");
+                                Environment.getUpdateRegion().setString(2, serialize(r.getXPoints()));
+                                Environment.getUpdateRegion().setString(3, serialize(r.getZPoints()));
+                                Environment.getUpdateRegion().setInt(4, r.getMinY());
+                                Environment.getUpdateRegion().setInt(5, r.getMaxY());
+                                Environment.getUpdateRegion().setString(6, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
+                                Environment.getUpdateRegion().setString(7, Environment.getNameserver());
+                                Environment.getUpdateRegion().setString(8, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Environment.getUpdateRegion().executeUpdate();
 
                                 PluginData.loadRegions();
                                 sendDone(cs);
@@ -102,9 +109,17 @@ public class EnvironmentRedefine extends EnvironmentCommand {
                             Vector minCorner = r.getMinCorner();
                             Vector maxCorner = r.getMaxCorner();
                             try {
-                                String stat = "UPDATE environment_regions_data SET type = 'cuboid', xlist = '" + minCorner.getBlockX() + ";" + maxCorner.getBlockX() + "', zlist = '" + minCorner.getBlockZ() + ";" + maxCorner.getBlockZ() + "', ymin = '" + minCorner.getBlockY() + "', ymax = '" + maxCorner.getBlockY() + "', location = '" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "', server = '" + Environment.getNameserver() + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion() + "';";
 
-                                Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                                Environment.getUpdateRegion().setString(1, "cuboid");
+                                Environment.getUpdateRegion().setString(2, minCorner.getBlockX() + ";" + maxCorner.getBlockX());
+                                Environment.getUpdateRegion().setString(3, minCorner.getBlockZ() + ";" + maxCorner.getBlockZ());
+                                Environment.getUpdateRegion().setInt(4, minCorner.getBlockY());
+                                Environment.getUpdateRegion().setInt(5, maxCorner.getBlockY());
+                                Environment.getUpdateRegion().setString(6, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
+                                Environment.getUpdateRegion().setString(7, Environment.getNameserver());
+                                Environment.getUpdateRegion().setString(8, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
+
+                                Environment.getUpdateRegion().executeUpdate();
 
                                 PluginData.loadRegions();
                                 sendDone(cs);
@@ -139,6 +154,18 @@ public class EnvironmentRedefine extends EnvironmentCommand {
 
     }
 
+    private String serialize(Integer[] intlist) {
+
+        StringBuilder builder = new StringBuilder();
+
+        for (Integer intlist1 : intlist) {
+            builder.append(String.valueOf(intlist1)).append(";");
+        }
+
+        return builder.toString();
+
+    }
+
     private void sendDone(CommandSender cs) {
         PluginData.getMessageUtils().sendInfoMessage(cs, "Region updated!");
 
@@ -151,18 +178,6 @@ public class EnvironmentRedefine extends EnvironmentCommand {
 
     private void sendInvalidSelection(Player player) {
         PluginData.getMessageUtils().sendErrorMessage(player, "For a cuboid or polygonal area make a valid WorldEdit selection first.");
-    }
-
-    private String serialize(Integer[] intlist) {
-
-        StringBuilder builder = new StringBuilder();
-
-        for (Integer intlist1 : intlist) {
-            builder.append(String.valueOf(intlist1)).append(";");
-        }
-
-        return builder.toString();
-
     }
 
 }

@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -45,7 +44,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     @Override
     protected void execute(final CommandSender cs, final String... args) {
-        Player pl = (Player) cs;
 
         thunder = false;
 
@@ -57,22 +55,24 @@ public class EnvironmentEdit extends EnvironmentCommand {
                 weather = "sun";
             }
 
-            if (args[2].equalsIgnoreCase("true")) {
-                thunder = true;
-            } else {
-                thunder = false;
-            }
+            thunder = args[2].equalsIgnoreCase("true");
+
             try {
-                
+
                 time = parseLong(args[3]);
 
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        String stat = "UPDATE environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
-
                         try {
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+
+                            Environment.getEditRegion().setBoolean(1, thunder);
+                            Environment.getEditRegion().setString(2, weather);
+                            Environment.getEditRegion().setString(3, time.toString());
+                            Environment.getEditRegion().setString(4, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
+
+                            Environment.getEditRegion().executeUpdate();
+
                             sendDone(cs);
                             PluginData.loadRegions();
                         } catch (SQLException ex) {
@@ -101,49 +101,4 @@ public class EnvironmentEdit extends EnvironmentCommand {
 
     }
 
-    private String boolString(Boolean b) {
-
-        if (b) {
-            return "1";
-
-        } else {
-            return "0";
-        }
-
-    }
-
-    /**
-     *
-     * @param s The string of the 24h times to be converted to ticks
-     * @return
-     */
-    /*
-     private Integer toTicks(String s) {
-
-        String[] l = unserialize(s);
-        int minute = 1200;
-        int hour = 72000;
-        if (l[1].substring(0, 0).equals("0")) {
-            int hours = Integer.parseInt(l[0].substring(1)) * hour;
-            int minutes = Integer.parseInt(l[1]) * minute;
-            System.out.println(minutes + hours);
-            return (minutes + hours);
-        } else {
-            int hours = Integer.parseInt(l[0]) * hour;
-            int minutes = Integer.parseInt(l[1]) * minute;
-            System.out.println(minutes + hours);
-            return (minutes + hours);
-
-        }
-
-    }
-
-    public static String[] unserialize(String line) {
-        String[] dataArray = line.split(":");
-
-        return dataArray;
-
-    }
- 
-     */
 }

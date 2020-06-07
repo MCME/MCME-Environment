@@ -46,9 +46,10 @@ public class EnvironmentRemove extends EnvironmentCommand {
                 @Override
                 public void run() {
 
-                    String stat = "DELETE FROM environment_regions_data WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
                     try {
-                        Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                        Environment.getRemoveRegion().setString(1, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
+                        Environment.getRemoveRegion().executeUpdate();
+                        
                         PluginData.loadRegions();
                         sendDel(cs);
                     } catch (SQLException ex) {

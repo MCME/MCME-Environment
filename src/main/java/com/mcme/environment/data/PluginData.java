@@ -79,9 +79,8 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM environment_regions_data ;";
 
-                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
+                    final ResultSet r = Environment.getSelectRegions().executeQuery();
 
                     if (r.first()) {
                         do {
@@ -147,9 +146,8 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM environment_locations_data ;";
 
-                    final ResultSet r = Environment.getPluginInstance().getConnection().prepareStatement(statement).executeQuery();
+                    final ResultSet r = Environment.getSelectLocations().executeQuery();
 
                     if (r.first()) {
                         do {

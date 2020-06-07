@@ -36,9 +36,7 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class SoundUtil {
 
-
     public static Location getRandomLocationNW(int minX, int maxX, int minZ, int maxZ, World world, int y) {
-        Random rand = new Random();
         Random r = new Random();
         int x = r.nextInt(maxX - minX + 1) + minX;
         int z = r.nextInt(maxZ - minZ + 1) + minZ;
@@ -145,7 +143,7 @@ public class SoundUtil {
                     public void run() {
 
                         ForestSound.ForestSound(pl, time);
-                       if (!r.locData.getLeaves().isEmpty()) {
+                        if (!r.locData.getLeaves().isEmpty()) {
                             LeavesSound.LeavesSound(pl, r);
                         }
                     }
@@ -193,7 +191,7 @@ public class SoundUtil {
                     public void run() {
 
                         SwamplandSound.SwampLandSound(pl, time);
-                       if (!r.locData.getLeaves().isEmpty()) {
+                        if (!r.locData.getLeaves().isEmpty()) {
                             LeavesSound.LeavesSound(pl, r);
                         }
                     }

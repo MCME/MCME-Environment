@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,22 +58,17 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     static final Logger Logger = Bukkit.getLogger();
 
     @Getter
-    private ConsoleCommandSender clogger = this.getServer().getConsoleSender();
-
+    private final ConsoleCommandSender clogger = this.getServer().getConsoleSender();
     @Getter
     private static Environment pluginInstance;
-
     @Getter
     private File envFolder;
-
     @Getter
     @Setter
     private static String nameserver;
-
     @Setter
     @Getter
     private ProtocolManager manager;
-
     @Getter
     private Connection connection;
 
@@ -84,6 +81,30 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     @Getter
     @Setter
     private static boolean engine;
+    @Getter
+    private static PreparedStatement selectPlayer;
+    @Getter
+    private static PreparedStatement insertPlayerBool;
+    @Getter
+    private static PreparedStatement updatePlayerBool;
+    @Getter
+    private static PreparedStatement selectRegions;
+    @Getter
+    private static PreparedStatement selectLocations;
+    @Getter
+    private static PreparedStatement insertLocation;
+    @Getter
+    private static PreparedStatement removeLocation;
+    @Getter
+    private static PreparedStatement updateRegion;
+    @Getter
+    private static PreparedStatement createRegion;
+    @Getter
+    private static PreparedStatement editRegion;
+    @Getter
+    private static PreparedStatement setSound;
+    @Getter
+    private static PreparedStatement removeRegion;
 
     @Override
     public void onEnable() {
@@ -151,14 +172,13 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
         clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " disabled!");
         clogger.sendMessage(ChatColor.RED + "---------------------------------------");
-        for (String str : PluginData.getAllRegions().keySet()) {
-            for (List<BukkitTask> s : PluginData.getAllRegions().get(str).getTasks().values()) {
-                for (BukkitTask task : s) {
+        PluginData.getAllRegions().keySet().forEach((str) -> {
+            PluginData.getAllRegions().get(str).getTasks().values().forEach((s) -> {
+                s.forEach((task) -> {
                     task.cancel();
-                }
-            }
-
-        }
+                });
+            });
+        });
 
         try {
             PluginData.onSave(envFolder);
@@ -202,53 +222,59 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.YELLOW + "Plugin INITIALIZED, change database information!");
             Bukkit.getPluginManager().disablePlugin(this);
         } else {
-
-            connection = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
-                    + Environment.pluginInstance.port + "/"
-                    + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
-                    Environment.getPluginInstance().username,
-                    Environment.getPluginInstance().password);
-            clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.GREEN + "Database Found! ");
-
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-
-                    String stat = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_regions_data` (\n"
-                            + "  `idregion` VARCHAR(45) NOT NULL,\n"
-                            + "  `name` VARCHAR(45) NOT NULL,\n"
-                            + "  `type` VARCHAR(45) NOT NULL,\n"
-                            + "  `xlist` LONGTEXT NOT NULL,\n"
-                            + "  `zlist` LONGTEXT NOT NULL,\n"
-                            + "  `ymin` INT NOT NULL,\n"
-                            + "  `ymax` INT NOT NULL,\n"
-                            + "  `weather` VARCHAR(45),\n"
-                            + "  `sound` VARCHAR(45),\n"
-                            + "  `info_sound` LONGTEXT,\n"
-                            + "  `thunders` BOOLEAN,\n"
-                            + "  `location` LONGTEXT NOT NULL,\n"
-                            + "  `weight` INT,\n"
-                            + "  `time` LONGTEXT,\n"
-                            + "  `server` VARCHAR(100) NOT NULL,\n"
-                            + "  PRIMARY KEY (`idregion`));";
-                    String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_locations_data` (\n"
-                            + "  `name` VARCHAR(45) NOT NULL,\n"
-                            + "  `idlocation` VARCHAR(45) NOT NULL,\n"
-                            + "  `sound` VARCHAR(45),\n"
-                            + "  `location` LONGTEXT,\n"
-                            + "  `server` VARCHAR(100) NOT NULL,\n"
-                            + "  PRIMARY KEY (`idlocation`));";
-                    String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
-                            + "  `uuid` VARCHAR(45) NOT NULL,\n"
-                            + "  `bool` BOOLEAN NOT NULL,\n"
-                            + "  PRIMARY KEY (`uuid`));";
                     try {
-                        connection.createStatement().execute(stat);
+                        connection = DriverManager.getConnection("jdbc:mysql://" + Environment.getPluginInstance().host + ":"
+                                + Environment.pluginInstance.port + "/"
+                                + Environment.getPluginInstance().database + "?useSSL=false&allowPublicKeyRetrieval=true",
+                                Environment.getPluginInstance().username,
+                                Environment.getPluginInstance().password);
+                        clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.GREEN + "Database Found! ");
 
-                        connection.createStatement().execute(stat2);
+                        String stat = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_regions_data` (\n"
+                                + "  `idregion` VARCHAR(45) NOT NULL,\n"
+                                + "  `name` VARCHAR(45) NOT NULL,\n"
+                                + "  `type` VARCHAR(45) NOT NULL,\n"
+                                + "  `xlist` LONGTEXT NOT NULL,\n"
+                                + "  `zlist` LONGTEXT NOT NULL,\n"
+                                + "  `ymin` INT NOT NULL,\n"
+                                + "  `ymax` INT NOT NULL,\n"
+                                + "  `weather` VARCHAR(45),\n"
+                                + "  `sound` VARCHAR(45),\n"
+                                + "  `thunders` BOOLEAN,\n"
+                                + "  `location` LONGTEXT NOT NULL,\n"
+                                + "  `weight` INT,\n"
+                                + "  `time` LONGTEXT,\n"
+                                + "  `server` VARCHAR(100) NOT NULL,\n"
+                                + "  PRIMARY KEY (`idregion`));";
+                        String stat2 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_locations_data` (\n"
+                                + "  `name` VARCHAR(45) NOT NULL,\n"
+                                + "  `idlocation` VARCHAR(45) NOT NULL,\n"
+                                + "  `sound` VARCHAR(45),\n"
+                                + "  `location` LONGTEXT,\n"
+                                + "  `server` VARCHAR(100) NOT NULL,\n"
+                                + "  PRIMARY KEY (`idlocation`));";
+                        String stat3 = "CREATE TABLE IF NOT EXISTS `" + database + "`.`environment_players` (\n"
+                                + "  `uuid` VARCHAR(45) NOT NULL,\n"
+                                + "  `bool` BOOLEAN NOT NULL,\n"
+                                + "  PRIMARY KEY (`uuid`));";
 
-                        connection.createStatement().execute(stat3);
+                        Statement statm1 = connection.prepareStatement(stat);
+                        statm1.setQueryTimeout(10);
+                        statm1.execute(stat);
+
+                        Statement statm2 = connection.prepareStatement(stat2);
+                        statm2.setQueryTimeout(10);
+                        statm2.execute(stat2);
+
+                        Statement statm3 = connection.prepareStatement(stat3);
+                        statm3.setQueryTimeout(10);
+                        statm3.execute(stat3);
+
+                        prepareStatements();
                     } catch (SQLException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -271,6 +297,10 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
     }
 
     private void onInitiateFile() throws IOException {
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+        }
+
         envFolder = new File(Bukkit.getServer().getPluginManager().getPlugin("Environment").getDataFolder(), "locations");
 
         if (!envFolder.exists()) {
@@ -279,6 +309,53 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
         }
 
+    }
+
+    private void prepareStatements() throws SQLException {
+
+        String stat_select_player = "SELECT * FROM environment_players WHERE uuid = '?' ;";
+        String stat_insert_bool = "INSERT INTO environment_players (bool, uuid) VALUES (1, '?' ) ; ";
+        String stat_update_bool = "UPDATE environment_players SET bool = '?' WHERE uuid = '?' ;";
+
+        String stat_select_locations = "SELECT * FROM environment_locations_data ;";
+        String stat_insert_location = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES ('?';'?';'?';'?','?','?','?','?') ;";
+        String stat_remove_location = "DELETE FROM environment_locations_data WHERE idlocation = '?' ;";
+
+        String stat_select_regions = "SELECT * FROM environment_regions_data ;";
+        String stat_update_region = "UPDATE environment_regions_data SET type = '?', xlist = '?', zlist = '?', ymin = '?', ymax = '?', location = '?', server = '?' WHERE idregion = '?';";
+        String stat_edit_region = "UPDATE environment_regions_data SET thunders = '?', weather = '?', time = '?' WHERE idregion = '?' ;";
+        String stat_create_region = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight) VALUES ('?','?','?','?','?','?','?','?','?','default','0','default','?','?') ;";
+
+        String stat_set_sound = "UPDATE environment_regions_data SET sound = '?', info_sound = '?' WHERE idregion = '?' ;";
+
+        String stat_remove_region = "DELETE FROM environment_regions_data WHERE idregion = '?' ;";
+
+        selectPlayer = connection.prepareStatement(stat_select_player);
+        insertPlayerBool = connection.prepareStatement(stat_insert_bool);
+        updatePlayerBool = connection.prepareStatement(stat_update_bool);
+        selectRegions = connection.prepareStatement(stat_select_regions);
+        selectLocations = connection.prepareStatement(stat_select_locations);
+
+        insertLocation = connection.prepareStatement(stat_insert_location);
+        removeLocation = connection.prepareStatement(stat_remove_location);
+        updateRegion = connection.prepareStatement(stat_update_region);
+        editRegion = connection.prepareStatement(stat_edit_region);
+        createRegion = connection.prepareStatement(stat_create_region);
+        setSound = connection.prepareStatement(stat_set_sound);
+        removeRegion = connection.prepareStatement(stat_remove_region);
+
+        selectPlayer.setQueryTimeout(10);
+        insertPlayerBool.setQueryTimeout(10);
+        updatePlayerBool.setQueryTimeout(10);
+        selectRegions.setQueryTimeout(10);
+        selectLocations.setQueryTimeout(10);
+        insertLocation.setQueryTimeout(10);
+        removeLocation.setQueryTimeout(10);
+        updateRegion.setQueryTimeout(10);
+        editRegion.setQueryTimeout(10);
+        createRegion.setQueryTimeout(10);
+        setSound.setQueryTimeout(10);
+        removeRegion.setQueryTimeout(10);
     }
 
 }

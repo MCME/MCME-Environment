@@ -58,13 +58,16 @@ public class EnvironmentLocation extends EnvironmentCommand {
 
                             @Override
                             public void run() {
-                                String stat = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES ('" + pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ() + "','" + Environment.getNameserver() + "','" + args[1] + "','" + PluginData.createId() + "','" + soundLocated + "') ;";
                                 try {
-                                    Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate(stat);
+                                    Environment.getInsertLocation().setString(1, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
+                                    Environment.getInsertLocation().setString(2, Environment.getNameserver());
+                                    Environment.getInsertLocation().setString(3, args[1]);
+                                    Environment.getInsertLocation().setString(4, PluginData.createId().toString());
+                                    Environment.getInsertLocation().setString(5, soundLocated.name().toUpperCase());
+                                    Environment.getInsertLocation().executeUpdate();
+
                                     sendDone(cs);
-
                                     PluginData.loadLocations();
-
                                 } catch (SQLException ex) {
                                     Logger.getLogger(EnvironmentEdit.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -90,10 +93,10 @@ public class EnvironmentLocation extends EnvironmentCommand {
 
                     @Override
                     public void run() {
-
-                        String stat = "DELETE FROM environment_locations_data WHERE idlocation = '" + PluginData.getLocSounds().get(args[1]).getId() + "' ;";
                         try {
-                            Environment.getPluginInstance().getConnection().prepareStatement(stat).executeUpdate();
+                            Environment.getRemoveLocation().setString(1, PluginData.getLocSounds().get(args[1]).getId().toString());
+                            Environment.getRemoveLocation().executeUpdate();
+
                             PluginData.loadLocations();
                             sendDel(cs);
                         } catch (SQLException ex) {
@@ -125,10 +128,10 @@ public class EnvironmentLocation extends EnvironmentCommand {
         Boolean bool = true;
 
         for (String s : PluginData.getLocSounds().keySet()) {
-            if (!PluginData.getLocSounds().get(s).getLoc().equals(loc)) {
-                if (PluginData.getLocSounds().get(s).playerInRange(loc)) {
-                    bool = false;
-                }
+            if (!PluginData.getLocSounds().get(s).getLoc().equals(loc) && PluginData.getLocSounds().get(s).playerInRange(loc)) {
+
+                bool = false;
+
             }
 
         }
