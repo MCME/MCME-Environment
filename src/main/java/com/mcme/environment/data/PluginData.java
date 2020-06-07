@@ -28,7 +28,6 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,11 +79,8 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM environment_regions_data ;";
 
-                    Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(statement);
-                    statm.setQueryTimeout(10);
-                    final ResultSet r = statm.executeQuery(statement);
+                    final ResultSet r = Environment.getSelectRegions().executeQuery();
 
                     if (r.first()) {
                         do {
@@ -150,11 +146,8 @@ public class PluginData {
             public void run() {
 
                 try {
-                    String statement = "SELECT * FROM environment_locations_data ;";
 
-                    Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(statement);
-                    statm.setQueryTimeout(10);
-                    final ResultSet r = statm.executeQuery(statement);
+                    final ResultSet r = Environment.getSelectLocations().executeQuery();
 
                     if (r.first()) {
                         do {

@@ -21,7 +21,6 @@ import com.mcme.environment.Environment;
 import com.mcme.environment.data.PluginData;
 import static java.lang.Long.parseLong;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
@@ -65,12 +64,14 @@ public class EnvironmentEdit extends EnvironmentCommand {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        String stat = "UPDATE environment_regions_data SET thunders = '" + boolString(thunder) + "', weather = '" + weather + "', time = '" + time + "' WHERE idregion = '" + PluginData.getAllRegions().get(args[0]).getIdregion().toString() + "' ;";
-
                         try {
-                            Statement statm = Environment.getPluginInstance().getConnection().prepareStatement(stat);
-                            statm.setQueryTimeout(10);
-                            statm.executeUpdate(stat);
+
+                            Environment.getEditRegion().setBoolean(1, thunder);
+                            Environment.getEditRegion().setString(2, weather);
+                            Environment.getEditRegion().setString(3, time.toString());
+                            Environment.getEditRegion().setString(4, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
+
+                            Environment.getEditRegion().executeUpdate();
 
                             sendDone(cs);
                             PluginData.loadRegions();
@@ -86,17 +87,6 @@ public class EnvironmentEdit extends EnvironmentCommand {
             }
         } else {
             sendNo(cs);
-        }
-
-    }
-
-    private String boolString(Boolean b) {
-
-        if (b) {
-            return "1";
-
-        } else {
-            return "0";
         }
 
     }
