@@ -34,6 +34,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.event.LeaveRegionEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -149,6 +154,9 @@ public class PlayerListener implements Listener {
         if (re.getWeather().equalsIgnoreCase("rain")) {
             e.getPlayer().setPlayerWeather(WeatherType.DOWNFALL);
 
+            if (PluginData.getBossbar() != null) {
+                PluginData.getBossbar().addPlayer(e.getPlayer());
+            }
         } else if (re.getWeather().equalsIgnoreCase("sun")) {
             e.getPlayer().setPlayerWeather(WeatherType.CLEAR);
         }

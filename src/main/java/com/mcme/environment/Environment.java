@@ -40,6 +40,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -146,6 +149,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                     SystemRunnable.runnableLocations();
                     RunnablePlayer.runnableLocationsPlayers();
                     RunnablePlayer.runnableRegionsPlayers();
+                    Bukkit.createBossBar(" ", BarColor.BLUE, BarStyle.SOLID, BarFlag.CREATE_FOG);
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);

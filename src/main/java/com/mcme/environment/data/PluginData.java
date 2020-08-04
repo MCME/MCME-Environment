@@ -39,6 +39,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -51,6 +52,9 @@ public class PluginData {
 
     @Getter
     private static final MessageUtil messageUtils = new MessageUtil();
+    
+    @Getter
+    private static BossBar bossbar ;
 
     static {
         messageUtils.setPluginName("Environment-MCME");
