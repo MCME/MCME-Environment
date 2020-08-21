@@ -40,6 +40,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -146,6 +149,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                     SystemRunnable.runnableLocations();
                     RunnablePlayer.runnableLocationsPlayers();
                     RunnablePlayer.runnableRegionsPlayers();
+                    Bukkit.createBossBar(" ", BarColor.BLUE, BarStyle.SOLID, BarFlag.CREATE_FOG);
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
@@ -313,20 +317,20 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
     private void prepareStatements() throws SQLException {
 
-        String stat_select_player = "SELECT * FROM environment_players WHERE uuid = '?' ;";
-        String stat_insert_bool = "INSERT INTO environment_players (bool, uuid) VALUES (1, '?' ) ; ";
-        String stat_update_bool = "UPDATE environment_players SET bool = '?' WHERE uuid = '?' ;";
+        String stat_select_player = "SELECT * FROM environment_players WHERE uuid = ? ;";
+        String stat_insert_bool = "INSERT INTO environment_players (bool, uuid) VALUES (1, ? ) ; ";
+        String stat_update_bool = "UPDATE environment_players SET bool = ? WHERE uuid = ? ;";
 
         String stat_select_locations = "SELECT * FROM environment_locations_data ;";
-        String stat_insert_location = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES ('?';'?';'?';'?','?','?','?','?') ;";
-        String stat_remove_location = "DELETE FROM environment_locations_data WHERE idlocation = '?' ;";
+        String stat_insert_location = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES (?;?;?;?,?,?,?,?) ;";
+        String stat_remove_location = "DELETE FROM environment_locations_data WHERE idlocation = ? ;";
 
         String stat_select_regions = "SELECT * FROM environment_regions_data ;";
-        String stat_update_region = "UPDATE environment_regions_data SET type = '?', xlist = '?', zlist = '?', ymin = '?', ymax = '?', location = '?', server = '?' WHERE idregion = '?';";
-        String stat_edit_region = "UPDATE environment_regions_data SET thunders = '?', weather = '?', time = '?' WHERE idregion = '?' ;";
-        String stat_create_region = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight) VALUES ('?','?','?','?','?','?','?','?','?','default','0','default','?','?') ;";
+        String stat_update_region = "UPDATE environment_regions_data SET type = ?, xlist = ?, zlist = ?, ymin = ?, ymax = ?, location = ?, server = ? WHERE idregion = ?;";
+        String stat_edit_region = "UPDATE environment_regions_data SET thunders = ?, weather = ?, time = ? WHERE idregion = ? ;";
+        String stat_create_region = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight) VALUES (?,?,?,?,?,?,?,?,?,'default','0','default',?,?) ;";
 
-        String stat_set_sound = "UPDATE environment_regions_data SET sound = '?', info_sound = '?' WHERE idregion = '?' ;";
+        String stat_set_sound = "UPDATE environment_regions_data SET sound = ?, info_sound = ? WHERE idregion = ? ;";
 
         String stat_remove_region = "DELETE FROM environment_regions_data WHERE idregion = '?' ;";
 

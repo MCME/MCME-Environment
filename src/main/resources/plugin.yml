@@ -2,7 +2,7 @@ name: Environment
 main: com.mcme.environment.Environment
 version: ${project.version}
 author: Fraspace5
-api-version: 1.15
+api-version: 1.16
 softdepend: [WorldEdit,PluginUtils,ProtocolLib]
 website: ${project.url}
 

@@ -37,81 +37,79 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author Fraspace5
  */
 public class RegionScanner {
-    
+
     public static void getChunkSnaphshot(Region region, World b, String name) {
         new BukkitRunnable() {
-            
+
             @Override
             public void run() {
                 List<ChunkSnapshot> chunklist = new ArrayList<>();
-                
+
                 region.getChunks().forEach(chunk -> chunklist.add(b.getChunkAt(chunk.getX(), chunk.getZ()).getChunkSnapshot()));
-                
+
                 List<Location> waterList = new ArrayList<>();
                 List<Location> leavesList = new ArrayList<>();
-                
+
                 new BukkitRunnable() {
-                    
+
                     @Override
                     public void run() {
-                        
+
                         chunklist.forEach(chunk -> {
                             List<Location> waterListAll = new ArrayList<>();
                             List<Location> leavesListAll = new ArrayList<>();
-                            
+
                             for (int i = 0; i < 16; i++) {
                                 for (int j = 0; j < 16; j++) {
                                     for (int k = 255; k > 0; k--) {
                                         BlockData data = chunk.getBlockData(i, k, j);
-                                        
-                                        if (!data.getMaterial().isAir()) {
-                                            if (data.getMaterial().equals(Material.WATER)) {
-                                                waterListAll.add(new Location(b, (double) chunk.getX() * 16 + i, (double) k, (double) chunk.getZ() * 16 + j));
-                                            } else if (data.getMaterial().equals(Material.ACACIA_LEAVES)
-                                                    || data.getMaterial().equals(Material.BIRCH_LEAVES)
-                                                    || data.getMaterial().equals(Material.DARK_OAK_LEAVES)
-                                                    || data.getMaterial().equals(Material.JUNGLE_LEAVES)
-                                                    || data.getMaterial().equals(Material.SPRUCE_LEAVES)
-                                                    || data.getMaterial().equals(Material.OAK_LEAVES)) {
-                                                
-                                                leavesListAll.add(new Location(b, (double) chunk.getX() * 16 + i, (double) k, (double) chunk.getZ() * 16 + j));
-                                            }
-                                            
+
+                                        if (data.getMaterial().equals(Material.WATER)) {
+                                            waterListAll.add(new Location(b, (double) chunk.getX() * 16 + i, (double) k, (double) chunk.getZ() * 16 + j));
+                                        } else if (data.getMaterial().equals(Material.ACACIA_LEAVES)
+                                                || data.getMaterial().equals(Material.BIRCH_LEAVES)
+                                                || data.getMaterial().equals(Material.DARK_OAK_LEAVES)
+                                                || data.getMaterial().equals(Material.JUNGLE_LEAVES)
+                                                || data.getMaterial().equals(Material.SPRUCE_LEAVES)
+                                                || data.getMaterial().equals(Material.OAK_LEAVES)) {
+
+                                            leavesListAll.add(new Location(b, (double) chunk.getX() * 16 + i, (double) k, (double) chunk.getZ() * 16 + j));
+
                                         }
-                                        
+
                                     }
                                 }
                             }
-                            
+
                             Location center = new Location(b, chunk.getX() * 16 + 8, 64, chunk.getZ() * 16 + 8);
-                            
+
                             if (!waterListAll.isEmpty()) {
-                                
+
                                 Location loc = waterListAll.get(0);
-                                
+
                                 for (Location l : waterListAll) {
                                     if (l.distance(center) < loc.distance(center)) {
                                         loc = l;
                                     }
                                 }
                                 waterList.add(loc);
-                                
+
                             }
-                            
+
                             if (!leavesListAll.isEmpty()) {
-                                
+
                                 Location loc = leavesListAll.get(0);
-                                
+
                                 for (Location l : leavesListAll) {
                                     if (l.distance(center) < loc.distance(center)) {
                                         loc = l;
                                     }
                                 }
-                                
+
                                 leavesList.add(loc);
-                                
+
                             }
-                            
+
                         });
                         try {
                             RegionScanner.saveAll(waterList, leavesList, name);
@@ -120,16 +118,16 @@ public class RegionScanner {
                         }
                     }
                 }.runTaskAsynchronously(Environment.getPluginInstance());
-                
+
             }
         }.runTaskLater(Environment.getPluginInstance(), 80L);
-        
+
     }
-    
+
     private static void saveAll(List<Location> waterList, List<Location> leavesList, String name) throws IOException {
-        
+
         PluginData.getAllRegions().get(name).setLocData(new LocationsData(waterList, leavesList));
         PluginData.onSave(Environment.getPluginInstance().getEnvFolder());
     }
-    
+
 }
