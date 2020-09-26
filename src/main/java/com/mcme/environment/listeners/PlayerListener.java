@@ -34,11 +34,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.mcme.environment.SoundPacket.SoundUtil;
 import com.mcme.environment.SoundPacket.SoundType;
 import com.mcme.environment.event.LeaveRegionEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -185,7 +180,7 @@ public class PlayerListener implements Listener {
         if (!re.getSoundAmbient().equals(SoundType.NONE) && !re.getTime().equals("default")) {
 
             SoundUtil.playSoundAmbient(re.getSoundAmbient(), e.getPlayer(), parseLong(re.getTime()), re.getRegion(), re);
-
+System.out.println("parte1");
         }
 
     }

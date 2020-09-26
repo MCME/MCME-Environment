@@ -33,7 +33,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -49,7 +48,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -146,10 +144,11 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 @Override
                 public void run() {
                     PluginData.loadRegions();
+                    PluginData.loadLocations();
                     SystemRunnable.runnableLocations();
                     RunnablePlayer.runnableLocationsPlayers();
-                    RunnablePlayer.runnableRegionsPlayers();
-                    Bukkit.createBossBar(" ", BarColor.BLUE, BarStyle.SOLID, BarFlag.CREATE_FOG);
+                    RunnablePlayer.runnableRegionsPlayers(); 
+                    PluginData.setBossbar(Bukkit.createBossBar(" ", BarColor.BLUE, BarStyle.SOLID, BarFlag.CREATE_FOG));
                 }
 
             }.runTaskLater(Environment.getPluginInstance(), 200L);
@@ -192,7 +191,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
 
         try {
             connection.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | NullPointerException ex ) {
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -322,7 +321,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         String stat_update_bool = "UPDATE environment_players SET bool = ? WHERE uuid = ? ;";
 
         String stat_select_locations = "SELECT * FROM environment_locations_data ;";
-        String stat_insert_location = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES (?;?;?;?,?,?,?,?) ;";
+        String stat_insert_location = "INSERT INTO environment_locations_data (location, server, name, idlocation, sound) VALUES (?,?,?,?,?) ;";
         String stat_remove_location = "DELETE FROM environment_locations_data WHERE idlocation = ? ;";
 
         String stat_select_regions = "SELECT * FROM environment_regions_data ;";
@@ -330,9 +329,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         String stat_edit_region = "UPDATE environment_regions_data SET thunders = ?, weather = ?, time = ? WHERE idregion = ? ;";
         String stat_create_region = "INSERT INTO environment_regions_data (idregion, name, type, xlist, zlist, ymin, ymax, location, server, weather, thunders, time, sound, weight) VALUES (?,?,?,?,?,?,?,?,?,'default','0','default',?,?) ;";
 
-        String stat_set_sound = "UPDATE environment_regions_data SET sound = ?, info_sound = ? WHERE idregion = ? ;";
+        String stat_set_sound = "UPDATE environment_regions_data SET sound = ? WHERE idregion = ? ;";
 
-        String stat_remove_region = "DELETE FROM environment_regions_data WHERE idregion = '?' ;";
+        String stat_remove_region = "DELETE FROM environment_regions_data WHERE idregion = ? ;";
 
         selectPlayer = connection.prepareStatement(stat_select_player);
         insertPlayerBool = connection.prepareStatement(stat_insert_bool);

@@ -54,7 +54,7 @@ public enum SoundsString {
     WIND("environmental.wind"),
     ELEVATION("environmental.wind.elevation"),
     // city
-    BELL("city.bell.one"),
+    BELL("cities.bell.one"),
     //Leaves
     LEAVES("environmental.leaves_rustle");
 

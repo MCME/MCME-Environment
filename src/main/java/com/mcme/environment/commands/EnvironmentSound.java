@@ -52,9 +52,8 @@ public class EnvironmentSound extends EnvironmentCommand {
                 @Override
                 public void run() {
                     try {
-                        Environment.getSetSound().setString(1, soundAmbient.name().toUpperCase());
-                        Environment.getSetSound().setString(2, pl.getLocation().getWorld().getName() + ";" + pl.getLocation().getX() + ";" + pl.getLocation().getY() + ";" + pl.getLocation().getZ());
-                        Environment.getSetSound().setString(3, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
+                        Environment.getSetSound().setString(1, soundAmbient.name().toUpperCase());    
+                        Environment.getSetSound().setString(2, PluginData.getAllRegions().get(args[0]).getIdregion().toString());
                         Environment.getSetSound().executeUpdate();
                         sendDone(cs);
                         PluginData.loadRegions();
