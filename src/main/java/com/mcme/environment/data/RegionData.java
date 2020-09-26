@@ -55,12 +55,9 @@ public class RegionData {
     @Getter
     private final SoundType soundAmbient;
     @Getter
-    private final Location loc;
-    @Getter
     private final Map<UUID, List<BukkitTask>> tasks;
     @Getter
     private final List<UUID> informedLoc;
-
     @Setter
     public LocationsData locData;
 
@@ -78,10 +75,10 @@ public class RegionData {
      * @param tm Time in ticks
      * @param weg Weight of the region
      * @param sndAmb Sound type of Ambient
-     * @param lc Location for soundlocated
+     * 
      *
      */
-    public RegionData(String namem, UUID idregi, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb, Location lc) {
+    public RegionData(String namem, UUID idregi, Region rn, String sr, String t, String we, boolean th, String tm, Integer weg, SoundType sndAmb ) {
 
         name = namem;
 
@@ -102,8 +99,6 @@ public class RegionData {
         weight = weg;
 
         soundAmbient = sndAmb;
-
-        loc = lc;
 
         locData = new LocationsData();
 
@@ -129,6 +124,12 @@ public class RegionData {
         }
 
     }
+    
+    public void removeInform(UUID uuid) {
+        if (informedLoc.contains(uuid)) {
+            informedLoc.remove(uuid);
+        }
+    }
 
     public void addTask(UUID uuid, BukkitTask task) {
         if (!tasks.containsKey(uuid)) {
@@ -146,10 +147,6 @@ public class RegionData {
             tasks.get(uuid).forEach((s) -> {
                 s.cancel();
             });
-        }
-
-        if (informedLoc.contains(uuid)) {
-            informedLoc.remove(uuid);
         }
 
     }

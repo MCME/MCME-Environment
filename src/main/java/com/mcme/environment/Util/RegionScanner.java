@@ -44,7 +44,7 @@ public class RegionScanner {
             @Override
             public void run() {
                 List<ChunkSnapshot> chunklist = new ArrayList<>();
-
+                System.out.println("Environment- Region scanning in progress");
                 region.getChunks().forEach(chunk -> chunklist.add(b.getChunkAt(chunk.getX(), chunk.getZ()).getChunkSnapshot()));
 
                 List<Location> waterList = new ArrayList<>();
@@ -113,6 +113,7 @@ public class RegionScanner {
                         });
                         try {
                             RegionScanner.saveAll(waterList, leavesList, name);
+                            System.out.println("Environment- Region scanner completed");
                         } catch (IOException ex) {
                             Logger.getLogger(RegionScanner.class.getName()).log(Level.SEVERE, null, ex);
                         }

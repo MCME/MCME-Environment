@@ -101,7 +101,6 @@ public class SoundUtil {
      */
     public static void playSoundAmbient(SoundType s, Player pl, Long time, Region re, RegionData r) {
         UUID uuid = pl.getUniqueId();
-
         switch (s) {
             case WIND:
 
@@ -175,6 +174,7 @@ public class SoundUtil {
                     public void run() {
 
                         PlainSound.PlainSound(pl, time);
+                        System.out.println("doverbbe andarea ora");
                         if (!r.locData.getLeaves().isEmpty()) {
                             LeavesSound.LeavesSound(pl, r);
                         }

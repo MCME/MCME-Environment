@@ -37,7 +37,7 @@ public class EnvironmentControl extends EnvironmentCommand {
 
     public EnvironmentControl(String... permissionNodes) {
         super(1, true, permissionNodes);
-        setShortDescription(": Util and metrics  ");
+        setShortDescription(": Util and metrics");
         setUsageDescription(": Metrics and util commands for environment plugin");
     }
 
@@ -52,9 +52,9 @@ public class EnvironmentControl extends EnvironmentCommand {
 
                     @Override
                     public void run() {
+                      
                         PluginData.loadLocations();
-
-                        pl.sendMessage(ChatColor.GREEN + "Reload Completed");
+                        pl.sendMessage(ChatColor.GREEN + "Reload Completed, no errors found");
                     }
 
                 }.runTaskLater(Environment.getPluginInstance(), 40L);
@@ -122,7 +122,7 @@ public class EnvironmentControl extends EnvironmentCommand {
 
                     PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine switched off");
                 } else {
-                    PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine already off ");
+                    PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine is already off ");
                 }
 
             } else {
@@ -139,7 +139,7 @@ public class EnvironmentControl extends EnvironmentCommand {
                     PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine enabled");
                 } else {
 
-                    PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine already on ");
+                    PluginData.getMessageUtils().sendInfoMessage(cs, "Sound engine is already on ");
 
                 }
             } else {
