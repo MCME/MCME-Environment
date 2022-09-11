@@ -1,8 +1,8 @@
 name: Environment
 main: com.mcme.environment.Environment
 version: ${project.version}
-author: Fraspace5
-api-version: 1.16.5
+authors: [Fraspace5,Eriol_Eandur]
+api-version: 1.18.2
 softdepend: [WorldEdit,PluginUtils,ProtocolLib]
 website: ${project.url}
 
@@ -10,7 +10,15 @@ commands:
   environment:
     aliases: [env,en]
     description: Region command
+  pweather:
+    description: personal weather control
+  ptime:
+    description: personal time control
 permissions:
+    env.ptime:
+      decription: Allows to use /ptime
+    env.pweather:
+      description: Allows to use /pweather
     env.user:
             description: Permission for users
     env.staff:

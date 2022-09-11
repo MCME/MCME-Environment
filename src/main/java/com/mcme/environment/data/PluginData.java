@@ -28,11 +28,7 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -42,6 +38,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -72,6 +69,8 @@ public class PluginData {
     //IdRegion, Players
     @Getter
     private static final Map<String, LocatedSoundData> locSounds = new HashMap<>();
+
+    private static final Set<EnvironmentPlayer> players = new HashSet<>();
 
     /**
      * It reloads all regions from database
@@ -212,6 +211,13 @@ public class PluginData {
         }
 
         return name;
+    }
+
+    public static EnvironmentPlayer getOrCreateEnvironmentPlayer(String name) {
+        Player player = Bukkit.getPlayer(name);
+        if(player != null) {
+
+        }
     }
 
     public static void onSave(File projectFolder) throws IOException {

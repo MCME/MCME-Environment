@@ -22,6 +22,8 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mcme.environment.commands.EnvironmentCommandExecutor;
+import com.mcme.environment.commands.PTimeCommand;
+import com.mcme.environment.commands.PWeatherCommand;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.listeners.PlayerListener;
 import com.mcme.environment.runnable.RunnablePlayer;
@@ -33,6 +35,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -121,7 +124,16 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             Bukkit.getPluginManager().disablePlugin(this);
         }
         if (this.isEnabled()) {
-
+            PWeatherCommand pWeather = new PWeatherCommand("pweather");
+            PTimeCommand pTime = new PTimeCommand("ptime");
+            if(getCommand("ptime")!=null) {
+                Objects.requireNonNull(getCommand("ptime")).setExecutor(pTime);
+                Objects.requireNonNull(getCommand("ptime")).setExecutor(pWeather);
+            }
+            if(getCommand("pweather")!=null) {
+                Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pTime);
+                Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pWeather);
+            }
             getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
             getCommand("environment").setTabCompleter(new EnvironmentCommandExecutor());
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
