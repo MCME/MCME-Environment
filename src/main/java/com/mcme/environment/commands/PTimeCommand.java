@@ -1,6 +1,8 @@
 package com.mcme.environment.commands;
 
 import com.google.common.base.Joiner;
+import com.mcme.environment.commands.argument.DaytimeArgument;
+import com.mcme.environment.commands.argument.OnlinePlayerArgument;
 import com.mcme.environment.data.EnvironmentPlayer;
 import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.command.AbstractCommandHandler;
@@ -38,7 +40,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                 .requires(sender -> (sender instanceof EnvironmentPlayer)
                         && ((EnvironmentPlayer) sender).getBukkitPlayer().hasPermission("env.ptime"))
                 .executes(context -> {
-                    context.getSource().sendMessage("/ptime <daytime> | server | cycle (on|off) | <player> | copy (allow|deny)");
+                    context.getSource().sendMessage("/ptime <daytime> | server | cycle (on|off)");// | <player> | copy (allow|deny)");
                     return 0; })
                 .then(HelpfulLiteralBuilder.literal("server")
                         .executes(this::resetPlayerTime))
@@ -49,26 +51,30 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                                 .executes(this::disableDaylightCycle)))
                 .then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
                         .executes(this::setTicks))
-                .then(HelpfulRequiredArgumentBuilder.argument("daytime", word())
-                        .executes(context -> {
-
-                            return 0;}))
-                .then(HelpfulRequiredArgumentBuilder.argument("player", word())
+                .then(HelpfulRequiredArgumentBuilder.argument("daytime", new DaytimeArgument())
+                        .executes(this::setTicks))
+                .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
                         .executes(this::copyPlayerTime))
                 .then(HelpfulLiteralBuilder.literal("copy")
                         .then(HelpfulLiteralBuilder.literal("allow")
-                                .executes(context -> {
-
-                                    return 0;}))
+                                .executes(this::publishPlayerTime))
                         .then(HelpfulLiteralBuilder.literal("deny")
-                                .executes(context -> {
-
-                                    return 0;})));
+                                .executes(this::unpublishPlayerTime)));
         return helpfulLiteralBuilder;
     }
 
+    private int publishPlayerTime(CommandContext<McmeCommandSender> context) {
+        getEnvironmentPlayer(context).setPtimePublic(true);
+        return 0;
+    }
+
+    private int unpublishPlayerTime(CommandContext<McmeCommandSender> context) {
+        getEnvironmentPlayer(context).setPtimePublic(false);
+        return 0;
+    }
+
     private int copyPlayerTime(CommandContext<McmeCommandSender> context) {
-        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",String.class));
+        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class).getName());
         if(other.isPtimePublic()) {
             getBukkitPlayer(context).setPlayerTime(other.getBukkitPlayer().getPlayerTimeOffset(),
                                                    other.getBukkitPlayer().isPlayerTimeRelative());

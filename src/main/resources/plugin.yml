@@ -3,6 +3,7 @@ main: com.mcme.environment.Environment
 version: ${project.version}
 authors: [Fraspace5,Eriol_Eandur]
 api-version: 1.18.2
+loadbefore: [EssentialsX]
 softdepend: [WorldEdit,PluginUtils,ProtocolLib]
 website: ${project.url}
 
