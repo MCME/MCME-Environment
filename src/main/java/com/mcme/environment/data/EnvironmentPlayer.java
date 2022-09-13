@@ -2,6 +2,7 @@ package com.mcme.environment.data;
 
 import com.mcmiddleearth.command.McmeCommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -21,6 +22,10 @@ public class EnvironmentPlayer implements McmeCommandSender {
     public void sendMessage(BaseComponent[] baseComponents) {
         PluginData.getMessageUtils().sendInfoMessage(bukkitPlayer,
                 Arrays.stream(baseComponents).map(component->component.toLegacyText()).collect(Collectors.joining()));
+    }
+
+    public void sendMessage(String message) {
+        PluginData.getMessageUtils().sendInfoMessage(bukkitPlayer,message);
     }
 
     public Player getBukkitPlayer() {

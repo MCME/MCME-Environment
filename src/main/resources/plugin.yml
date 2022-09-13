@@ -2,7 +2,7 @@ name: Environment
 main: com.mcme.environment.Environment
 version: ${project.version}
 authors: [Fraspace5,Eriol_Eandur]
-api-version: 1.18.2
+api-version: 1.18
 loadbefore: [EssentialsX]
 softdepend: [WorldEdit,PluginUtils,ProtocolLib]
 website: ${project.url}
@@ -18,8 +18,10 @@ commands:
 permissions:
     env.ptime:
       decription: Allows to use /ptime
+      default: op
     env.pweather:
       description: Allows to use /pweather
+      default: op
     env.user:
             description: Permission for users
     env.staff:

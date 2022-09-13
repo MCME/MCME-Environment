@@ -1,6 +1,5 @@
 package com.mcme.environment.commands;
 
-import com.destroystokyo.paper.util.misc.PlayerAreaMap;
 import com.google.common.base.Joiner;
 import com.mcme.environment.commands.argument.OnlinePlayerArgument;
 import com.mcme.environment.commands.argument.WeatherArgument;
@@ -13,6 +12,7 @@ import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
 import com.mcmiddleearth.command.builder.HelpfulRequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.WeatherType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,8 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-
-import static com.mojang.brigadier.arguments.StringArgumentType.word;
 
 public class PWeatherCommand extends AbstractCommandHandler implements TabExecutor {
 
@@ -38,7 +36,7 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
                 .requires(sender -> (sender instanceof EnvironmentPlayer)
                         && ((EnvironmentPlayer) sender).getBukkitPlayer().hasPermission("env.pweather"))
                 .executes(context -> {
-                    context.getSource().sendMessage("/pweather clear | downfall | server");//| <player> | copy (allow|deny)");
+                    getEnvironmentPlayer(context).sendMessage("/pweather clear | downfall | server");//| <player> | copy (allow|deny)");
                     return 0; })
                 .then(HelpfulRequiredArgumentBuilder.argument("weather", new WeatherArgument())
                         .executes(this::setWeather))
@@ -65,7 +63,7 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
     }
 
     private int copyWeather(CommandContext<McmeCommandSender> context) {
-        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class).getName());
+        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class));
         if(other.isPweatherPublic()) {
             WeatherType otherWeather = other.getBukkitPlayer().getPlayerWeather();
             if(otherWeather!=null) {
@@ -102,7 +100,7 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
         if(!(sender instanceof Player)) {
             sender.sendMessage("You need to be logged in to use this command.");
         } else {
-            McmeCommandSender wrappedSender = new EnvironmentPlayer((Player) sender);
+            McmeCommandSender wrappedSender = PluginData.getOrCreateEnvironmentPlayer((Player)sender);
             execute(wrappedSender, args);
         }
         return true;
@@ -115,7 +113,7 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
         if(!(sender instanceof Player)) {
             return Collections.emptyList();
         } else {
-            TabCompleteRequest request = new SimpleTabCompleteRequest((EnvironmentPlayer) sender,
+            TabCompleteRequest request = new SimpleTabCompleteRequest(PluginData.getOrCreateEnvironmentPlayer((Player)sender),
                     String.format("/%s %s", alias, Joiner.on(' ').join(args)));
             onTabComplete(request);
             //Logger.getGlobal().info("tabComplete 1");

@@ -12,8 +12,7 @@ import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
 import com.mcmiddleearth.command.builder.HelpfulRequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import org.bukkit.Bukkit;
-import org.bukkit.WeatherType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static com.mojang.brigadier.arguments.StringArgumentType.word;
 
 public class PTimeCommand extends AbstractCommandHandler implements TabExecutor {
 
@@ -40,7 +39,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                 .requires(sender -> (sender instanceof EnvironmentPlayer)
                         && ((EnvironmentPlayer) sender).getBukkitPlayer().hasPermission("env.ptime"))
                 .executes(context -> {
-                    context.getSource().sendMessage("/ptime <daytime> | server | cycle (on|off)");// | <player> | copy (allow|deny)");
+                    getEnvironmentPlayer(context).sendMessage("ptime <daytime> | server | cycle (on|off)");// | <player> | copy (allow|deny)");
                     return 0; })
                 .then(HelpfulLiteralBuilder.literal("server")
                         .executes(this::resetPlayerTime))
@@ -50,9 +49,9 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                         .then(HelpfulLiteralBuilder.literal("off")
                                 .executes(this::disableDaylightCycle)))
                 .then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
-                        .executes(this::setTicks))
+                        .executes(context -> setTicks(context, context.getArgument("ticks", int.class))))
                 .then(HelpfulRequiredArgumentBuilder.argument("daytime", new DaytimeArgument())
-                        .executes(this::setTicks))
+                        .executes(context -> setTicks(context, context.getArgument("daytime", int.class))))
                 .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
                         .executes(this::copyPlayerTime))
                 .then(HelpfulLiteralBuilder.literal("copy")
@@ -74,7 +73,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
     }
 
     private int copyPlayerTime(CommandContext<McmeCommandSender> context) {
-        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class).getName());
+        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class));
         if(other.isPtimePublic()) {
             getBukkitPlayer(context).setPlayerTime(other.getBukkitPlayer().getPlayerTimeOffset(),
                                                    other.getBukkitPlayer().isPlayerTimeRelative());
@@ -82,9 +81,8 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         return 0;
     }
 
-    private int setTicks(CommandContext<McmeCommandSender> context) {
+    private int setTicks(CommandContext<McmeCommandSender> context, int time) {
         Player p = getBukkitPlayer(context);
-        int time = context.getArgument("ticks", int.class);
         if(!p.isPlayerTimeRelative()) {
             p.setPlayerTime(time,false);
         } else {
@@ -100,8 +98,10 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 
     private int enableDaylightCycle(CommandContext<McmeCommandSender> context){
         Player p = getBukkitPlayer(context);
+Logger.getGlobal().info("enable cycle");
         if(!p.isPlayerTimeRelative()) {
             long playerTime = p.getPlayerTime();
+Logger.getGlobal().info("old time: "+playerTime);
             p.setPlayerTime(absoluteToRelativeTime(playerTime, p.getWorld()), true);
         }
         return 0;
@@ -109,8 +109,10 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 
     private int disableDaylightCycle(CommandContext<McmeCommandSender> context) {
         Player p = getBukkitPlayer(context);
+Logger.getGlobal().info("disable cycle");
         if(p.isPlayerTimeRelative()) {
             long playerTime = p.getPlayerTimeOffset();
+Logger.getGlobal().info("old offset: "+playerTime);
             p.setPlayerTime(relativeToAbsoluteTime(playerTime, p.getWorld()), false);
         }
         return 0;
@@ -139,7 +141,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         if(!(sender instanceof Player)) {
             sender.sendMessage("You need to be logged in to use this command.");
         } else {
-            McmeCommandSender wrappedSender = new EnvironmentPlayer((Player) sender);
+            McmeCommandSender wrappedSender = PluginData.getOrCreateEnvironmentPlayer((Player)sender);
             execute(wrappedSender, args);
         }
         return true;
@@ -152,7 +154,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         if(!(sender instanceof Player)) {
             return Collections.emptyList();
         } else {
-            TabCompleteRequest request = new SimpleTabCompleteRequest((EnvironmentPlayer) sender,
+            TabCompleteRequest request = new SimpleTabCompleteRequest(PluginData.getOrCreateEnvironmentPlayer((Player)sender),
                     String.format("/%s %s", alias, Joiner.on(' ').join(args)));
             onTabComplete(request);
             //Logger.getGlobal().info("tabComplete 1");

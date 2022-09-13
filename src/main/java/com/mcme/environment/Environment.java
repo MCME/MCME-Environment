@@ -116,22 +116,23 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
         engine = true;
         this.saveDefaultConfig();
         this.getConfig().options().copyDefaults();
+        /*todo:
         try {
             openConnection();
         } catch (SQLException ex) {
             clogger.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GRAY + "] - " + ChatColor.RED + "Database error!");
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
             Bukkit.getPluginManager().disablePlugin(this);
-        }
+        }*/
         if (this.isEnabled()) {
             PWeatherCommand pWeather = new PWeatherCommand("pweather");
             PTimeCommand pTime = new PTimeCommand("ptime");
             if(getCommand("ptime")!=null) {
                 Objects.requireNonNull(getCommand("ptime")).setExecutor(pTime);
-                Objects.requireNonNull(getCommand("ptime")).setExecutor(pWeather);
+                Objects.requireNonNull(getCommand("ptime")).setTabCompleter(pTime);
             }
             if(getCommand("pweather")!=null) {
-                Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pTime);
+                Objects.requireNonNull(getCommand("pweather")).setExecutor(pWeather);
                 Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pWeather);
             }
             getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
@@ -143,7 +144,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
             clogger.sendMessage(ChatColor.DARK_GREEN + "Environment Plugin v" + this.getDescription().getVersion() + " enabled!");
             clogger.sendMessage(ChatColor.GREEN + "---------------------------------------");
-            SystemRunnable.ConnectionRunnable();
+            //todo: SystemRunnable.ConnectionRunnable();
             try {
                 onInitiateFile();
             } catch (IOException ex) {
@@ -151,6 +152,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             }
             Environment.setNameserver("default");
 
+            /*todo:
             new BukkitRunnable() {
 
                 @Override
@@ -177,7 +179,7 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                     }
                 }
 
-            }.runTaskLater(Environment.getPluginInstance(), 400L);
+            }.runTaskLater(Environment.getPluginInstance(), 400L);*/
         }
 
     }

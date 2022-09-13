@@ -213,11 +213,8 @@ public class PluginData {
         return name;
     }
 
-    public static EnvironmentPlayer getOrCreateEnvironmentPlayer(String name) {
-        Player player = Bukkit.getPlayer(name);
-        if(player != null) {
-
-        }
+    public static EnvironmentPlayer getOrCreateEnvironmentPlayer(Player player) {
+        return new EnvironmentPlayer(player);
     }
 
     public static void onSave(File projectFolder) throws IOException {
