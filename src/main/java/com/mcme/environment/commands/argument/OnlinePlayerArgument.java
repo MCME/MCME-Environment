@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class OnlinePlayerArgument implements ArgumentType<Player>, HelpfulArgumentType {
 
@@ -36,7 +37,18 @@ public class OnlinePlayerArgument implements ArgumentType<Player>, HelpfulArgume
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        Bukkit.getOnlinePlayers().forEach(player -> builder.suggest(player.getName()));
+        for (String option : Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toSet())) {
+            if (option.toLowerCase().startsWith(builder.getRemaining().toLowerCase())) {
+                if (tooltip == null) {
+                    builder.suggest(option);
+                } else {
+                    builder.suggest(option, new LiteralMessage(tooltip));
+                }
+            }
+        }
+        if (Bukkit.getOnlinePlayers().isEmpty() && tooltip != null) {
+            builder.suggest(tooltip);
+        }
         return builder.buildFuture();
     }
 

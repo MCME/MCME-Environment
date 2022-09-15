@@ -38,7 +38,18 @@ public class WeatherArgument implements ArgumentType<WeatherType>, HelpfulArgume
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        weathers.forEach(builder::suggest);
+        for (String option :  weathers) {
+            if (option.toLowerCase().startsWith(builder.getRemaining().toLowerCase())) {
+                if(tooltip == null) {
+                    builder.suggest(option);
+                } else {
+                    builder.suggest(option, new LiteralMessage(tooltip));
+                }
+            }
+        }
+        if(weathers.isEmpty() && tooltip != null) {
+            builder.suggest(tooltip);
+        }
         return builder.buildFuture();
     }
 

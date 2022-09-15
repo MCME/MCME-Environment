@@ -13,6 +13,7 @@ public class EnvironmentPlayer implements McmeCommandSender {
     private final Player bukkitPlayer;
     private boolean ptimePublic = false;
     private boolean pweatherPublic = false;
+    private int timeWarp = 1;
 
     public EnvironmentPlayer(Player bukkitPlayer) {
         this.bukkitPlayer = bukkitPlayer;
@@ -46,5 +47,13 @@ public class EnvironmentPlayer implements McmeCommandSender {
 
     public void setPweatherPublic(boolean pweatherPublic) {
         this.pweatherPublic = pweatherPublic;
+    }
+
+    public int getTimeWarp() {
+        return timeWarp;
+    }
+
+    public void setTimeWarp(int timeWarp) {
+        this.timeWarp = timeWarp;
     }
 }

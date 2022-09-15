@@ -70,7 +70,7 @@ public class PluginData {
     @Getter
     private static final Map<String, LocatedSoundData> locSounds = new HashMap<>();
 
-    private static final Set<EnvironmentPlayer> players = new HashSet<>();
+    private static final Map<UUID,EnvironmentPlayer> players = new HashMap<>();
 
     /**
      * It reloads all regions from database
@@ -214,7 +214,12 @@ public class PluginData {
     }
 
     public static EnvironmentPlayer getOrCreateEnvironmentPlayer(Player player) {
-        return new EnvironmentPlayer(player);
+        EnvironmentPlayer environmentPlayer = players.get(player.getUniqueId());
+        if(environmentPlayer==null) {
+            environmentPlayer = new EnvironmentPlayer(player);
+            players.put(player.getUniqueId(),new EnvironmentPlayer(player));
+        }
+        return environmentPlayer;
     }
 
     public static void onSave(File projectFolder) throws IOException {

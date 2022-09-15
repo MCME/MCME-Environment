@@ -1,6 +1,8 @@
 package com.mcme.environment.commands;
 
 import com.google.common.base.Joiner;
+import com.mcme.environment.Environment;
+import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.commands.argument.DaytimeArgument;
 import com.mcme.environment.commands.argument.OnlinePlayerArgument;
 import com.mcme.environment.data.EnvironmentPlayer;
@@ -12,18 +14,17 @@ import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
 import com.mcmiddleearth.command.builder.HelpfulRequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 
@@ -39,14 +40,14 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                 .requires(sender -> (sender instanceof EnvironmentPlayer)
                         && ((EnvironmentPlayer) sender).getBukkitPlayer().hasPermission("env.ptime"))
                 .executes(context -> {
-                    getEnvironmentPlayer(context).sendMessage("ptime <daytime> | server | cycle (on|off)");// | <player> | copy (allow|deny)");
+                    getEnvironmentPlayer(context).sendMessage("ptime <daytime> | server | cycle (on|off) | <player> | copy (allow|deny) | warp <factor> | get");
                     return 0; })
                 .then(HelpfulLiteralBuilder.literal("server")
                         .executes(this::resetPlayerTime))
                 .then(HelpfulLiteralBuilder.literal("cycle")
                         .then(HelpfulLiteralBuilder.literal("on")
                                 .executes(this::enableDaylightCycle))
-                        .then(HelpfulLiteralBuilder.literal("off")
+       get                 .then(HelpfulLiteralBuilder.literal("off")
                                 .executes(this::disableDaylightCycle)))
                 .then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
                         .executes(context -> setTicks(context, context.getArgument("ticks", int.class))))
@@ -54,12 +55,20 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                         .executes(context -> setTicks(context, context.getArgument("daytime", int.class))))
                 .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
                         .executes(this::copyPlayerTime))
+                .then(HelpfulLiteralBuilder.literal("warp")
+                        .then(HelpfulRequiredArgumentBuilder.argument("timeFactor", integer(1,100))
+                                .executes(this::setWarpFactor)))
                 .then(HelpfulLiteralBuilder.literal("copy")
                         .then(HelpfulLiteralBuilder.literal("allow")
                                 .executes(this::publishPlayerTime))
                         .then(HelpfulLiteralBuilder.literal("deny")
                                 .executes(this::unpublishPlayerTime)));
         return helpfulLiteralBuilder;
+    }
+
+    private int setWarpFactor(CommandContext<McmeCommandSender> context) {
+        getEnvironmentPlayer(context).setTimeWarp(context.getArgument("timeFactor", int.class));
+        return 0;
     }
 
     private int publishPlayerTime(CommandContext<McmeCommandSender> context) {
@@ -75,6 +84,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
     private int copyPlayerTime(CommandContext<McmeCommandSender> context) {
         EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class));
         if(other.isPtimePublic()) {
+            getEnvironmentPlayer(context).setTimeWarp(other.getTimeWarp());
             getBukkitPlayer(context).setPlayerTime(other.getBukkitPlayer().getPlayerTimeOffset(),
                                                    other.getBukkitPlayer().isPlayerTimeRelative());
         }
@@ -93,27 +103,43 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 
     private int resetPlayerTime(CommandContext<McmeCommandSender> context) {
         getBukkitPlayer(context).resetPlayerTime();
+        getEnvironmentPlayer(context).setTimeWarp(1);
         return 0;
     }
 
     private int enableDaylightCycle(CommandContext<McmeCommandSender> context){
         Player p = getBukkitPlayer(context);
-Logger.getGlobal().info("enable cycle");
+//Logger.getGlobal().info("enable cycle");
         if(!p.isPlayerTimeRelative()) {
             long playerTime = p.getPlayerTime();
-Logger.getGlobal().info("old time: "+playerTime);
-            p.setPlayerTime(absoluteToRelativeTime(playerTime, p.getWorld()), true);
+//Logger.getGlobal().info("old time: "+playerTime);
+            long newTime = absoluteToRelativeTime(playerTime, p.getWorld());
+//Logger.getGlobal().info("Server time: "+p.getWorld().getFullTime()+" new offset: "+newTime);
+            p.setPlayerTime(newTime, true);
+            UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(),false);
+//Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
+//Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
         }
         return 0;
     }
 
     private int disableDaylightCycle(CommandContext<McmeCommandSender> context) {
         Player p = getBukkitPlayer(context);
-Logger.getGlobal().info("disable cycle");
+//Logger.getGlobal().info("disable cycle");
         if(p.isPlayerTimeRelative()) {
             long playerTime = p.getPlayerTimeOffset();
-Logger.getGlobal().info("old offset: "+playerTime);
-            p.setPlayerTime(relativeToAbsoluteTime(playerTime, p.getWorld()), false);
+//Logger.getGlobal().info("old offset: "+playerTime);
+            long newTime = relativeToAbsoluteTime(playerTime, p.getWorld());
+//Logger.getGlobal().info("Server time: "+p.getWorld().getTime()+" new time: "+newTime);
+            p.setPlayerTime(newTime, false);
+            UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
+            new BukkitRunnable(){
+                public void run() {
+                    //p.setPlayerTime(newTime, false);
+//Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
+//Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
+                }
+            }.runTaskLater(Environment.getPluginInstance(),1);
         }
         return 0;
     }
@@ -124,7 +150,7 @@ Logger.getGlobal().info("old offset: "+playerTime);
     }
 
     private long absoluteToRelativeTime(long absolute, World world) {
-        long serverTime = world.getTime();
+        long serverTime = world.getFullTime();
         return absolute - serverTime;
     }
 

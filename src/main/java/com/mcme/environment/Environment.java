@@ -25,9 +25,9 @@ import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.commands.PTimeCommand;
 import com.mcme.environment.commands.PWeatherCommand;
 import com.mcme.environment.data.PluginData;
+import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.listeners.PlayerListener;
-import com.mcme.environment.runnable.RunnablePlayer;
-import com.mcme.environment.runnable.SystemRunnable;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -38,15 +38,13 @@ import java.sql.Statement;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.mcme.environment.runnable.TimeWarpRunnable;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -135,6 +133,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 Objects.requireNonNull(getCommand("pweather")).setExecutor(pWeather);
                 Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pWeather);
             }
+            UpdateTimePacketUtil.addUpdateTimePacketListener();
+            TimeWarpRunnable.startTimeWarpTask();
+
             getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
             getCommand("environment").setTabCompleter(new EnvironmentCommandExecutor());
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
@@ -196,6 +197,9 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 });
             });
         });
+
+        UpdateTimePacketUtil.removeUpdateTimePacketListener();
+        TimeWarpRunnable.stopTimeWarpTask();
 
         try {
             PluginData.onSave(envFolder);

@@ -44,7 +44,18 @@ public class DaytimeArgument implements ArgumentType<Integer>, HelpfulArgumentTy
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        daytimes.keySet().forEach(builder::suggest);
+        for (String option :  daytimes.keySet()) {
+            if (option.toLowerCase().startsWith(builder.getRemaining().toLowerCase())) {
+                if(tooltip == null) {
+                    builder.suggest(option);
+                } else {
+                    builder.suggest(option, new LiteralMessage(tooltip));
+                }
+            }
+        }
+        if(daytimes.keySet().isEmpty() && tooltip != null) {
+            builder.suggest(tooltip);
+        }
         return builder.buildFuture();
     }
 
