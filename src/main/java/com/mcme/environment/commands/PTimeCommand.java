@@ -13,6 +13,8 @@ import com.mcmiddleearth.command.SimpleTabCompleteRequest;
 import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
 import com.mcmiddleearth.command.builder.HelpfulRequiredArgumentBuilder;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -47,18 +49,22 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                 .then(HelpfulLiteralBuilder.literal("cycle")
                         .then(HelpfulLiteralBuilder.literal("on")
                                 .executes(this::enableDaylightCycle))
-       get                 .then(HelpfulLiteralBuilder.literal("off")
+                        .then(HelpfulLiteralBuilder.literal("off")
                                 .executes(this::disableDaylightCycle)))
                 .then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
                         .executes(context -> setTicks(context, context.getArgument("ticks", int.class))))
                 .then(HelpfulRequiredArgumentBuilder.argument("daytime", new DaytimeArgument())
                         .executes(context -> setTicks(context, context.getArgument("daytime", int.class))))
-                .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
-                        .executes(this::copyPlayerTime))
                 .then(HelpfulLiteralBuilder.literal("warp")
                         .then(HelpfulRequiredArgumentBuilder.argument("timeFactor", integer(1,100))
                                 .executes(this::setWarpFactor)))
+                .then(HelpfulLiteralBuilder.literal("get")
+                        .requires(sender -> ((EnvironmentPlayer) sender).getBukkitPlayer().hasPermission("env.ptime.get"))
+                        .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
+                                .executes(this::showPTime)))
                 .then(HelpfulLiteralBuilder.literal("copy")
+                        .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
+                                .executes(this::copyPlayerTime))
                         .then(HelpfulLiteralBuilder.literal("allow")
                                 .executes(this::publishPlayerTime))
                         .then(HelpfulLiteralBuilder.literal("deny")
@@ -66,18 +72,33 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         return helpfulLiteralBuilder;
     }
 
+    private int showPTime(CommandContext<McmeCommandSender> context) {
+        MessageUtil util = PluginData.getMessageUtils();
+        EnvironmentPlayer other = PluginData.getOrCreateEnvironmentPlayer(context.getArgument("player",Player.class));
+        util.sendInfoMessage(getBukkitPlayer(context),"Current time of "
+                +util.STRESSED+other.getBukkitPlayer().getName()
+                +util.INFO+".\nTime: "+util.STRESSED+formatTime(other.getBukkitPlayer().getPlayerTime())+"\n"
+                +util.INFO+"Daytime cycle: "+util.STRESSED+(other.getBukkitPlayer().isPlayerTimeRelative()?"enabled":"disabled")+"\n"
+                +util.INFO+"Time warp factor: "+util.STRESSED+other.getTimeWarp());
+        return 0;
+    }
+
     private int setWarpFactor(CommandContext<McmeCommandSender> context) {
-        getEnvironmentPlayer(context).setTimeWarp(context.getArgument("timeFactor", int.class));
+        int factor = context.getArgument("timeFactor", int.class);
+        getEnvironmentPlayer(context).setTimeWarp(factor);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Setting your time warp factor to "+factor+".");
         return 0;
     }
 
     private int publishPlayerTime(CommandContext<McmeCommandSender> context) {
         getEnvironmentPlayer(context).setPtimePublic(true);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Other players are now allowed to copy your time settings.");
         return 0;
     }
 
     private int unpublishPlayerTime(CommandContext<McmeCommandSender> context) {
         getEnvironmentPlayer(context).setPtimePublic(false);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Other players are now denied to copy your time settings.");
         return 0;
     }
 
@@ -87,7 +108,9 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
             getEnvironmentPlayer(context).setTimeWarp(other.getTimeWarp());
             getBukkitPlayer(context).setPlayerTime(other.getBukkitPlayer().getPlayerTimeOffset(),
                                                    other.getBukkitPlayer().isPlayerTimeRelative());
+            PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Copied time settings of "+other.getBukkitPlayer().getName());
         }
+        PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context),other.getBukkitPlayer().getName()+" does not allow to copy his time settings.");
         return 0;
     }
 
@@ -98,12 +121,14 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         } else {
             p.setPlayerTime(absoluteToRelativeTime(time,p.getWorld()), true);
         }
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Setting your time to "+formatTime(p.getPlayerTime())+".");
         return 0;
     }
 
     private int resetPlayerTime(CommandContext<McmeCommandSender> context) {
         getBukkitPlayer(context).resetPlayerTime();
         getEnvironmentPlayer(context).setTimeWarp(1);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"You are now following server time.");
         return 0;
     }
 
@@ -119,7 +144,9 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
             UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(),false);
 //Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
 //Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
+            PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle enabled.");
         }
+        PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context),"You already have daylight cycle disabled.");
         return 0;
     }
 
@@ -133,14 +160,12 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 //Logger.getGlobal().info("Server time: "+p.getWorld().getTime()+" new time: "+newTime);
             p.setPlayerTime(newTime, false);
             UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
-            new BukkitRunnable(){
-                public void run() {
+            PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle enabled.");
                     //p.setPlayerTime(newTime, false);
 //Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
 //Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
-                }
-            }.runTaskLater(Environment.getPluginInstance(),1);
         }
+        PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context),"You already have daylight cycle disabled.");
         return 0;
     }
 
@@ -160,6 +185,14 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 
     private EnvironmentPlayer getEnvironmentPlayer(CommandContext<McmeCommandSender> context) {
         return ((EnvironmentPlayer)(context.getSource()));
+    }
+
+    private String formatTime(long playerTime) {
+        long day = playerTime/24000;
+        long daytime = playerTime%24000;
+        long hours = daytime/1000+6;
+        long minutes = (daytime%1000)*60/1000;
+        return "Day "+ day + " Time "+ hours+":"+(minutes<10?"0"+minutes:minutes);
     }
 
     @Override
@@ -187,5 +220,6 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
             return request.getSuggestions();
         }
     }
+
 
 }

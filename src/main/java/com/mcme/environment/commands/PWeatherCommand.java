@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class PWeatherCommand extends AbstractCommandHandler implements TabExecutor {
 
@@ -43,22 +44,24 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
                 .then(HelpfulLiteralBuilder.literal("server")
                         .executes(this::resetWeather))
                 .then(HelpfulLiteralBuilder.literal("copy")
+                        .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
+                                .executes(this::copyWeather))
                         .then(HelpfulLiteralBuilder.literal("allow")
                                 .executes(this::publishPlayerWeather))
                         .then(HelpfulLiteralBuilder.literal("deny")
-                                .executes(this::unpublishPlayerWeather)))
-                .then(HelpfulRequiredArgumentBuilder.argument("player", new OnlinePlayerArgument())
-                        .executes(this::copyWeather));
+                                .executes(this::unpublishPlayerWeather)));
         return helpfulLiteralBuilder;
     }
 
     private int unpublishPlayerWeather(CommandContext<McmeCommandSender> context) {
         getEnvironmentPlayer(context).setPweatherPublic(true);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Other players are now allowed to copy your weather settings.");
         return 0;
     }
 
     private int publishPlayerWeather(CommandContext<McmeCommandSender> context) {
         getEnvironmentPlayer(context).setPweatherPublic(false);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Other players are now denied to copy your weather settings.");
         return 0;
     }
 
@@ -77,13 +80,16 @@ public class PWeatherCommand extends AbstractCommandHandler implements TabExecut
 
     private int setWeather(CommandContext<McmeCommandSender> context) {
         Player p = getBukkitPlayer(context);
-        p.setPlayerWeather(context.getArgument("weather",WeatherType.class));
+        WeatherType weather = context.getArgument("weather",WeatherType.class);
+        p.setPlayerWeather(weather);
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Setting your weather to "+weather.name().toLowerCase());
         return 0;
     }
 
     private int resetWeather(CommandContext<McmeCommandSender> context) {
         Player p = getBukkitPlayer(context);
         p.resetPlayerWeather();
+        PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Setting your weather to server weather");
         return 0;
     }
 

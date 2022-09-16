@@ -17,7 +17,10 @@ commands:
     description: personal time control
 permissions:
     env.ptime:
-      decription: Allows to use /ptime
+      description: Allows to use /ptime
+      default: op
+    env.ptime.get:
+      description: Allows to use /ptime get <player>
       default: op
     env.pweather:
       description: Allows to use /pweather
