@@ -215,11 +215,15 @@ public class PluginData {
 
     public static EnvironmentPlayer getOrCreateEnvironmentPlayer(Player player) {
         EnvironmentPlayer environmentPlayer = players.get(player.getUniqueId());
-        if(environmentPlayer==null) {
+        if(environmentPlayer==null || environmentPlayer.getBukkitPlayer()!=player) {
             environmentPlayer = new EnvironmentPlayer(player);
             players.put(player.getUniqueId(),new EnvironmentPlayer(player));
         }
         return environmentPlayer;
+    }
+
+    public static void removeEnvironmentPlayer(Player player) {
+        players.remove(player.getUniqueId());
     }
 
     public static void onSave(File projectFolder) throws IOException {

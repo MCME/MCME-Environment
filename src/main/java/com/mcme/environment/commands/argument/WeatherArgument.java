@@ -20,7 +20,7 @@ public class WeatherArgument implements ArgumentType<WeatherType>, HelpfulArgume
 
     private String tooltip = "Weather you want to see in the world.";
 
-    private final List<String> weathers = List.of("Clear","Downfall");
+    private final List<String> weathers = List.of("clear","downfall");
 
     @Override
     public WeatherType parse(StringReader reader) throws CommandSyntaxException {

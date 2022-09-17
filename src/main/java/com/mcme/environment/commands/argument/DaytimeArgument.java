@@ -19,14 +19,14 @@ public class DaytimeArgument implements ArgumentType<Integer>, HelpfulArgumentTy
     private String tooltip = "Daytime you want to see the world at.";
 
     private final Map<String,Integer> daytimes = Map.of(
-            "Dawn", 23500,
-            "Sunrise", 0,
-            "Day", 1000,
-            "Noon", 6000,
-            "Sunset", 12000,
-            "Dusk", 12500,
-            "Night", 13000,
-            "Midnight", 18000);
+            "dawn", 23500,
+            "sunrise", 0,
+            "day", 1000,
+            "noon", 6000,
+            "sunset", 12000,
+            "dusk", 12500,
+            "night", 13000,
+            "midnight", 18000);
 
     @Override
     public Integer parse(StringReader reader) throws CommandSyntaxException {

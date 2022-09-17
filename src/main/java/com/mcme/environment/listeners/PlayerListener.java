@@ -18,6 +18,8 @@ package com.mcme.environment.listeners;
 
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.EnvChange;
+import com.mcme.environment.Util.UpdateTimePacketUtil;
+import com.mcme.environment.commands.PTimeCommand;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
 import com.mcme.environment.event.EnterRegionEvent;
@@ -27,6 +29,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.WeatherType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -45,7 +48,10 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        new BukkitRunnable() {
+        Player p = e.getPlayer();
+        p.setPlayerTime(6000, false);
+        UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
+        /*new BukkitRunnable() {
 
             @Override
             public void run() {
@@ -85,14 +91,14 @@ public class PlayerListener implements Listener {
 
             }
 
-        }.runTaskAsynchronously(Environment.getPluginInstance());
+        }.runTaskAsynchronously(Environment.getPluginInstance());*/
 
     }
 
     @EventHandler
 
     public void onQuit(PlayerQuitEvent e) {
-
+        PluginData.removeEnvironmentPlayer(e.getPlayer());
         if (PluginData.getBoolPlayers().containsKey(e.getPlayer().getUniqueId())) {
 
             if (PluginData.getBoolPlayers().get(e.getPlayer().getUniqueId())) {

@@ -145,31 +145,36 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
 //Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
 //Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
             PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle enabled.");
+        } else {
+            PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context), "You already have daylight cycle enabled.");
         }
-        PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context),"You already have daylight cycle disabled.");
         return 0;
     }
 
     private int disableDaylightCycle(CommandContext<McmeCommandSender> context) {
         Player p = getBukkitPlayer(context);
-//Logger.getGlobal().info("disable cycle");
         if(p.isPlayerTimeRelative()) {
-            long playerTime = p.getPlayerTimeOffset();
-//Logger.getGlobal().info("old offset: "+playerTime);
-            long newTime = relativeToAbsoluteTime(playerTime, p.getWorld());
-//Logger.getGlobal().info("Server time: "+p.getWorld().getTime()+" new time: "+newTime);
-            p.setPlayerTime(newTime, false);
-            UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
-            PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle enabled.");
+            disableCycle(p);
+            PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle disabled.");
                     //p.setPlayerTime(newTime, false);
 //Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
 //Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
+        } else {
+            PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context), "You already have daylight cycle disabled.");
         }
-        PluginData.getMessageUtils().sendErrorMessage(getBukkitPlayer(context),"You already have daylight cycle disabled.");
         return 0;
     }
 
-    private long relativeToAbsoluteTime(long relative, World world) {
+    public static void disableCycle(Player p) {
+        long playerTime = p.getPlayerTimeOffset();
+//Logger.getGlobal().info("old offset: "+playerTime);
+        long newTime = relativeToAbsoluteTime(playerTime, p.getWorld());
+//Logger.getGlobal().info("Server time: "+p.getWorld().getTime()+" new time: "+newTime);
+        p.setPlayerTime(newTime, false);
+        UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
+    }
+
+    private static long relativeToAbsoluteTime(long relative, World world) {
         long serverTime = world.getTime();
         return relative + serverTime;
     }
@@ -192,7 +197,7 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         long daytime = playerTime%24000;
         long hours = daytime/1000+6;
         long minutes = (daytime%1000)*60/1000;
-        return "Day "+ day + " Time "+ hours+":"+(minutes<10?"0"+minutes:minutes);
+        return /*"Day "+ day + " Time "+*/ hours+":"+(minutes<10?"0"+minutes:minutes);
     }
 
     @Override
