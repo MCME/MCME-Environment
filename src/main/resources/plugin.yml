@@ -1,0 +1,35 @@
+name: Environment
+main: com.mcme.environment.Environment
+version: ${project.version}
+authors: [Fraspace5,Eriol_Eandur]
+api-version: 1.18
+loadbefore: [EssentialsX]
+softdepend: [WorldEdit,PluginUtils,ProtocolLib]
+website: ${project.url}
+
+commands:
+  environment:
+    aliases: [env,en]
+    description: Region command
+  pweather:
+    description: personal weather control
+  ptime:
+    description: personal time control
+permissions:
+    env.ptime:
+      description: Allows to use /ptime
+      default: op
+    env.ptime.get:
+      description: Allows to use /ptime get <player>
+      default: op
+    env.pweather:
+      description: Allows to use /pweather
+      default: op
+    env.user:
+            description: Permission for users
+    env.staff:
+            default: op
+            description: Allows to use all the commands of this plugin[Guide+]
+    env.reload:
+            description: Allows to reload
+ #Copyright (C) 2020 MCME (Fraspace5)
