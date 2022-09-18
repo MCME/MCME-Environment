@@ -1,7 +1,6 @@
 package com.mcme.environment.commands;
 
 import com.google.common.base.Joiner;
-import com.mcme.environment.Environment;
 import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.commands.argument.DaytimeArgument;
 import com.mcme.environment.commands.argument.OnlinePlayerArgument;
@@ -14,14 +13,12 @@ import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
 import com.mcmiddleearth.command.builder.HelpfulRequiredArgumentBuilder;
 import com.mcmiddleearth.pluginutil.message.MessageUtil;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,8 +48,8 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
                                 .executes(this::enableDaylightCycle))
                         .then(HelpfulLiteralBuilder.literal("off")
                                 .executes(this::disableDaylightCycle)))
-                .then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
-                        .executes(context -> setTicks(context, context.getArgument("ticks", int.class))))
+                /*.then(HelpfulRequiredArgumentBuilder.argument("ticks", integer())
+                        .executes(context -> setTicks(context, context.getArgument("ticks", integer()))))*/
                 .then(HelpfulRequiredArgumentBuilder.argument("daytime", new DaytimeArgument())
                         .executes(context -> setTicks(context, context.getArgument("daytime", int.class))))
                 .then(HelpfulLiteralBuilder.literal("warp")
@@ -195,9 +192,15 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
     private String formatTime(long playerTime) {
         long day = playerTime/24000;
         long daytime = playerTime%24000;
-        long hours = daytime/1000+6;
+        long hours = (daytime/1000+6)%24;
         long minutes = (daytime%1000)*60/1000;
-        return /*"Day "+ day + " Time "+*/ hours+":"+(minutes<10?"0"+minutes:minutes);
+        String ampm = "am";
+        if(hours > 11) {
+            ampm = "pm";
+        }
+        if(hours>12) hours -=12;
+        if(hours == 0) hours = 12;
+        return /*"Day "+ day + " Time "+*/ hours+":"+(minutes<10?"0"+minutes:minutes)+" "+ampm.toUpperCase();
     }
 
     @Override
