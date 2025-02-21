@@ -19,9 +19,13 @@ public class TimeWarpRunnable {
             public void run() {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     EnvironmentPlayer environmentPlayer = PluginData.getOrCreateEnvironmentPlayer(player);
-                    if(player.isPlayerTimeRelative() && environmentPlayer.getTimeWarp()>1) {
-                        player.setPlayerTime(player.getPlayerTimeOffset()+(environmentPlayer.getTimeWarp()-1),true);
-                        UpdateTimePacketUtil.sendTime(player,player.getPlayerTime(),false);
+                    if(player.isPlayerTimeRelative()) {
+                        if(environmentPlayer.getTimeWarp()>1) {
+                            player.setPlayerTime(player.getPlayerTimeOffset() + (environmentPlayer.getTimeWarp() - 1), true);
+                            UpdateTimePacketUtil.sendTime(player, player.getPlayerTime(), false);
+                        } else if(environmentPlayer.getTimeWarp()<1) {
+
+                        }
                     }
                 });
             }

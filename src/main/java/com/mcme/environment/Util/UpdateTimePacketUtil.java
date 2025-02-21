@@ -24,10 +24,12 @@ public class UpdateTimePacketUtil {
             public void onPacketSending(PacketEvent event) {
                 Player player = event.getPlayer();
                 //long worldTimestamp = event.getPacket().getLongs().read(0);
-                long daytime = event.getPacket().getLongs().read(1);
+                //long daytime = event.getPacket().getLongs().read(1);
+                boolean increasing = event.getPacket().getBooleans().read(0);
                 //Logger.getGlobal().info("Player: "+player.getName()+" WorldTimestamp: "+worldTimestamp+" Daytime: "+daytime);
-                if(!player.isPlayerTimeRelative() && daytime > 0) {
-                    event.getPacket().getLongs().write(1,-daytime);
+                if(!player.isPlayerTimeRelative() && increasing) {
+                    //event.getPacket().getLongs().write(1,-daytime);
+                    event.getPacket().getBooleans().write(0, false);
                 }
             }
         };
@@ -45,7 +47,8 @@ public class UpdateTimePacketUtil {
     public static void sendTime(Player player, long time, boolean stopped) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.UPDATE_TIME);
         packet.getLongs().write(0,player.getWorld().getFullTime());
-        packet.getLongs().write(1,(stopped?-time:time));
+        packet.getLongs().write(1,(time));
+        packet.getBooleans().write(0, !stopped);
         try {
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
             manager.sendServerPacket(player, packet);
