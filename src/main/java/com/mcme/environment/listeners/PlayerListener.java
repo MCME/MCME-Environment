@@ -18,7 +18,6 @@ package com.mcme.environment.listeners;
 
 import com.mcme.environment.Environment;
 import com.mcme.environment.Util.EnvChange;
-import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.commands.PTimeCommand;
 import com.mcme.environment.data.PluginData;
 import com.mcme.environment.data.RegionData;
@@ -49,8 +48,12 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        // Paper 26.2 implements per-player time natively: CraftPlayer.setPlayerTime()
+        // sends ClientboundSetTimePacket itself, packing ClockNetworkState(getPlayerTime(),
+        // partialTick, paused ? 0 : rate) with paused = !relativeTime. Passing false here
+        // therefore already freezes this player's clock client-side, which is exactly what
+        // the old ProtocolLib UPDATE_TIME hack was faking by negating dayTime.
         p.setPlayerTime(6000, false);
-        UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
         /*new BukkitRunnable() {
 
             @Override

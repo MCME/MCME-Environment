@@ -25,7 +25,6 @@ import com.mcme.environment.commands.EnvironmentCommandExecutor;
 import com.mcme.environment.commands.PTimeCommand;
 import com.mcme.environment.commands.PWeatherCommand;
 import com.mcme.environment.data.PluginData;
-import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.listeners.PlayerListener;
 
 import java.io.File;
@@ -133,7 +132,6 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
                 Objects.requireNonNull(getCommand("pweather")).setExecutor(pWeather);
                 Objects.requireNonNull(getCommand("pweather")).setTabCompleter(pWeather);
             }
-            UpdateTimePacketUtil.addUpdateTimePacketListener();
             TimeWarpRunnable.startTimeWarpTask();
 
             getCommand("environment").setExecutor(new EnvironmentCommandExecutor());
@@ -198,7 +196,6 @@ public class Environment extends JavaPlugin implements PluginMessageListener {
             });
         });
 
-        UpdateTimePacketUtil.removeUpdateTimePacketListener();
         TimeWarpRunnable.stopTimeWarpTask();
 
         try {
