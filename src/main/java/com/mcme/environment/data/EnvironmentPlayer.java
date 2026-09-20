@@ -1,6 +1,6 @@
 package com.mcme.environment.data;
 
-import com.mcmiddleearth.command.McmeCommandSender;
+import com.mcmiddleearth.command.sender.McmeCommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -27,6 +27,15 @@ public class EnvironmentPlayer implements McmeCommandSender {
 
     public void sendMessage(String message) {
         PluginData.getMessageUtils().sendInfoMessage(bukkitPlayer,message);
+    }
+
+    /**
+     * Permission checks delegate straight to the wrapped Bukkit player, which is what the
+     * command tree already did inline (e.g. the "env.ptime" check in PTimeCommand).
+     */
+    @Override
+    public boolean hasPermission(String permission) {
+        return bukkitPlayer.hasPermission(permission);
     }
 
     public Player getBukkitPlayer() {
