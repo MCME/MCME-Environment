@@ -1,13 +1,12 @@
 package com.mcme.environment.commands;
 
 import com.google.common.base.Joiner;
-import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.commands.argument.DaytimeArgument;
 import com.mcme.environment.commands.argument.OnlinePlayerArgument;
 import com.mcme.environment.data.EnvironmentPlayer;
 import com.mcme.environment.data.PluginData;
-import com.mcmiddleearth.command.AbstractCommandHandler;
-import com.mcmiddleearth.command.McmeCommandSender;
+import com.mcmiddleearth.command.handler.AbstractCommandHandler;
+import com.mcmiddleearth.command.sender.McmeCommandSender;
 import com.mcmiddleearth.command.SimpleTabCompleteRequest;
 import com.mcmiddleearth.command.TabCompleteRequest;
 import com.mcmiddleearth.command.builder.HelpfulLiteralBuilder;
@@ -138,7 +137,6 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
             long newTime = absoluteToRelativeTime(playerTime, p.getWorld());
 //Logger.getGlobal().info("Server time: "+p.getWorld().getFullTime()+" new offset: "+newTime);
             p.setPlayerTime(newTime, true);
-            UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(),false);
 //Logger.getGlobal().info("Check new time: "+p.getPlayerTime());
 //Logger.getGlobal().info("Check new time offset: "+p.getPlayerTimeOffset());
             PluginData.getMessageUtils().sendInfoMessage(getBukkitPlayer(context),"Daylight cycle enabled.");
@@ -168,7 +166,6 @@ public class PTimeCommand extends AbstractCommandHandler implements TabExecutor 
         long newTime = relativeToAbsoluteTime(playerTime, p.getWorld());
 //Logger.getGlobal().info("Server time: "+p.getWorld().getTime()+" new time: "+newTime);
         p.setPlayerTime(newTime, false);
-        UpdateTimePacketUtil.sendTime(p, p.getPlayerTime(), true);
     }
 
     private static long relativeToAbsoluteTime(long relative, World world) {

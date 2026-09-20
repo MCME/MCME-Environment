@@ -3,24 +3,41 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mcme</groupId>
     <artifactId>Environment</artifactId>
-    <version>3.3.1</version>
+    <version>3.4.0</version>
     <packaging>jar</packaging>
     <name>Environment</name>
     <url>http://www.mcmiddleearth.com/</url>
-    <repositories> 
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Build with JDK 25: paper-api 26.2 and PluginUtils 2.0.2 are Java-25 bytecode.
+             Emit Java 21 bytecode, because maven-shade-plugin's ASM cannot read major
+             version 69. Note this is source/target, NOT the release flag: release mode would pin the
+             platform API and refuse to read the newer class files on the compile classpath.
+             Java 21 bytecode runs fine on the Java 25 server (forward compatible). -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
         <repository>
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
             <id>dmulloy2-repo</id>
-            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
     <build>
         <resources>
             <resource>
@@ -32,67 +49,118 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.48</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <!-- MCME-CommandParser is not published to any repository and is
+                                 not installed as a server plugin, so it is the one artifact
+                                 that genuinely has to travel inside this jar. Everything else
+                                 is provided by the server. -->
+                            <artifactSet>
+                                <includes>
+                                    <include>com.mcmiddleearth:MCME-CommandParser</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
+        <!-- Annotation processing only; must not be shaded into the plugin jar. -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <scope>provided</scope>
-            <version>4.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <scope>provided</scope>
-            <version>7.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mcmiddleearth</groupId>
-            <artifactId>PluginUtils</artifactId>
-            <version>1.6.3</version>
+            <version>1.18.48</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>26.2.build.126-stable</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Still used by EnvChange for the lightning-effect packet; the per-player time
+             packet hack that used to live here was removed for 26.2 (Paper does it natively). -->
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>5.3.0</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mojang</groupId>
+                    <artifactId>brigadier</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.0.1</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mojang</groupId>
+                    <artifactId>brigadier</artifactId>
+                </exclusion>
+                <!-- WorldEdit 7.0.1 declares a runtime dep on org.bstats:bstats-bukkit:1.5,
+                     which no longer exists in any public repository. WorldEdit is provided by
+                     the server, so none of its transitives are wanted here anyway. -->
+                <exclusion>
+                    <groupId>org.bstats</groupId>
+                    <artifactId>bstats-bukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MCME</groupId>
+            <artifactId>PluginUtils</artifactId>
+            <version>2.0.2</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mojang</groupId>
+                    <artifactId>brigadier</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Shaded in. brigadier is excluded on purpose: MCME-CommandParser pins
+             com.mojang:brigadier:1.0.17, and bundling that alongside the 1.3.10 the server
+             already provides is a class-conflict waiting to happen. -->
         <dependency>
             <groupId>com.mcmiddleearth</groupId>
             <artifactId>MCME-CommandParser</artifactId>
-            <version>1.0</version>
+            <version>1.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mojang</groupId>
+                    <artifactId>brigadier</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
 </project>

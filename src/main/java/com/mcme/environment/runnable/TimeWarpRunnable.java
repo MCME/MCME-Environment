@@ -1,7 +1,6 @@
 package com.mcme.environment.runnable;
 
 import com.mcme.environment.Environment;
-import com.mcme.environment.Util.UpdateTimePacketUtil;
 import com.mcme.environment.data.EnvironmentPlayer;
 import com.mcme.environment.data.PluginData;
 import org.bukkit.Bukkit;
@@ -21,8 +20,8 @@ public class TimeWarpRunnable {
                     EnvironmentPlayer environmentPlayer = PluginData.getOrCreateEnvironmentPlayer(player);
                     if(player.isPlayerTimeRelative()) {
                         if(environmentPlayer.getTimeWarp()>1) {
+                            // setPlayerTime() sends the sync packet itself on 26.2.
                             player.setPlayerTime(player.getPlayerTimeOffset() + (environmentPlayer.getTimeWarp() - 1), true);
-                            UpdateTimePacketUtil.sendTime(player, player.getPlayerTime(), false);
                         } else if(environmentPlayer.getTimeWarp()<1) {
 
                         }

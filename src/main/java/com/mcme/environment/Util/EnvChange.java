@@ -25,7 +25,6 @@ import com.mcme.environment.data.PluginData;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.Region;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -76,10 +75,9 @@ public class EnvChange {
 
             System.out.println("invia thunder " + l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ());
 
-            try {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
-            } catch (InvocationTargetException es) {
-            }
+            // ProtocolLib 5.x no longer declares InvocationTargetException here, so the
+            // old catch became unreachable and stopped compiling.
+            ProtocolLibrary.getProtocolManager().sendServerPacket(pl, thunder);
         }
 
         if (bol && SoundUtil.randomBoolean(0.15, 0.85)) {
