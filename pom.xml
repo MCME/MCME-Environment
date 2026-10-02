@@ -20,6 +20,15 @@
     </properties>
 
     <repositories>
+        <!-- MCME's own Maven repository: the MCME libraries under com.mcmiddleearth, PluginUtils
+             among them. -->
+        <repository>
+            <id>mcme-releases</id>
+            <url>https://repo.mcmiddleearth.com/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
@@ -31,10 +40,6 @@
         <repository>
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -136,8 +141,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- MCME's coordinate from repo.mcmiddleearth.com, not JitPack's com.github.MCME: with one
+             coordinate per library, Maven can compare versions when another MCME library brings
+             PluginUtils along too. -->
         <dependency>
-            <groupId>com.github.MCME</groupId>
+            <groupId>com.mcmiddleearth</groupId>
             <artifactId>PluginUtils</artifactId>
             <version>2.0.2</version>
             <scope>provided</scope>
